@@ -1,4 +1,4 @@
-// Small mark in the admin top bar; uses the site's generated favicon (brand colour + short name).
+// Small mark in the console's top bar.
 export function Icon() {
-  return <img src="/favicon.svg" alt="" width={28} height={28} style={{ display: 'block', borderRadius: 6 }} />
+  return <img src="/civiq-mark.svg" alt="" width={28} height={28} style={{ display: 'block', borderRadius: 6 }} />
 }

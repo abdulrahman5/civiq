@@ -1,7 +1,7 @@
-import type { GlobalConfig, TextFieldSingleValidation } from 'payload'
+import type { CollectionConfig, TextFieldSingleValidation } from 'payload'
 
-import { anyone, isEditor } from '../access'
-import { revalidateGlobal } from '../hooks/revalidate'
+import { anyone, guardTenantWrite, platformAdminOnly, tenantRole } from '../access'
+import { revalidateAfterChange } from '../hooks/revalidate'
 
 const hexColour: TextFieldSingleValidation = (value) =>
   !value || /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(value) ? true : 'Use a hex colour code such as #0b5d3b'
@@ -9,12 +9,13 @@ const hexColour: TextFieldSingleValidation = (value) =>
 const url: TextFieldSingleValidation = (value) =>
   !value || /^https:\/\/\S+$/i.test(value) ? true : 'Enter a full link starting with https://'
 
-export const SiteSettings: GlobalConfig = {
+export const SiteSettings: CollectionConfig = {
   slug: 'site-settings',
-  label: 'Site settings',
-  admin: { group: 'Website' },
-  access: { read: anyone, update: isEditor },
-  hooks: { afterChange: [revalidateGlobal] },
+  labels: { singular: 'Site settings', plural: 'Site settings' },
+  admin: { group: 'Website', useAsTitle: 'name' },
+  // One document per legislator (the multi-tenant plugin treats this collection like a global).
+  access: { read: anyone, create: tenantRole('admin', 'editor'), update: tenantRole('admin', 'editor'), delete: platformAdminOnly },
+  hooks: { beforeChange: [guardTenantWrite(['admin', 'editor'])], afterChange: [revalidateAfterChange] },
   fields: [
     {
       type: 'tabs',

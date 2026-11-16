@@ -3,16 +3,19 @@ import Link from 'next/link'
 
 import { MESSAGE_TOPICS } from '@/collections/Messages'
 import { Icon } from '@/lib/icons'
-import { getAbout, getAgenda, getNews, getProjects, getSettings, isPlaceholder, ph } from '@/lib/payload'
+import { getAbout, getAgenda, getNews, getProjects, isPlaceholder, ph } from '@/lib/payload'
+import { submitMessage } from './actions'
 import { ContactForm } from './ContactForm'
 import { Img } from './Img'
 import { PostCard } from './PostCard'
 import { ProjectGrid } from './ProjectGrid'
+import { type DomainParams, siteFromParams } from './site'
 
 export const dynamic = 'force-static'
 
-export default async function Home() {
-  const [s, about, agenda, projects, posts] = await Promise.all([getSettings(), getAbout(), getAgenda(), getProjects(), getNews(4)])
+export default async function Home(props: DomainParams) {
+  const { tenant, settings: s, domain } = await siteFromParams(props)
+  const [about, agenda, projects, posts] = await Promise.all([getAbout(tenant.id), getAgenda(tenant.id), getProjects(tenant.id), getNews(tenant.id, 4)])
   const categories = [...new Set(projects.map((p) => p.category))]
   const contact = s.contact ?? {}
 
@@ -32,7 +35,7 @@ export default async function Home() {
             </div>
           </div>
           <div className="hero-photo">
-            <Img media={s.hero?.image} size="large" alt={s.name} label="Official portrait — upload in Admin → Site settings → Home banner" />
+            <Img media={s.hero?.image} size="large" alt={s.name} label="Official portrait — upload in the console → Site settings → Home banner" />
           </div>
         </div>
       </section>
@@ -50,10 +53,11 @@ export default async function Home() {
         </div>
       )}
 
+      {about && (
       <section id="about" style={{ paddingTop: 40 }}>
         <div className="wrap about-grid">
           <div className="about-photo">
-            <Img media={about.image} size="card" label="Photo: SMA with constituents — upload in Admin → About & timeline" />
+            <Img media={about.image} size="card" label="Photo with constituents — upload in the console → About & timeline" />
           </div>
           <div>
             <span className="eyebrow">About {s.shortName}</span>
@@ -72,7 +76,9 @@ export default async function Home() {
           </div>
         </div>
       </section>
+      )}
 
+      {agenda && (
       <section id="agenda" className="alt">
         <div className="wrap">
           <span className="eyebrow">The Agenda</span>
@@ -89,8 +95,9 @@ export default async function Home() {
           </div>
         </div>
       </section>
+      )}
 
-      {!!about.timeline?.length && (
+      {!!about?.timeline?.length && (
         <section id="journey" className="alt" style={{ paddingTop: 0 }}>
           <div className="wrap">
             <span className="eyebrow">The Journey</span>
@@ -183,7 +190,7 @@ export default async function Home() {
               )}
             </ul>
           </div>
-          <ContactForm topics={MESSAGE_TOPICS} />
+          <ContactForm topics={MESSAGE_TOPICS} action={submitMessage.bind(null, domain)} />
         </div>
       </section>
     </>

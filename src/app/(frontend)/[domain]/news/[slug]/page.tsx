@@ -3,24 +3,28 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-import { absoluteUrl, formatDate, getNews, getPost, imageUrl, ph } from '@/lib/payload'
+import { absoluteUrl, formatDate, getPost, imageUrl, ph } from '@/lib/payload'
 import { Img } from '../../Img'
+import { loadSite } from '../../site'
 
 export const dynamic = 'force-static'
 // Posts published after the last deploy are rendered on first visit, then cached.
 export const dynamicParams = true
 
-type Props = { params: Promise<{ slug: string }> }
+type Props = { params: Promise<{ domain: string; slug: string }> }
 
-export async function generateStaticParams() {
-  const posts = await getNews()
-  return posts.filter((p) => p.slug).map((p) => ({ slug: p.slug! }))
+export const generateStaticParams = () => []
+
+const load = async ({ params }: Props) => {
+  const { domain, slug } = await params
+  const site = await loadSite(domain)
+  return { ...site, post: await getPost(site.tenant.id, slug) }
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const post = await getPost((await params).slug)
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const { post, siteUrl } = await load(props)
   if (!post) return {}
-  const image = absoluteUrl(imageUrl(post.image, 'large'))
+  const image = absoluteUrl(siteUrl, imageUrl(post.image, 'large'))
   return {
     title: post.title,
     description: post.summary,
@@ -29,8 +33,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default async function PostPage({ params }: Props) {
-  const post = await getPost((await params).slug)
+export default async function PostPage(props: Props) {
+  const { post } = await load(props)
   if (!post) notFound()
 
   return (

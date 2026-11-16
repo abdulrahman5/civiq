@@ -2,10 +2,12 @@
 
 import { useActionState, useEffect, useRef, useState } from 'react'
 
-import { type ContactState, submitMessage } from './actions'
+import type { ContactState } from './actions'
 
-export function ContactForm({ topics }: { topics: string[] }) {
-  const [state, action, pending] = useActionState<ContactState, FormData>(submitMessage, { ok: false })
+type SubmitAction = (prev: ContactState, fd: FormData) => Promise<ContactState>
+
+export function ContactForm({ topics, action: submit }: { topics: string[]; action: SubmitAction }) {
+  const [state, action, pending] = useActionState<ContactState, FormData>(submit, { ok: false })
   const [startedAt, setStartedAt] = useState('')
   const form = useRef<HTMLFormElement>(null)
 

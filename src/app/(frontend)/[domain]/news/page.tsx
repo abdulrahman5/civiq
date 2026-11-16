@@ -1,17 +1,19 @@
 import type { Metadata } from 'next'
 
-import { getNews, getSettings } from '@/lib/payload'
+import { getNews } from '@/lib/payload'
 import { PostCard } from '../PostCard'
+import { type DomainParams, siteFromParams } from '../site'
 
 export const dynamic = 'force-static'
 
-export async function generateMetadata(): Promise<Metadata> {
-  const s = await getSettings()
+export async function generateMetadata(props: DomainParams): Promise<Metadata> {
+  const { settings: s } = await siteFromParams(props)
   return { title: 'News', description: `Latest news and press releases from the office of ${s.name}.`, alternates: { canonical: '/news' } }
 }
 
-export default async function NewsIndex() {
-  const posts = await getNews()
+export default async function NewsIndex(props: DomainParams) {
+  const { tenant } = await siteFromParams(props)
+  const posts = await getNews(tenant.id)
   return (
     <>
       <div className="page-head">

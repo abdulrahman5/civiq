@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import { canWriteContent, isEditor, publishedOrLoggedIn } from '../access'
+import { canWriteContent, guardTenantWrite, publishedOrLoggedIn, tenantRole } from '../access'
 import { revalidateAfterChange, revalidateAfterDelete } from '../hooks/revalidate'
 
 export const PROJECT_CATEGORIES = ['Education', 'Health', 'Infrastructure', 'Empowerment', 'Agriculture', 'Water', 'Security', 'Other']
@@ -20,9 +20,10 @@ export const Projects: CollectionConfig = {
     read: publishedOrLoggedIn,
     create: canWriteContent,
     update: canWriteContent,
-    delete: isEditor,
+    delete: tenantRole('admin', 'editor'),
   },
   hooks: {
+    beforeChange: [guardTenantWrite(['admin', 'editor', 'contributor'], { contributorsDraftOnly: true })],
     afterChange: [revalidateAfterChange],
     afterDelete: [revalidateAfterDelete],
   },

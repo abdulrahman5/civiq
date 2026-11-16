@@ -1,6 +1,6 @@
 import type { CollectionConfig, FieldHook } from 'payload'
 
-import { canWriteContent, isEditor, publishedOrLoggedIn } from '../access'
+import { canWriteContent, guardTenantWrite, publishedOrLoggedIn, tenantRole } from '../access'
 import { revalidateAfterChange, revalidateAfterDelete } from '../hooks/revalidate'
 
 export const slugify = (s: string) =>
@@ -27,14 +27,17 @@ export const News: CollectionConfig = {
     description: 'Press releases and updates. Save as draft to keep a post hidden until it is ready.',
   },
   defaultSort: '-publishedDate',
+  // Slugs only need to be unique within one legislator's site.
+  indexes: [{ fields: ['tenant', 'slug'], unique: true }],
   versions: { drafts: true, maxPerDoc: 30 },
   access: {
     read: publishedOrLoggedIn,
     create: canWriteContent,
     update: canWriteContent,
-    delete: isEditor,
+    delete: tenantRole('admin', 'editor'),
   },
   hooks: {
+    beforeChange: [guardTenantWrite(['admin', 'editor', 'contributor'], { contributorsDraftOnly: true })],
     afterChange: [revalidateAfterChange],
     afterDelete: [revalidateAfterDelete],
   },
@@ -46,7 +49,6 @@ export const News: CollectionConfig = {
     {
       name: 'slug',
       type: 'text',
-      unique: true,
       index: true,
       admin: { position: 'sidebar', description: 'Web address of the post. Filled in from the headline if left empty.' },
       hooks: { beforeValidate: [formatSlug] },

@@ -1,14 +1,15 @@
-import type { GlobalConfig } from 'payload'
+import type { CollectionConfig } from 'payload'
 
-import { anyone, isEditor } from '../access'
-import { revalidateGlobal } from '../hooks/revalidate'
+import { anyone, guardTenantWrite, platformAdminOnly, tenantRole } from '../access'
+import { revalidateAfterChange } from '../hooks/revalidate'
 
-export const About: GlobalConfig = {
+export const About: CollectionConfig = {
   slug: 'about',
-  label: 'About & timeline',
-  admin: { group: 'Website' },
-  access: { read: anyone, update: isEditor },
-  hooks: { afterChange: [revalidateGlobal] },
+  labels: { singular: 'About & timeline', plural: 'About & timeline' },
+  admin: { group: 'Website', useAsTitle: 'id' },
+  // One document per legislator (the multi-tenant plugin treats this collection like a global).
+  access: { read: anyone, create: tenantRole('admin', 'editor'), update: tenantRole('admin', 'editor'), delete: platformAdminOnly },
+  hooks: { beforeChange: [guardTenantWrite(['admin', 'editor'])], afterChange: [revalidateAfterChange] },
   fields: [
     { name: 'heading', type: 'text', required: true },
     { name: 'image', label: 'Photo', type: 'upload', relationTo: 'media' },

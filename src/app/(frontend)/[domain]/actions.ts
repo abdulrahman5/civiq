@@ -1,14 +1,16 @@
 'use server'
 
 import { MESSAGE_TOPICS } from '@/collections/Messages'
-import { getClient } from '@/lib/payload'
+import { getClient, getSettings } from '@/lib/payload'
+import { getTenantByHost } from '@/lib/tenant'
 
 export type ContactState = { ok: boolean; error?: string }
 
 const field = (fd: FormData, name: string, max: number) => String(fd.get(name) ?? '').trim().slice(0, max)
 const escapeHtml = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!)
 
-export async function submitMessage(_prev: ContactState, fd: FormData): Promise<ContactState> {
+// `domain` is bound on the server when the page renders; the tenant is looked up again here, never trusted from the form.
+export async function submitMessage(domain: string, _prev: ContactState, fd: FormData): Promise<ContactState> {
   // Spam traps: a hidden field real visitors never fill in, and a minimum time on the page.
   const startedAt = Number(fd.get('startedAt'))
   if (field(fd, 'website', 200) || !startedAt || Date.now() - startedAt < 3000) {
@@ -23,7 +25,11 @@ export async function submitMessage(_prev: ContactState, fd: FormData): Promise<
     return { ok: false, error: 'Please enter your name and a valid email address.' }
   }
 
+  const tenant = await getTenantByHost(domain)
+  if (!tenant) return { ok: false, error: 'Sorry, this site is not accepting messages right now.' }
+
   const data = {
+    tenant: tenant.id,
     name,
     email,
     phone: field(fd, 'phone', 40),
@@ -38,8 +44,8 @@ export async function submitMessage(_prev: ContactState, fd: FormData): Promise<
     // The public cannot create messages through the API; this trusted server action can.
     await payload.create({ collection: 'messages', data, overrideAccess: true })
 
-    const settings = await payload.findGlobal({ slug: 'site-settings', depth: 0 })
-    const to = settings.contact?.notifyEmail
+    const settings = await getSettings(tenant.id)
+    const to = settings?.contact?.notifyEmail
     if (to) {
       const rows = Object.entries({ Name: name, Email: email, Phone: data.phone, Ward: data.ward, Topic: data.topic })
         .map(([k, v]) => `<tr><td style="padding:4px 12px 4px 0;color:#666">${k}</td><td>${escapeHtml(v)}</td></tr>`)
@@ -48,8 +54,8 @@ export async function submitMessage(_prev: ContactState, fd: FormData): Promise<
         .sendEmail({
           to,
           replyTo: email,
-          subject: `New website message: ${data.topic} from ${name}`,
-          html: `<table>${rows}</table><p style="white-space:pre-wrap">${escapeHtml(message)}</p><p>View and manage it in the admin Inbox.</p>`,
+          subject: `New message on ${tenant.name}’s website: ${data.topic} from ${name}`,
+          html: `<table>${rows}</table><p style="white-space:pre-wrap">${escapeHtml(message)}</p><p>View and manage it in the Inbox of the Civiq console.</p>`,
         })
         .catch((err: unknown) => payload.logger.error({ err }, 'Contact form email failed'))
     }

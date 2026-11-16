@@ -1,21 +1,25 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { resendAdapter } from '@payloadcms/email-resend'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { multiTenantPlugin } from '@payloadcms/plugin-multi-tenant'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import path from 'path'
 import { buildConfig } from 'payload'
 import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 
+import { isPlatformAdmin, TENANT_ROLES } from './access'
+import { About } from './collections/About'
+import { Agenda } from './collections/Agenda'
 import { Media } from './collections/Media'
 import { Messages } from './collections/Messages'
 import { News } from './collections/News'
 import { Projects } from './collections/Projects'
-import { Users } from './collections/Users'
-import { About } from './globals/About'
-import { Agenda } from './globals/Agenda'
-import { SiteSettings } from './globals/SiteSettings'
-import { getSiteUrl } from './lib/site-url'
+import { SiteSettings } from './collections/SiteSettings'
+import { Tenants } from './collections/Tenants'
+import { teamManagerField, Users } from './collections/Users'
+import type { Config } from './payload-types'
+import { getConsoleUrl } from './lib/site-url'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -51,15 +55,16 @@ if (process.env.VERCEL) {
 }
 
 export default buildConfig({
-  serverURL: getSiteUrl(),
+  // The console (admin + API) lives on one Civiq address; legislators' own domains only serve their sites.
+  serverURL: getConsoleUrl(),
   admin: {
     user: Users.slug,
     importMap: { baseDir: path.resolve(dirname) },
     // Built-in avatar instead of Gravatar, so admin email hashes are not sent to a third party.
     avatar: 'default',
     meta: {
-      titleSuffix: ' · SMA Admin',
-      icons: [{ rel: 'icon', type: 'image/svg+xml', url: '/favicon.svg' }],
+      titleSuffix: ' · Civiq Console',
+      icons: [{ rel: 'icon', type: 'image/svg+xml', url: '/civiq-mark.svg' }],
     },
     components: {
       graphics: {
@@ -68,8 +73,7 @@ export default buildConfig({
       },
     },
   },
-  collections: [News, Projects, Media, Messages, Users],
-  globals: [SiteSettings, About, Agenda],
+  collections: [SiteSettings, About, Agenda, News, Projects, Media, Messages, Users, Tenants],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },
@@ -87,10 +91,31 @@ export default buildConfig({
     ? resendAdapter({
         apiKey: process.env.RESEND_API_KEY,
         defaultFromAddress: process.env.EMAIL_FROM_ADDRESS || 'onboarding@resend.dev',
-        defaultFromName: process.env.EMAIL_FROM_NAME || 'Office of Hon. Saidu Musa Abdullahi',
+        defaultFromName: process.env.EMAIL_FROM_NAME || 'Civiq',
       })
     : undefined,
   plugins: [
+    // One codebase and database, many legislators: every content document belongs to one tenant,
+    // and team members only ever see the tenants they work for.
+    multiTenantPlugin<Config>({
+      tenantsSlug: 'tenants',
+      collections: {
+        'site-settings': { isGlobal: true },
+        about: { isGlobal: true },
+        agenda: { isGlobal: true },
+        news: {},
+        projects: {},
+        media: {},
+        messages: {},
+      },
+      tenantsArrayField: {
+        includeDefaultField: true,
+        arrayFieldAccess: { create: teamManagerField, update: teamManagerField },
+        rowFields: [{ name: 'role', type: 'select', required: true, defaultValue: 'editor', options: [...TENANT_ROLES] }],
+      },
+      userHasAccessToAllTenants: (user) => isPlatformAdmin(user as Parameters<typeof isPlatformAdmin>[0]),
+      i18n: { translations: { en: { 'nav-tenantSelector-label': 'Legislator' } } },
+    }),
     // Photos go to Vercel Blob in production; locally (no token) they are saved to ./media.
     vercelBlobStorage({
       enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),

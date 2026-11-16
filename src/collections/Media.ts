@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import { anyone, isEditor, isLoggedIn } from '../access'
+import { anyone, guardTenantWrite, tenantRole } from '../access'
 
 export const Media: CollectionConfig = {
   slug: 'media',
@@ -12,9 +12,12 @@ export const Media: CollectionConfig = {
   },
   access: {
     read: anyone,
-    create: isLoggedIn,
-    update: isLoggedIn,
-    delete: isEditor,
+    create: tenantRole('admin', 'editor', 'contributor'),
+    update: tenantRole('admin', 'editor', 'contributor'),
+    delete: tenantRole('admin', 'editor'),
+  },
+  hooks: {
+    beforeChange: [guardTenantWrite(['admin', 'editor', 'contributor'])],
   },
   upload: {
     // SVG is deliberately excluded: it can carry scripts.

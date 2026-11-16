@@ -1,6 +1,6 @@
-import type { CollectionConfig } from 'payload'
+import { type CollectionConfig, parseCookies, type Where } from 'payload'
 
-import { hasRole, isEditor, isSuperAdmin } from '../access'
+import { guardTenantWrite, tenantRole } from '../access'
 
 export const MESSAGE_TOPICS = ['Volunteer', 'Request support', 'Invite to event', 'Share feedback', 'Media enquiry']
 
@@ -29,22 +29,28 @@ export const Messages: CollectionConfig = {
   access: {
     // Messages are only created by the website's contact form (server-side), never through the API.
     create: () => false,
-    read: isEditor,
-    update: isEditor,
-    delete: isSuperAdmin,
+    read: tenantRole('admin', 'editor'),
+    update: tenantRole('admin', 'editor'),
+    delete: tenantRole('admin'),
+  },
+  hooks: {
+    beforeChange: [guardTenantWrite(['admin', 'editor'])],
   },
   endpoints: [
     {
       path: '/export-csv',
       method: 'get',
       handler: async (req) => {
-        if (!hasRole(req, 'superadmin', 'editor')) {
-          return Response.json({ error: 'Not allowed' }, { status: 403 })
-        }
+        if (!req.user) return Response.json({ error: 'Not allowed' }, { status: 403 })
+        // Export the legislator currently selected in the console's tenant menu; access control
+        // still limits the result to tenants this user is an admin or editor of.
+        const selected = parseCookies(req.headers).get('payload-tenant')
+        const where: Where | undefined = selected ? { tenant: { equals: Number(selected) || selected } } : undefined
         const { docs } = await req.payload.find({
           collection: 'messages',
           pagination: false,
           sort: '-createdAt',
+          where,
           req,
           overrideAccess: false,
         })
@@ -53,7 +59,7 @@ export const Messages: CollectionConfig = {
         return new Response('﻿' + rows.join('\r\n'), {
           headers: {
             'Content-Type': 'text/csv; charset=utf-8',
-            'Content-Disposition': `attachment; filename="sma-messages-${date}.csv"`,
+            'Content-Disposition': `attachment; filename="messages-${date}.csv"`,
           },
         })
       },
