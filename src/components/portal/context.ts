@@ -2,6 +2,7 @@ import { cookies } from 'next/headers'
 import type { Payload } from 'payload'
 
 import { idOf, isPlatformAdmin, roleIn, type TenantRole } from '@/access'
+import { touchLastSeen } from '@/lib/team'
 import type { Tenant, User } from '@/payload-types'
 
 export type PortalContext = {
@@ -21,6 +22,7 @@ export type PortalContext = {
 export async function getPortalContext(payload: Payload, rawUser: unknown): Promise<PortalContext> {
   const user = rawUser as User
   const platformAdmin = isPlatformAdmin(user)
+  await touchLastSeen({ payload }, user) // someone who joins through an invite link lands here first
   const memberOf = (user.tenants ?? []).map((r) => Number(idOf(r.tenant)))
   const picked = Number((await cookies()).get('payload-tenant')?.value) || null
 

@@ -67,10 +67,10 @@ Public-site queries run as the restricted Postgres role `civiq_web` inside a tra
 
 ## Onboarding a new legislator
 
-1. **Portal → Civiq platform → Legislator sites → Create new:** name, slug (e.g. `adaokafor`), main domain (e.g. `adaokafor.ng`) and any extra domains (`www.adaokafor.ng`).
-2. **Vercel → Project → Settings → Domains:** add the same domains, then set the DNS records Vercel shows at the legislator's registrar. HTTPS is automatic. (Phase 2 automates this step from the portal.)
-3. Switch the portal's **Legislator** menu to the new site and fill in **Site settings** (and About / Agenda).
-4. **Team → Users:** create their team admin with a role on that legislator; they can then add their own editors.
+1. **Portal → Civiq platform → Legislator sites → Create new:** name, slug (e.g. `adaokafor`), main domain (e.g. `adaokafor.ng`) and any extra domains (`www.adaokafor.ng`; extra domains forward to the main one). Save.
+2. On the same screen, **Connect domains**. The portal adds them to Vercel and shows the exact DNS records to give the legislator's registrar (with copy buttons). Press **Check again** later: each domain turns **Live** once DNS works, and HTTPS is automatic. A domain already used on another Vercel account first shows a TXT “ownership check” record.
+3. Switch the portal's **Legislator** menu to the new site and fill in **Site settings** (and About / Agenda). The **Setup checklist** next to the domains shows what is left.
+4. **Team → Users → Invite a team member:** name, email and role. They get an email with a link to choose their own password (valid 7 days, works once); the inviter also sees the link, to share on WhatsApp if needed. Team admins then invite the rest of their team the same way. The Users list shows who is **Active** (last active time) and who was **Invited, not joined yet**; open someone to **Resend invite**.
 
 Until DNS is live the site is visible at `adaokafor.theciviq.com.ng` (needs `PLATFORM_ROOT_DOMAIN`). Search engines may index a site only on its main domain.
 
@@ -86,6 +86,8 @@ Hosting: Vercel (Pro required before launch), Neon Postgres and Vercel Blob conn
 | `BLOB_READ_WRITE_TOKEN` | Added by the Blob integration |
 | `PAYLOAD_SECRET` | Long random string; never change it |
 | `RESEND_API_KEY`, `EMAIL_FROM_ADDRESS`, `EMAIL_FROM_NAME` | Email via Resend |
+| `VERCEL_TOKEN` | A Vercel access token (Vercel → Account settings → Tokens) with access to this project's team. Lets the portal add domains and check their DNS. Without it domains are added by hand in Vercel |
+| `VERCEL_PROJECT_ID`, `VERCEL_TEAM_ID` | From Vercel → Project → Settings → General (Project ID) and Team → Settings (Team ID; leave empty for a personal account) |
 | `RESEND_WEBHOOK_SECRET` | Newsletter delivery/open/click/bounce tracking. In Resend → Webhooks add `https://<portal>/api/newsletters/resend-webhook` with the email events, then copy its signing secret (`whsec_…`) here |
 | `CRON_SECRET` | Long random string. Vercel sends it to `/api/newsletters/cron` (set in `vercel.json`), which sends scheduled newsletters and finishes large sends |
 | `NEWSLETTER_CRON_FREQUENT` | Set to `1` after moving to Vercel Pro and changing the cron in `vercel.json` to every 5 minutes (`*/5 * * * *`). On the free plan the cron runs once a day at 07:00 UTC |

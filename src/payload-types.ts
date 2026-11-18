@@ -257,7 +257,7 @@ export interface Tenant {
    */
   primaryDomain?: string | null;
   /**
-   * Extra addresses that show this site, e.g. www.saidumusa.ng.
+   * Extra addresses, e.g. www.saidumusa.ng. They forward to the main domain.
    */
   domains?:
     | {
@@ -587,7 +587,7 @@ export interface Message {
   createdAt: string;
 }
 /**
- * People who can log in to the Civiq Portal. Team admins can add and remove members of their own team.
+ * People who can log in to the Civiq Portal. Team admins invite and remove members of their own team.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
@@ -595,6 +595,10 @@ export interface Message {
 export interface User {
   id: number;
   name: string;
+  invitedAt?: string | null;
+  invitedByName?: string | null;
+  lastSeenAt?: string | null;
+  teamStatus?: string | null;
   role?: ('superadmin' | 'editor' | 'contributor') | null;
   /**
    * Platform admins are the Civiq team and can manage every site. Everyone else is a member of one or more legislator teams.
@@ -1127,6 +1131,10 @@ export interface NewsletterDeliveriesSelect<T extends boolean = true> {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
+  invitedAt?: T;
+  invitedByName?: T;
+  lastSeenAt?: T;
+  teamStatus?: T;
   role?: T;
   platformRole?: T;
   tenants?:
