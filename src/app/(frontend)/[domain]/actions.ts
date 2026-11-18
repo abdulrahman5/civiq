@@ -3,6 +3,7 @@
 import { MESSAGE_TOPICS } from '@/collections/Messages'
 import { CONTACT_CHANNELS, SUPPORTER_INTERESTS } from '@/collections/Supporters'
 import { asSite, getClient, getSettings } from '@/lib/payload'
+import { tidyPlace } from '@/lib/places'
 import { getTenantByHost } from '@/lib/tenant'
 import { joinConsentText, messageConsentText } from './consent'
 
@@ -106,9 +107,9 @@ export async function joinMovement(domain: string, _prev: ContactState, fd: Form
     name,
     phone: phone || null,
     email: email || null,
-    ward: field(fd, 'ward', 120),
-    lga: field(fd, 'lga', 120),
-    state: field(fd, 'state', 60),
+    ward: tidyPlace(field(fd, 'ward', 120)),
+    lga: tidyPlace(field(fd, 'lga', 120)),
+    state: tidyPlace(field(fd, 'state', 60)),
     interests: pick('interests', SUPPORTER_INTERESTS),
     channels: pick('channels', CONTACT_CHANNELS),
     status: 'subscribed' as const,

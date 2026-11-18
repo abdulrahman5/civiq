@@ -10,6 +10,7 @@ import { fileURLToPath } from 'url'
 
 import { isPlatformAdmin, TENANT_ROLES } from './access'
 import { About } from './collections/About'
+import { Audiences } from './collections/Audiences'
 import { Agenda } from './collections/Agenda'
 import { Media } from './collections/Media'
 import { Messages } from './collections/Messages'
@@ -68,13 +69,19 @@ export default buildConfig({
       icons: [{ rel: 'icon', type: 'image/svg+xml', url: '/civiq-mark.svg' }],
     },
     components: {
+      beforeNavLinks: ['@/components/portal/PortalNav#PortalNav'],
+      views: {
+        // The portal's Home screen and Community insights page.
+        dashboard: { Component: '@/components/portal/Dashboard#Dashboard' },
+        community: { Component: '@/components/portal/Community#Community', path: '/community', meta: { title: 'Community insights' } },
+      },
       graphics: {
         Logo: '@/components/admin/Logo#Logo',
         Icon: '@/components/admin/Icon#Icon',
       },
     },
   },
-  collections: [SiteSettings, About, Agenda, News, Projects, Media, Supporters, Messages, Users, Tenants],
+  collections: [SiteSettings, About, Agenda, News, Projects, Media, Supporters, Audiences, Messages, Users, Tenants],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },
@@ -109,6 +116,7 @@ export default buildConfig({
         media: {},
         messages: {},
         supporters: {},
+        audiences: {},
       },
       tenantsArrayField: {
         includeDefaultField: true,

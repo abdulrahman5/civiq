@@ -74,6 +74,7 @@ export interface Config {
     projects: Project;
     media: Media;
     supporters: Supporter;
+    audiences: Audience;
     messages: Message;
     users: User;
     tenants: Tenant;
@@ -91,6 +92,7 @@ export interface Config {
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     supporters: SupportersSelect<false> | SupportersSelect<true>;
+    audiences: AudiencesSelect<false> | AudiencesSelect<true>;
     messages: MessagesSelect<false> | MessagesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     tenants: TenantsSelect<false> | TenantsSelect<true>;
@@ -493,6 +495,54 @@ export interface Supporter {
   createdAt: string;
 }
 /**
+ * Saved groups of supporters, for sending newsletters to the right people. Leave a filter empty to include everyone.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "audiences".
+ */
+export interface Audience {
+  id: number;
+  tenant?: (number | null) | Tenant;
+  /**
+   * e.g. “Youth in Bida LGA” or “Volunteers”
+   */
+  name: string;
+  description?: string | null;
+  /**
+   * Subscribed supporters who currently match. Updates as people join.
+   */
+  memberCount?: number | null;
+  /**
+   * Type a ward and press Enter. Spelling must match; case does not.
+   */
+  wards?: string[] | null;
+  lgas?: string[] | null;
+  states?: string[] | null;
+  /**
+   * Anyone interested in at least one of these.
+   */
+  interests?:
+    | (
+        | 'Volunteering'
+        | 'Youth programmes'
+        | 'Women’s programmes'
+        | 'Education'
+        | 'Health'
+        | 'Agriculture'
+        | 'Jobs & empowerment'
+        | 'Infrastructure'
+        | 'Events & town halls'
+      )[]
+    | null;
+  channels?: ('WhatsApp' | 'SMS' | 'Email' | 'Phone call')[] | null;
+  /**
+   * Needed for newsletters.
+   */
+  requireEmail?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Messages sent through the website contact form.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -609,6 +659,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'supporters';
         value: number | Supporter;
+      } | null)
+    | ({
+        relationTo: 'audiences';
+        value: number | Audience;
       } | null)
     | ({
         relationTo: 'messages';
@@ -871,6 +925,24 @@ export interface SupportersSelect<T extends boolean = true> {
   consentAt?: T;
   consentText?: T;
   consentSource?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "audiences_select".
+ */
+export interface AudiencesSelect<T extends boolean = true> {
+  tenant?: T;
+  name?: T;
+  description?: T;
+  memberCount?: T;
+  wards?: T;
+  lgas?: T;
+  states?: T;
+  interests?: T;
+  channels?: T;
+  requireEmail?: T;
   updatedAt?: T;
   createdAt?: T;
 }

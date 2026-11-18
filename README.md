@@ -29,6 +29,14 @@ x.theciviq.com.ng   ─┘      │  src/proxy.ts: domain → /<domain>/… → 
 
 A person can work for several legislators (a role on each); the portal's **Legislator** switcher picks which one they are editing. Every save is checked on the server against the user's role *in that document's site*, so teams can never read or change another legislator's data.
 
+## The portal's own screens
+
+- **Home** (`/admin`): greeting, headline numbers (supporters, new in the last 7 days, unread messages, published news), “Needs attention” (unread messages, unpublished drafts, no recent news, placeholder text still on the site), supporter growth, latest messages, top wards, top interests and quick actions. Contributors see a content-only version. Civiq platform admins who have not picked a legislator see an overview of every site.
+- **Community insights** (`/admin/community`): supporter totals, new sign-ups per week, breakdowns by ward, LGA, state, interest and preferred contact, and saved audiences with live counts. Admins and editors only.
+- **Audiences** (Community → Audiences): saved groups of subscribed supporters (by ward, LGA, state, interest, contact preference, has-email), for newsletters. Place matching ignores case and extra spaces.
+
+Code: `src/components/portal/` (screens, charts, which-legislator logic) and `src/lib/insights.ts` (SQL aggregates; always filtered by tenant, and only called after the portal has checked the user belongs to that legislator).
+
 ## What teams edit in the portal
 
 | Section | Contents |
