@@ -16,6 +16,7 @@ import { Messages } from './collections/Messages'
 import { News } from './collections/News'
 import { Projects } from './collections/Projects'
 import { SiteSettings } from './collections/SiteSettings'
+import { Supporters } from './collections/Supporters'
 import { Tenants } from './collections/Tenants'
 import { teamManagerField, Users } from './collections/Users'
 import type { Config } from './payload-types'
@@ -73,7 +74,7 @@ export default buildConfig({
       },
     },
   },
-  collections: [SiteSettings, About, Agenda, News, Projects, Media, Messages, Users, Tenants],
+  collections: [SiteSettings, About, Agenda, News, Projects, Media, Supporters, Messages, Users, Tenants],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },
@@ -107,6 +108,7 @@ export default buildConfig({
         projects: {},
         media: {},
         messages: {},
+        supporters: {},
       },
       tenantsArrayField: {
         includeDefaultField: true,

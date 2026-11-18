@@ -73,6 +73,7 @@ export interface Config {
     news: News;
     projects: Project;
     media: Media;
+    supporters: Supporter;
     messages: Message;
     users: User;
     tenants: Tenant;
@@ -89,6 +90,7 @@ export interface Config {
     news: NewsSelect<false> | NewsSelect<true>;
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    supporters: SupportersSelect<false> | SupportersSelect<true>;
     messages: MessagesSelect<false> | MessagesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     tenants: TenantsSelect<false> | TenantsSelect<true>;
@@ -206,6 +208,28 @@ export interface SiteSetting {
     youtube?: string | null;
     tiktok?: string | null;
   };
+  /**
+   * Where people send requests to see, correct or delete their data. Defaults to the public email.
+   */
+  privacyEmail?: string | null;
+  /**
+   * Optional. Leave empty to use Civiq’s standard notice, filled in with this site’s details. Have a lawyer review whichever you use.
+   */
+  privacyPolicy?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -428,6 +452,47 @@ export interface Project {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * People who joined the movement on your website, with the consent they gave. Respect unsubscribes, and delete a record when someone asks you to.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "supporters".
+ */
+export interface Supporter {
+  id: number;
+  tenant?: (number | null) | Tenant;
+  name: string;
+  phone?: string | null;
+  email?: string | null;
+  ward?: string | null;
+  lga?: string | null;
+  state?: string | null;
+  interests?:
+    | (
+        | 'Volunteering'
+        | 'Youth programmes'
+        | 'Women’s programmes'
+        | 'Education'
+        | 'Health'
+        | 'Agriculture'
+        | 'Jobs & empowerment'
+        | 'Infrastructure'
+        | 'Events & town halls'
+      )[]
+    | null;
+  channels?: ('WhatsApp' | 'SMS' | 'Email' | 'Phone call')[] | null;
+  /**
+   * Set to Unsubscribed when someone asks to stop receiving messages.
+   */
+  status: 'subscribed' | 'unsubscribed';
+  unsubscribedAt?: string | null;
+  notes?: string | null;
+  consentAt: string;
+  consentText: string;
+  consentSource?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Messages sent through the website contact form.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -447,6 +512,8 @@ export interface Message {
    * Only visible to admins.
    */
   notes?: string | null;
+  consentAt?: string | null;
+  consentText?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -538,6 +605,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'supporters';
+        value: number | Supporter;
       } | null)
     | ({
         relationTo: 'messages';
@@ -643,6 +714,8 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         youtube?: T;
         tiktok?: T;
       };
+  privacyEmail?: T;
+  privacyPolicy?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -780,6 +853,29 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "supporters_select".
+ */
+export interface SupportersSelect<T extends boolean = true> {
+  tenant?: T;
+  name?: T;
+  phone?: T;
+  email?: T;
+  ward?: T;
+  lga?: T;
+  state?: T;
+  interests?: T;
+  channels?: T;
+  status?: T;
+  unsubscribedAt?: T;
+  notes?: T;
+  consentAt?: T;
+  consentText?: T;
+  consentSource?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "messages_select".
  */
 export interface MessagesSelect<T extends boolean = true> {
@@ -792,6 +888,8 @@ export interface MessagesSelect<T extends boolean = true> {
   message?: T;
   status?: T;
   notes?: T;
+  consentAt?: T;
+  consentText?: T;
   updatedAt?: T;
   createdAt?: T;
 }

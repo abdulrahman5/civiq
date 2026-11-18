@@ -4,8 +4,11 @@ import Link from 'next/link'
 import { MESSAGE_TOPICS } from '@/collections/Messages'
 import { Icon } from '@/lib/icons'
 import { getAbout, getAgenda, getNews, getProjects, isPlaceholder, ph } from '@/lib/payload'
-import { submitMessage } from './actions'
+import { CONTACT_CHANNELS, SUPPORTER_INTERESTS } from '@/collections/Supporters'
+import { joinMovement, submitMessage } from './actions'
+import { joinConsentText, messageConsentText } from './consent'
 import { ContactForm } from './ContactForm'
+import { JoinForm } from './JoinForm'
 import { Img } from './Img'
 import { PostCard } from './PostCard'
 import { ProjectGrid } from './ProjectGrid'
@@ -31,7 +34,7 @@ export default async function Home(props: DomainParams) {
             {s.hero?.intro && <p className={ph(s.hero.intro)}>{s.hero.intro}</p>}
             <div className="hero-ctas">
               <a href="#projects" className="btn btn-gold">See the Impact</a>
-              <a href="#involve" className="btn btn-ghost">Join the Movement</a>
+              <a href="#join" className="btn btn-ghost">Join the Movement</a>
             </div>
           </div>
           <div className="hero-photo">
@@ -168,10 +171,30 @@ export default async function Home(props: DomainParams) {
         </section>
       )}
 
+      <section id="join" className="join">
+        <div className="wrap join-grid">
+          <div>
+            <span className="eyebrow">Join the movement</span>
+            <h2 className="h2">Be part of what comes next.</h2>
+            <p className="lead">
+              Get updates on projects, town halls and opportunities in your ward, straight from the office of {s.name}. Volunteer, share ideas
+              and help shape the agenda.
+            </p>
+          </div>
+          <JoinForm
+            action={joinMovement.bind(null, domain)}
+            consentText={joinConsentText(s.name)}
+            interests={SUPPORTER_INTERESTS}
+            channels={CONTACT_CHANNELS}
+            defaultState={s.state}
+          />
+        </div>
+      </section>
+
       <section id="involve" className="alt">
         <div className="wrap involve">
           <div>
-            <span className="eyebrow">Get Involved</span>
+            <span className="eyebrow">Contact the office</span>
             <h2 className="h2">Your voice matters.</h2>
             <p className="lead">Volunteer, request support, invite {s.shortName} to an event, or simply share what your community needs.</p>
             <ul className="contact-list">
@@ -190,7 +213,7 @@ export default async function Home(props: DomainParams) {
               )}
             </ul>
           </div>
-          <ContactForm topics={MESSAGE_TOPICS} action={submitMessage.bind(null, domain)} />
+          <ContactForm topics={MESSAGE_TOPICS} action={submitMessage.bind(null, domain)} consentText={messageConsentText(s.name)} />
         </div>
       </section>
     </>

@@ -193,3 +193,29 @@ footer .logo small{color:rgba(255,255,255,.6)}
 .socials a{width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.25);display:grid;place-items:center;text-decoration:none;color:#fff}
 .socials a:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
 .copy{border-top:1px solid rgba(255,255,255,.12);margin-top:30px;padding-top:20px;font-size:.82rem}
+
+/* Join the movement */
+.join{background:var(--green-deep);color:#fff}
+.join .lead{color:rgba(255,255,255,.82)}
+.join .eyebrow{color:var(--accent)}
+.join-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:48px;align-items:start}
+.join-form,.join-done{background:var(--card);color:var(--ink);border-radius:var(--radius);padding:30px;display:grid;gap:14px;box-shadow:0 24px 60px -30px rgba(0,0,0,.5)}
+.join-done h3{font-size:1.5rem}
+.join-done p{color:var(--muted)}
+.row.three{grid-template-columns:1fr 1fr 1fr}
+.optional{font-weight:400;color:var(--muted)}
+fieldset{border:0;padding:0;margin:0;min-width:0}
+legend{font-size:.86rem;font-weight:600;margin-bottom:8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip-check{display:inline-flex;font-weight:500;font-size:.88rem;cursor:pointer}
+.chip-check input{position:absolute;opacity:0;width:1px;height:1px}
+.chip-check span{border:1px solid var(--line);border-radius:999px;padding:8px 14px;background:var(--bg);min-height:44px;display:inline-flex;align-items:center}
+.chip-check input:checked+span{background:var(--brand);border-color:var(--brand);color:#fff}
+.chip-check input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+.consent{display:flex;gap:10px;align-items:flex-start;font-weight:400;font-size:.88rem;line-height:1.5;color:var(--muted)}
+.consent input{width:20px;height:20px;margin:2px 0 0;flex-shrink:0;accent-color:var(--brand)}
+.consent a{color:var(--green)}
+.copy a{color:inherit}
+.prose-page h2{font-size:1.4rem;margin:28px 0 10px}
+.prose-page .prose li{margin-bottom:8px}
+@media (max-width:900px){.join-grid{grid-template-columns:1fr}.row.three{grid-template-columns:1fr}}

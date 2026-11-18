@@ -1,17 +1,11 @@
-import { type CollectionConfig, parseCookies, type Where } from 'payload'
+import type { CollectionConfig } from 'payload'
 
 import { guardTenantWrite, tenantRole } from '../access'
+import { csvExportEndpoint } from '../lib/csv'
 
 export const MESSAGE_TOPICS = ['Volunteer', 'Request support', 'Invite to event', 'Share feedback', 'Media enquiry']
 
-const CSV_COLUMNS = ['createdAt', 'name', 'email', 'phone', 'ward', 'topic', 'status', 'message', 'notes'] as const
-
-// Quote every cell, and neutralise values that spreadsheet apps would run as formulas.
-const csvCell = (v: unknown) => {
-  const s = String(v ?? '')
-  const safe = /^[=+\-@\t\r]/.test(s) ? `'${s}` : s
-  return `"${safe.replace(/"/g, '""')}"`
-}
+const CSV_COLUMNS = ['createdAt', 'name', 'email', 'phone', 'ward', 'topic', 'status', 'message', 'notes', 'consentAt'] as const
 
 export const Messages: CollectionConfig = {
   slug: 'messages',
@@ -22,7 +16,7 @@ export const Messages: CollectionConfig = {
     defaultColumns: ['name', 'topic', 'ward', 'status', 'createdAt'],
     description: 'Messages sent through the website contact form.',
     components: {
-      beforeListTable: ['@/components/admin/ExportMessagesButton#ExportMessagesButton'],
+      beforeListTable: [{ path: '@/components/admin/ExportButton#ExportButton', clientProps: { collectionSlug: 'messages' } }],
     },
   },
   defaultSort: '-createdAt',
@@ -36,35 +30,7 @@ export const Messages: CollectionConfig = {
   hooks: {
     beforeChange: [guardTenantWrite(['admin', 'editor'])],
   },
-  endpoints: [
-    {
-      path: '/export-csv',
-      method: 'get',
-      handler: async (req) => {
-        if (!req.user) return Response.json({ error: 'Not allowed' }, { status: 403 })
-        // Export the legislator currently selected in the console's tenant menu; access control
-        // still limits the result to tenants this user is an admin or editor of.
-        const selected = parseCookies(req.headers).get('payload-tenant')
-        const where: Where | undefined = selected ? { tenant: { equals: Number(selected) || selected } } : undefined
-        const { docs } = await req.payload.find({
-          collection: 'messages',
-          pagination: false,
-          sort: '-createdAt',
-          where,
-          req,
-          overrideAccess: false,
-        })
-        const rows = [CSV_COLUMNS.join(','), ...docs.map((d) => CSV_COLUMNS.map((c) => csvCell(d[c])).join(','))]
-        const date = new Date().toISOString().slice(0, 10)
-        return new Response('﻿' + rows.join('\r\n'), {
-          headers: {
-            'Content-Type': 'text/csv; charset=utf-8',
-            'Content-Disposition': `attachment; filename="messages-${date}.csv"`,
-          },
-        })
-      },
-    },
-  ],
+  endpoints: [csvExportEndpoint('messages', CSV_COLUMNS, 'messages')],
   fields: [
     {
       type: 'row',
@@ -95,5 +61,14 @@ export const Messages: CollectionConfig = {
       admin: { position: 'sidebar' },
     },
     { name: 'notes', label: 'Internal notes', type: 'textarea', admin: { position: 'sidebar', description: 'Only visible to admins.' } },
+    {
+      type: 'collapsible',
+      label: 'Consent record',
+      admin: { initCollapsed: true },
+      fields: [
+        { name: 'consentAt', label: 'Consent given', type: 'date', admin: { readOnly: true, date: { pickerAppearance: 'dayAndTime' } } },
+        { name: 'consentText', label: 'Statement they agreed to', type: 'textarea', admin: { readOnly: true } },
+      ],
+    },
   ],
 }

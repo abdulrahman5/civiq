@@ -1,12 +1,13 @@
 'use client'
 
+import Link from 'next/link'
 import { useActionState, useEffect, useRef, useState } from 'react'
 
 import type { ContactState } from './actions'
 
 type SubmitAction = (prev: ContactState, fd: FormData) => Promise<ContactState>
 
-export function ContactForm({ topics, action: submit }: { topics: string[]; action: SubmitAction }) {
+export function ContactForm({ topics, action: submit, consentText }: { topics: string[]; action: SubmitAction; consentText: string }) {
   const [state, action, pending] = useActionState<ContactState, FormData>(submit, { ok: false })
   const [startedAt, setStartedAt] = useState('')
   const form = useRef<HTMLFormElement>(null)
@@ -31,6 +32,10 @@ export function ContactForm({ topics, action: submit }: { topics: string[]; acti
         </label>
       </div>
       <label>Message<textarea name="message" maxLength={5000} /></label>
+      <label className="consent">
+        <input type="checkbox" name="consent" value="yes" required />
+        <span>{consentText} <Link href="/privacy">Read the privacy notice</Link>.</span>
+      </label>
       {/* Spam traps */}
       <input type="hidden" name="startedAt" value={startedAt} />
       <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px' }}>

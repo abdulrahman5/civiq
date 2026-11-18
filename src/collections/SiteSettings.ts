@@ -135,6 +135,25 @@ export const SiteSettings: CollectionConfig = {
             },
           ],
         },
+        {
+          label: 'Privacy',
+          description:
+            'Every site has a privacy notice at /privacy, linked from both forms. Under the Nigeria Data Protection Act 2023, the legislator’s office is the data controller and Civiq stores the data on its behalf.',
+          fields: [
+            {
+              name: 'privacyEmail',
+              label: 'Privacy contact email',
+              type: 'email',
+              admin: { description: 'Where people send requests to see, correct or delete their data. Defaults to the public email.' },
+            },
+            {
+              name: 'privacyPolicy',
+              label: 'Custom privacy notice',
+              type: 'richText',
+              admin: { description: 'Optional. Leave empty to use Civiq’s standard notice, filled in with this site’s details. Have a lawyer review whichever you use.' },
+            },
+          ],
+        },
       ],
     },
   ],

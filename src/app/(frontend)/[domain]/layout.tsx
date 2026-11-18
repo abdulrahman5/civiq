@@ -65,7 +65,8 @@ export default async function SiteLayout(props: DomainParams & { children: React
             <li><Link href="/#journey">Journey</Link></li>
             <li><Link href="/#projects">Projects</Link></li>
             <li><Link href="/news">News</Link></li>
-            <li><Link href="/#involve" className="btn btn-green">Get Involved</Link></li>
+            <li><Link href="/#involve">Contact</Link></li>
+            <li><Link href="/#join" className="btn btn-green">Join the movement</Link></li>
           </MobileNav>
         </div>
       </header>
@@ -89,7 +90,7 @@ export default async function SiteLayout(props: DomainParams & { children: React
             )}
           </div>
           <div className="copy">
-            © {new Date().getFullYear()} Office of {s.name}. All rights reserved.
+            © {new Date().getFullYear()} Office of {s.name}. All rights reserved. · <Link href="/privacy">Privacy notice</Link>
             <span className="powered"> · Powered by <a href="https://civiq.ng" target="_blank" rel="noopener">Civiq</a></span>
           </div>
         </div>
