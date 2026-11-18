@@ -543,7 +543,7 @@ export interface Audience {
   createdAt: string;
 }
 /**
- * Messages sent through the website contact form.
+ * Messages sent through the website contact form. Open one to read it and reply by email.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "messages".
@@ -557,9 +557,24 @@ export interface Message {
   ward?: string | null;
   topic?: ('Volunteer' | 'Request support' | 'Invite to event' | 'Share feedback' | 'Media enquiry') | null;
   message?: string | null;
-  status: 'new' | 'in-progress' | 'handled';
+  replies?:
+    | {
+        sentAt: string;
+        sentBy?: (number | null) | User;
+        sentByName?: string | null;
+        to?: string | null;
+        subject?: string | null;
+        body?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   /**
-   * Only visible to admins.
+   * Archive messages you no longer need in the main list.
+   */
+  status: 'unread' | 'read' | 'archived';
+  lastRepliedAt?: string | null;
+  /**
+   * Only visible to the team.
    */
   notes?: string | null;
   consentAt?: string | null;
@@ -958,7 +973,19 @@ export interface MessagesSelect<T extends boolean = true> {
   ward?: T;
   topic?: T;
   message?: T;
+  replies?:
+    | T
+    | {
+        sentAt?: T;
+        sentBy?: T;
+        sentByName?: T;
+        to?: T;
+        subject?: T;
+        body?: T;
+        id?: T;
+      };
   status?: T;
+  lastRepliedAt?: T;
   notes?: T;
   consentAt?: T;
   consentText?: T;

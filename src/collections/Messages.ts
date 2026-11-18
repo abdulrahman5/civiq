@@ -2,10 +2,11 @@ import type { CollectionConfig } from 'payload'
 
 import { guardTenantWrite, tenantRole } from '../access'
 import { csvExportEndpoint } from '../lib/csv'
+import { replyEndpoint } from '../lib/inbox'
 
 export const MESSAGE_TOPICS = ['Volunteer', 'Request support', 'Invite to event', 'Share feedback', 'Media enquiry']
 
-const CSV_COLUMNS = ['createdAt', 'name', 'email', 'phone', 'ward', 'topic', 'status', 'message', 'notes', 'consentAt'] as const
+const CSV_COLUMNS = ['createdAt', 'name', 'email', 'phone', 'ward', 'topic', 'status', 'lastRepliedAt', 'message', 'notes', 'consentAt'] as const
 
 export const Messages: CollectionConfig = {
   slug: 'messages',
@@ -13,10 +14,13 @@ export const Messages: CollectionConfig = {
   admin: {
     group: 'Inbox',
     useAsTitle: 'name',
-    defaultColumns: ['name', 'topic', 'ward', 'status', 'createdAt'],
-    description: 'Messages sent through the website contact form.',
+    defaultColumns: ['name', 'topic', 'ward', 'status', 'lastRepliedAt', 'createdAt'],
+    description: 'Messages sent through the website contact form. Open one to read it and reply by email.',
     components: {
-      beforeListTable: [{ path: '@/components/admin/ExportButton#ExportButton', clientProps: { collectionSlug: 'messages' } }],
+      beforeListTable: [
+        '@/components/portal/InboxTabs#InboxTabs',
+        { path: '@/components/admin/ExportButton#ExportButton', clientProps: { collectionSlug: 'messages' } },
+      ],
     },
   },
   defaultSort: '-createdAt',
@@ -30,8 +34,10 @@ export const Messages: CollectionConfig = {
   hooks: {
     beforeChange: [guardTenantWrite(['admin', 'editor'])],
   },
-  endpoints: [csvExportEndpoint('messages', CSV_COLUMNS, 'messages')],
+  endpoints: [csvExportEndpoint('messages', CSV_COLUMNS, 'messages'), replyEndpoint],
   fields: [
+    // Marks the message as read when someone opens it in the portal.
+    { name: 'markRead', type: 'ui', admin: { components: { Field: '@/components/portal/MarkRead#MarkRead' }, disableListColumn: true } },
     {
       type: 'row',
       fields: [
@@ -48,19 +54,35 @@ export const Messages: CollectionConfig = {
       ],
     },
     { name: 'message', type: 'textarea', admin: { readOnly: true } },
+    // Reply by email, with the history of replies sent.
+    { name: 'replyBox', type: 'ui', admin: { components: { Field: '@/components/portal/ReplyBox#ReplyBox' }, disableListColumn: true } },
+    {
+      name: 'replies',
+      type: 'array',
+      admin: { hidden: true, readOnly: true },
+      fields: [
+        { name: 'sentAt', type: 'date', required: true },
+        { name: 'sentBy', type: 'relationship', relationTo: 'users' },
+        { name: 'sentByName', type: 'text' },
+        { name: 'to', type: 'text' },
+        { name: 'subject', type: 'text' },
+        { name: 'body', type: 'textarea' },
+      ],
+    },
     {
       name: 'status',
       type: 'select',
-      defaultValue: 'new',
+      defaultValue: 'unread',
       required: true,
       options: [
-        { label: 'New', value: 'new' },
-        { label: 'In progress', value: 'in-progress' },
-        { label: 'Handled', value: 'handled' },
+        { label: 'Unread', value: 'unread' },
+        { label: 'Read', value: 'read' },
+        { label: 'Archived', value: 'archived' },
       ],
-      admin: { position: 'sidebar' },
+      admin: { position: 'sidebar', description: 'Archive messages you no longer need in the main list.' },
     },
-    { name: 'notes', label: 'Internal notes', type: 'textarea', admin: { position: 'sidebar', description: 'Only visible to admins.' } },
+    { name: 'lastRepliedAt', label: 'Last replied', type: 'date', admin: { position: 'sidebar', readOnly: true, date: { pickerAppearance: 'dayAndTime' } } },
+    { name: 'notes', label: 'Internal notes', type: 'textarea', admin: { position: 'sidebar', description: 'Only visible to the team.' } },
     {
       type: 'collapsible',
       label: 'Consent record',

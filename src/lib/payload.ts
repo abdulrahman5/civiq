@@ -4,6 +4,7 @@ import { getPayload, type PayloadRequest } from 'payload'
 import { cache } from 'react'
 
 import type { Media } from '@/payload-types'
+import { isPlaceholder } from './placeholder'
 
 export const getClient = cache(() => getPayload({ config }))
 
@@ -81,8 +82,7 @@ export const getPost = cache(async (tenant: TenantID, slug: string) =>
 
 // ---------- presentation helpers ----------
 
-/** Text in [square brackets] is placeholder copy that still needs to be filled in. */
-export const isPlaceholder = (s?: string | null) => Boolean(s && /^\s*\[.*\]\s*$/s.test(s))
+export { isPlaceholder }
 export const ph = (s?: string | null) => (isPlaceholder(s) ? 'placeholder' : undefined)
 
 export const asMedia = (m: unknown): Media | null => (m && typeof m === 'object' && 'url' in m ? (m as Media) : null)

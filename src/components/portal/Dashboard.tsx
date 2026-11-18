@@ -121,7 +121,7 @@ export async function Dashboard({ payload, user }: Props) {
 
   const daysSinceNews = news.lastPublished ? Math.floor((Date.now() - new Date(news.lastPublished).getTime()) / 86400000) : null
   const attention = [
-    msgs.unread > 0 && { text: `${fmt(msgs.unread)} unread ${msgs.unread === 1 ? 'message' : 'messages'} in the inbox`, href: '/admin/collections/messages?where[status][equals]=new' },
+    msgs.unread > 0 && { text: `${fmt(msgs.unread)} unread ${msgs.unread === 1 ? 'message' : 'messages'} in the inbox`, href: '/admin/collections/messages?where[status][equals]=unread' },
     news.drafts > 0 && { text: `${fmt(news.drafts)} news ${news.drafts === 1 ? 'draft' : 'drafts'} not yet published`, href: '/admin/collections/news?where[_status][equals]=draft' },
     (daysSinceNews === null || daysSinceNews > 21) && { text: daysSinceNews === null ? 'No news published yet' : `No news published in ${daysSinceNews} days`, href: '/admin/collections/news/create' },
     placeholders > 0 && { text: `${fmt(placeholders)} placeholder ${placeholders === 1 ? 'text' : 'texts'} like “[…]” still on the website`, href: '/admin/collections/site-settings' },
@@ -135,7 +135,7 @@ export async function Dashboard({ payload, user }: Props) {
       <div className="cq-stats">
         <StatTile label="Supporters" value={fmt(sup.subscribed)} note={`${fmt(sup.withEmail)} can receive email`} href="/admin/community" />
         <StatTile label="New (last 7 days)" value={fmt(sup.new7)} note={<Trend now={sup.new7} before={sup.prev7} />} href="/admin/community" />
-        <StatTile label="Unread messages" value={fmt(msgs.unread)} note={`${fmt(msgs.week)} received this week`} href="/admin/collections/messages?where[status][equals]=new" />
+        <StatTile label="Unread messages" value={fmt(msgs.unread)} note={`${fmt(msgs.week)} received this week`} href="/admin/collections/messages?where[status][equals]=unread" />
         <StatTile label="Published news" value={fmt(news.published)} note={news.drafts ? `${fmt(news.drafts)} in draft` : 'No drafts'} href="/admin/collections/news" />
       </div>
 
@@ -158,7 +158,7 @@ export async function Dashboard({ payload, user }: Props) {
               {recent.docs.map((m) => (
                 <li key={m.id}>
                   <a href={`/admin/collections/messages/${m.id}`}>
-                    <span className="cq-list__title">{m.status === 'new' && <span className="cq-pill">New</span>} {m.name}</span>
+                    <span className="cq-list__title">{m.status === 'unread' && <span className="cq-pill">Unread</span>} {m.name}</span>
                     <span className="cq-muted">{[m.topic, m.ward].filter(Boolean).join(' · ')} · {ago(m.createdAt)}</span>
                   </a>
                 </li>

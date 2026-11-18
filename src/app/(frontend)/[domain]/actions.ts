@@ -53,7 +53,7 @@ export async function submitMessage(domain: string, _prev: ContactState, fd: For
     ward: field(fd, 'ward', 120),
     topic: (MESSAGE_TOPICS.includes(topic) ? topic : 'Share feedback') as 'Share feedback',
     message,
-    status: 'new' as const,
+    status: 'unread' as const,
     consentAt: new Date().toISOString(),
     consentText: messageConsentText(office),
   }

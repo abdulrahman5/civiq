@@ -83,7 +83,7 @@ export async function multiBreakdown(payload: Payload, tenant: TenantID, field: 
 export async function messageTotals(payload: Payload, tenant: TenantID) {
   const [r] = await run<Record<string, unknown>>(
     payload,
-    sql`SELECT count(*) FILTER (WHERE status = 'new') AS unread,
+    sql`SELECT count(*) FILTER (WHERE status = 'unread') AS unread,
                count(*) FILTER (WHERE created_at >= now() - interval '7 days') AS week
         FROM messages WHERE tenant_id = ${tenant}`,
   )
@@ -108,7 +108,7 @@ export async function platformOverview(payload: Payload) {
     sql`SELECT t.id, t.name, t.slug, t.primary_domain, t.status,
           (SELECT count(*) FROM supporters s WHERE s.tenant_id = t.id AND s.status = 'subscribed') AS supporters,
           (SELECT count(*) FROM supporters s WHERE s.tenant_id = t.id AND s.created_at >= now() - interval '7 days') AS new7,
-          (SELECT count(*) FROM messages m WHERE m.tenant_id = t.id AND m.status = 'new') AS unread
+          (SELECT count(*) FROM messages m WHERE m.tenant_id = t.id AND m.status = 'unread') AS unread
         FROM tenants t ORDER BY t.name`,
   )
   return rows.map((r) => ({
@@ -156,4 +156,17 @@ export async function countAudience(payload: Payload, tenant: TenantID, f: Audie
         ${f.requireEmail ? sql`AND coalesce(s.email, '') <> ''` : sql``}`,
   )
   return int(r?.n)
+}
+
+/** Inbox tab counts for one legislator. */
+export async function inboxCounts(payload: Payload, tenant: TenantID) {
+  const [r] = await run<Record<string, unknown>>(
+    payload,
+    sql`SELECT count(*) FILTER (WHERE status = 'unread') AS unread,
+               count(*) FILTER (WHERE status = 'read') AS read,
+               count(*) FILTER (WHERE status = 'archived') AS archived,
+               count(*) AS all
+        FROM messages WHERE tenant_id = ${tenant}`,
+  )
+  return { unread: int(r?.unread), read: int(r?.read), archived: int(r?.archived), all: int(r?.all) }
 }

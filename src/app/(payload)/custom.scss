@@ -72,3 +72,27 @@ a.cq-stat:hover { border-color: var(--theme-elevation-400); }
 /* Portal links at the top of the side menu */
 .cq-nav { display: flex; flex-direction: column; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--theme-elevation-100); }
 .cq-nav--active .nav__link-label { font-weight: 600; }
+
+/* Inbox: status tabs and reply box */
+.cq-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.cq-tab { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; min-height: 36px; border: 1px solid var(--theme-elevation-150); border-radius: 999px; color: inherit; text-decoration: none; font-size: 0.9rem; }
+.cq-tab:hover { border-color: var(--theme-elevation-400); }
+.cq-tab--active { background: var(--cq-accent); border-color: var(--cq-accent); color: #fff; }
+.cq-tab__count { font-variant-numeric: tabular-nums; font-size: 0.8rem; padding: 0 7px; border-radius: 999px; background: var(--theme-elevation-100); color: var(--theme-elevation-800); }
+.cq-tab--active .cq-tab__count { background: rgba(255, 255, 255, 0.22); color: #fff; }
+.cq-reply { margin: 8px 0 24px; padding: 18px 20px; border: 1px solid var(--theme-elevation-150); border-radius: 8px; background: var(--theme-elevation-0); }
+.cq-reply h3 { margin: 0 0 12px; font-size: 1.05rem; }
+.cq-reply__history { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 10px; }
+.cq-reply__history li { padding: 12px 14px; border-left: 3px solid var(--cq-accent); background: var(--theme-elevation-50); border-radius: 0 6px 6px 0; }
+.cq-reply__meta { margin: 0 0 6px; font-size: 0.85rem; color: var(--theme-elevation-700); }
+.cq-reply__body { margin: 0; white-space: pre-wrap; }
+.cq-reply__form { display: grid; gap: 12px; }
+.cq-reply__form p { margin: 0; }
+.cq-reply__form label { display: grid; gap: 6px; font-weight: 600; font-size: 0.9rem; }
+.cq-reply__form input, .cq-reply__form textarea { font: inherit; font-weight: 400; padding: 10px 12px; border: 1px solid var(--theme-elevation-150); border-radius: 4px; background: var(--theme-input-bg, var(--theme-elevation-0)); color: var(--theme-text); }
+.cq-reply__actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.cq-reply__actions .btn { margin: 0; }
+.cq-reply__ok { color: var(--cq-accent); font-weight: 600; }
+.cq-reply__error { color: var(--theme-error-500); font-weight: 600; }
+.cq-reply__warning { color: var(--theme-warning-650, #9a6700); font-weight: 600; }
+.cq-reply__form label .cq-muted { font-weight: 400; }
