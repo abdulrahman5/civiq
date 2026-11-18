@@ -1,8 +1,7 @@
 import { Gutter } from '@payloadcms/ui'
 import type { Payload } from 'payload'
 
-import { isPlaceholder } from '@/lib/payload'
-import { messageTotals, multiBreakdown, newsTotals, platformOverview, supporterTotals, topPlaces, weeklySignups } from '@/lib/insights'
+import { countPlaceholders, messageTotals, multiBreakdown, newsTotals, platformOverview, supporterTotals, topPlaces, weeklySignups } from '@/lib/insights'
 import { BarList, StatTile, Trend, WeeklyBars } from './charts'
 import { fmt, getPortalContext } from './context'
 
@@ -21,20 +20,6 @@ const ago = (iso: string) => {
 }
 
 /** Placeholder text like “[Project name]” still on the site, counted across settings and about. */
-async function countPlaceholders(payload: Payload, tenant: number) {
-  const docs = await Promise.all(
-    (['site-settings', 'about'] as const).map((collection) =>
-      payload.find({ collection, where: { tenant: { equals: tenant } }, limit: 1, depth: 0, overrideAccess: true }).then((r) => r.docs[0]),
-    ),
-  )
-  let n = 0
-  JSON.stringify(docs, (_k, v) => {
-    if (typeof v === 'string' && isPlaceholder(v)) n++
-    return v
-  })
-  return n
-}
-
 // The portal's Home screen (replaces Payload's default dashboard).
 export async function Dashboard({ payload, user }: Props) {
   if (!user) return null

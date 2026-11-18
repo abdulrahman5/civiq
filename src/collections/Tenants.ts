@@ -2,6 +2,7 @@ import type { CollectionConfig, FieldHook, TextFieldSingleValidation } from 'pay
 
 import { isLoggedIn, isPlatformAdmin, platformAdminOnly } from '../access'
 import { revalidateAfterChange, revalidateAfterDelete } from '../hooks/revalidate'
+import { domainConnectEndpoint, domainStatusEndpoint } from '../lib/domains'
 
 export const normaliseDomain = (v: string) =>
   v
@@ -39,6 +40,7 @@ export const Tenants: CollectionConfig = {
     update: platformAdminOnly,
     delete: platformAdminOnly,
   },
+  endpoints: [domainStatusEndpoint, domainConnectEndpoint],
   hooks: {
     afterChange: [revalidateAfterChange],
     afterDelete: [revalidateAfterDelete],
@@ -67,9 +69,11 @@ export const Tenants: CollectionConfig = {
       name: 'domains',
       label: 'Other domains',
       type: 'array',
-      admin: { description: 'Extra addresses that show this site, e.g. www.saidumusa.ng.' },
+      admin: { description: 'Extra addresses, e.g. www.saidumusa.ng. They forward to the main domain.' },
       fields: [{ name: 'domain', type: 'text', required: true, validate: domainFormat, hooks: { beforeValidate: [toDomain] } }],
     },
+    // Connect the domains to Vercel, the DNS records to set, and the onboarding checklist.
+    { name: 'domainPanel', type: 'ui', admin: { components: { Field: '@/components/portal/DomainPanel#DomainPanel' }, disableListColumn: true } },
     {
       name: 'status',
       type: 'select',

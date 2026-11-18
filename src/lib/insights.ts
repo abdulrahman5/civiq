@@ -1,5 +1,6 @@
 import { type PostgresAdapter, sql } from '@payloadcms/db-postgres'
 import type { Payload } from 'payload'
+import { isPlaceholder } from './placeholder'
 
 // Aggregates for the Civiq Portal (Home and Community). These run as the portal's normal database
 // role, so EVERY query filters by tenant explicitly. Only call them with a tenant the signed-in user
@@ -176,4 +177,19 @@ export async function inboxCounts(payload: Payload, tenant: TenantID) {
         FROM messages WHERE tenant_id = ${tenant}`,
   )
   return { unread: int(r?.unread), read: int(r?.read), archived: int(r?.archived), all: int(r?.all) }
+}
+
+/** How many “[…]” placeholder texts are still in a legislator's Site settings and About page. */
+export async function countPlaceholders(payload: Payload, tenant: number) {
+  const docs = await Promise.all(
+    (['site-settings', 'about'] as const).map((collection) =>
+      payload.find({ collection, where: { tenant: { equals: tenant } }, limit: 1, depth: 0, overrideAccess: true }).then((r) => r.docs[0]),
+    ),
+  )
+  let n = 0
+  JSON.stringify(docs, (_k, v) => {
+    if (typeof v === 'string' && isPlaceholder(v)) n++
+    return v
+  })
+  return n
 }

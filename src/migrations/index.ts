@@ -5,6 +5,7 @@ import * as migration_20261118_140000_row_level_security from './20261118_140000
 import * as migration_20261118_151901_audiences from './20261118_151901_audiences';
 import * as migration_20261118_160300_inbox from './20261118_160300_inbox';
 import * as migration_20261118_162452_newsletters from './20261118_162452_newsletters';
+import * as migration_20261118_165419_onboarding from './20261118_165419_onboarding';
 
 export const migrations = [
   {
@@ -40,6 +41,11 @@ export const migrations = [
   {
     up: migration_20261118_162452_newsletters.up,
     down: migration_20261118_162452_newsletters.down,
-    name: '20261118_162452_newsletters'
+    name: '20261118_162452_newsletters',
+  },
+  {
+    up: migration_20261118_165419_onboarding.up,
+    down: migration_20261118_165419_onboarding.down,
+    name: '20261118_165419_onboarding'
   },
 ];

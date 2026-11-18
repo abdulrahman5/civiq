@@ -118,3 +118,46 @@ a.cq-stat:hover { border-color: var(--theme-elevation-400); }
 .cq-send__stats dt { font-size: 0.78rem; color: var(--theme-elevation-700); }
 .cq-send__stats dd { margin: 2px 0 0; font-size: 1.1rem; font-weight: 700; }
 .cq-send__stats dd span { font-size: 0.8rem; font-weight: 400; color: var(--theme-elevation-700); }
+
+// Legislator site: domains and setup checklist
+.cq-domains { margin: 8px 0 24px; padding: 18px 20px; border: 1px solid var(--theme-elevation-150); border-radius: 8px; background: var(--theme-elevation-0); }
+.cq-domains h3 { margin: 0 0 10px; font-size: 1.05rem; }
+.cq-domains p { margin: 0 0 10px; line-height: 1.5; }
+.cq-domains__cols { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 28px; }
+@media (max-width: 900px) { .cq-domains__cols { grid-template-columns: 1fr; } }
+.cq-domains__list { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 8px; }
+.cq-domains__actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 12px; }
+.cq-domains .btn { margin: 0; }
+.cq-domains__dns { margin-top: 8px; padding: 14px; background: var(--theme-elevation-50); border-radius: 6px; }
+.cq-domains__tablewrap { overflow-x: auto; margin: 0 0 10px; }
+.cq-domains table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.cq-domains th, .cq-domains td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--theme-elevation-150); vertical-align: top; }
+.cq-domains td:last-child code { word-break: break-all; }
+.cq-domains code { font-size: 0.85rem; }
+.cq-domains__copy { font: inherit; font-size: 0.75rem; padding: 2px 8px; border: 1px solid var(--theme-elevation-200); border-radius: 4px; background: var(--theme-elevation-0); color: var(--theme-text); cursor: pointer; }
+.cq-state { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; }
+.cq-state--ok { background: color-mix(in srgb, var(--cq-accent) 16%, transparent); color: var(--cq-accent); }
+.cq-state--wait { background: color-mix(in srgb, #c8a13a 22%, transparent); color: var(--theme-warning-650, #8a5d00); }
+.cq-state--bad { background: var(--theme-elevation-100); color: var(--theme-elevation-800); }
+.cq-checklist { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: 0.92rem; }
+.cq-checklist li { line-height: 1.45; color: var(--theme-elevation-800); }
+.cq-checklist li.is-done { color: var(--theme-elevation-600); }
+.cq-checklist li.is-done > span:first-child { color: var(--cq-accent); font-weight: 700; }
+
+// Team: invites
+.cq-invite { margin: 0 0 20px; }
+.cq-invite .btn { margin: 0; }
+.cq-invite__form { padding: 18px 20px; border: 1px solid var(--theme-elevation-150); border-radius: 8px; background: var(--theme-elevation-0); display: grid; gap: 12px; max-width: 860px; }
+.cq-invite__form h3 { margin: 0; font-size: 1.05rem; }
+.cq-invite__form p { margin: 0; }
+.cq-invite__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+.cq-invite__grid label { display: grid; gap: 6px; font-weight: 600; font-size: 0.9rem; }
+.cq-invite input, .cq-invite select, .cq-invite__link input { font: inherit; font-weight: 400; padding: 9px 12px; border: 1px solid var(--theme-elevation-150); border-radius: 4px; background: var(--theme-input-bg, var(--theme-elevation-0)); color: var(--theme-text); min-width: 0; }
+.cq-invite__help { font-size: 0.85rem; }
+.cq-invite__actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.cq-invite__link { display: grid; gap: 8px; padding: 12px; background: var(--theme-elevation-50); border-radius: 6px; font-size: 0.88rem; }
+.cq-invite__link p { margin: 0; }
+.cq-invite__linkrow { display: flex; gap: 8px; flex-wrap: wrap; }
+.cq-invite__linkrow input { flex: 1 1 260px; font-size: 0.82rem; }
+.cq-invite__linkrow .btn { margin: 0; }
+.cq-invite-status .cq-invite__link { margin-top: 4px; }

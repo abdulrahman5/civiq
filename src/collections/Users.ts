@@ -1,6 +1,7 @@
 import { type Access, type CollectionConfig, type FieldAccess, Forbidden, ValidationError } from 'payload'
 
 import { idOf, isPlatformAdmin, PLATFORM_ROLES, tenantIdsFor } from '../access'
+import { inviteEndpoint, inviteOptionsEndpoint, resendInviteEndpoint, touchLastSeen } from '../lib/team'
 
 const MIN_PASSWORD_LENGTH = 10
 
@@ -38,9 +39,11 @@ export const Users: CollectionConfig = {
   admin: {
     group: 'Team',
     useAsTitle: 'name',
-    defaultColumns: ['name', 'email', 'platformRole', 'updatedAt'],
-    description: 'People who can log in to the Civiq Portal. Team admins can add and remove members of their own team.',
+    defaultColumns: ['name', 'email', 'teamStatus', 'lastSeenAt'],
+    description: 'People who can log in to the Civiq Portal. Team admins invite and remove members of their own team.',
+    components: { beforeListTable: ['@/components/portal/InviteForm#InviteForm'] },
   },
+  endpoints: [inviteOptionsEndpoint, inviteEndpoint, resendInviteEndpoint],
   auth: {
     tokenExpiration: 60 * 60 * 8, // log out after 8 hours
     maxLoginAttempts: 5,
@@ -55,6 +58,7 @@ export const Users: CollectionConfig = {
     delete: deleteAccess,
   },
   hooks: {
+    afterLogin: [({ req, user }) => touchLastSeen(req, user)],
     beforeValidate: [
       ({ data }) => {
         if (data?.password && String(data.password).length < MIN_PASSWORD_LENGTH) {
@@ -93,7 +97,26 @@ export const Users: CollectionConfig = {
     ],
   },
   fields: [
+    { name: 'inviteStatus', type: 'ui', admin: { position: 'sidebar', components: { Field: '@/components/portal/InviteStatus#InviteStatus' }, disableListColumn: true } },
     { name: 'name', type: 'text', required: true },
+    // Set by the server only: invites and portal activity.
+    { name: 'invitedAt', type: 'date', admin: { hidden: true }, access: { create: () => false, update: () => false } },
+    { name: 'invitedByName', type: 'text', admin: { hidden: true }, access: { create: () => false, update: () => false } },
+    {
+      name: 'lastSeenAt',
+      label: 'Last active',
+      type: 'date',
+      admin: { hidden: true, date: { pickerAppearance: 'dayAndTime' } },
+      access: { create: () => false, update: () => false },
+    },
+    {
+      name: 'teamStatus',
+      label: 'Status',
+      type: 'text',
+      virtual: true,
+      admin: { hidden: true },
+      hooks: { afterRead: [({ data }) => (data?.lastSeenAt ? 'Active' : data?.invitedAt ? 'Invited, not joined yet' : 'No activity recorded yet')] },
+    },
     // The pre-Civiq single-site role. Kept (hidden, read-only) only so the multi-tenant migration can
     // copy each user's role onto their team; remove in the next release together with its column.
     {
