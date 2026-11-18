@@ -9,7 +9,7 @@ const csvCell = (v: unknown) => {
 
 /**
  * GET /api/<collection>/export-csv: downloads the records of the legislator currently selected in the
- * console's Legislator menu. Access control still limits the result to tenants the user may read.
+ * portal's Legislator menu. Access control still limits the result to tenants the user may read.
  */
 export const csvExportEndpoint = (collection: CollectionSlug, columns: readonly string[], fileStem: string): Endpoint => ({
   path: '/export-csv',

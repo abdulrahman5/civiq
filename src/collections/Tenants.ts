@@ -52,7 +52,7 @@ export const Tenants: CollectionConfig = {
       unique: true,
       index: true,
       validate: slugFormat,
-      admin: { description: 'Short ID, also used for the preview address slug.civiq.ng. Example: saidumusa' },
+      admin: { description: 'Short ID, also used for the preview address slug.theciviq.com.ng. Example: saidumusa' },
     },
     {
       name: 'primaryDomain',

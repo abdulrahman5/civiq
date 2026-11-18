@@ -91,7 +91,7 @@ export default async function SiteLayout(props: DomainParams & { children: React
           </div>
           <div className="copy">
             © {new Date().getFullYear()} Office of {s.name}. All rights reserved. · <Link href="/privacy">Privacy notice</Link>
-            <span className="powered"> · Powered by <a href="https://civiq.ng" target="_blank" rel="noopener">Civiq</a></span>
+            <span className="powered"> · Powered by <a href="https://theciviq.com.ng" target="_blank" rel="noopener">Civiq</a></span>
           </div>
         </div>
       </footer>

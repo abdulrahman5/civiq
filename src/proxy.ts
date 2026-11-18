@@ -2,22 +2,22 @@ import { type NextRequest, NextResponse } from 'next/server'
 
 // Every legislator's site is served by this one app. The proxy reads the domain a request came
 // in on and rewrites it to /<domain>/<path>, where [domain] pages look up that legislator's content.
-// The console (/admin) lives on one Civiq address: once CONSOLE_URL is set, /admin on any
-// legislator's domain redirects there, and the console's own host only serves the console.
+// The portal (/admin) lives on one Civiq address: once PORTAL_URL is set, /admin on any
+// legislator's domain redirects there, and the portal's own host only serves the portal.
 export function proxy(request: NextRequest) {
   const url = request.nextUrl
   const host = (request.headers.get('host') ?? '').toLowerCase().replace(/:\d+$/, '')
   if (!/^[a-z0-9.-]{1,253}$/.test(host)) return new NextResponse('Bad request', { status: 400 })
 
-  const consoleUrl = process.env.CONSOLE_URL
-  const consoleHost = consoleUrl ? new URL(consoleUrl).hostname : null
+  const portalUrl = process.env.PORTAL_URL || process.env.CONSOLE_URL
+  const portalHost = portalUrl ? new URL(portalUrl).hostname : null
   const isAdmin = url.pathname === '/admin' || url.pathname.startsWith('/admin/')
 
-  if (consoleHost && host === consoleHost) {
-    return isAdmin ? NextResponse.next() : NextResponse.redirect(new URL('/admin', consoleUrl))
+  if (portalHost && host === portalHost) {
+    return isAdmin ? NextResponse.next() : NextResponse.redirect(new URL('/admin', portalUrl))
   }
   if (isAdmin) {
-    return consoleHost ? NextResponse.redirect(new URL(url.pathname + url.search, consoleUrl)) : NextResponse.next()
+    return portalHost ? NextResponse.redirect(new URL(url.pathname + url.search, portalUrl)) : NextResponse.next()
   }
 
   const rewritten = url.clone()

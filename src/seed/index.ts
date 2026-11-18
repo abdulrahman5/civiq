@@ -1,6 +1,6 @@
 // Sets up a brand-new database with its first legislator site (from seed/data).
 // Runs automatically during every build, but does nothing once any site exists,
-// so content deleted by a team is never brought back. Later sites are added in the Civiq console.
+// so content deleted by a team is never brought back. Later sites are added in the Civiq Portal.
 import { convertMarkdownToLexical, editorConfigFactory } from '@payloadcms/richtext-lexical'
 import config from '@payload-config'
 import fs from 'node:fs'

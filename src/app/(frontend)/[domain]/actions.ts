@@ -73,7 +73,7 @@ export async function submitMessage(domain: string, _prev: ContactState, fd: For
           to,
           replyTo: email,
           subject: `New message on ${tenant.name}’s website: ${data.topic} from ${name}`,
-          html: `<table>${rows}</table><p style="white-space:pre-wrap">${escapeHtml(message)}</p><p>View and manage it in the Inbox of the Civiq console.</p>`,
+          html: `<table>${rows}</table><p style="white-space:pre-wrap">${escapeHtml(message)}</p><p>View and manage it in the Inbox of the Civiq Portal.</p>`,
         })
         .catch((err: unknown) => payload.logger.error({ err }, 'Contact form email failed'))
     }
@@ -127,7 +127,7 @@ export async function joinMovement(domain: string, _prev: ContactState, fd: Form
         .then((r) => r.docs[0])
       if (existing) {
         // Written at the database level: the public site's restricted role has no access to the
-        // console's document-lock tables, which a regular update would touch.
+        // portal's document-lock tables, which a regular update would touch.
         // Interests and channels are added to, and blank fields keep what was there before.
         const union = (a: unknown, b: unknown) => [...new Set([...((a as string[]) ?? []), ...((b as string[]) ?? [])])]
         const keep = (k: string) => (data[k] ? data[k] : (existing as unknown as Record<string, unknown>)[k])

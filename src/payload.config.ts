@@ -20,7 +20,7 @@ import { Supporters } from './collections/Supporters'
 import { Tenants } from './collections/Tenants'
 import { teamManagerField, Users } from './collections/Users'
 import type { Config } from './payload-types'
-import { getConsoleUrl } from './lib/site-url'
+import { getPortalUrl } from './lib/site-url'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -56,15 +56,15 @@ if (process.env.VERCEL) {
 }
 
 export default buildConfig({
-  // The console (admin + API) lives on one Civiq address; legislators' own domains only serve their sites.
-  serverURL: getConsoleUrl(),
+  // The portal (admin + API) lives on one Civiq address; legislators' own domains only serve their sites.
+  serverURL: getPortalUrl(),
   admin: {
     user: Users.slug,
     importMap: { baseDir: path.resolve(dirname) },
     // Built-in avatar instead of Gravatar, so admin email hashes are not sent to a third party.
     avatar: 'default',
     meta: {
-      titleSuffix: ' · Civiq Console',
+      titleSuffix: ' · Civiq Portal',
       icons: [{ rel: 'icon', type: 'image/svg+xml', url: '/civiq-mark.svg' }],
     },
     components: {

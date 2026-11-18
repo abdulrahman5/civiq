@@ -39,7 +39,7 @@ export const Users: CollectionConfig = {
     group: 'Team',
     useAsTitle: 'name',
     defaultColumns: ['name', 'email', 'platformRole', 'updatedAt'],
-    description: 'People who can log in to the Civiq console. Team admins can add and remove members of their own team.',
+    description: 'People who can log in to the Civiq Portal. Team admins can add and remove members of their own team.',
   },
   auth: {
     tokenExpiration: 60 * 60 * 8, // log out after 8 hours

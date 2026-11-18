@@ -13,7 +13,7 @@ type TenantID = number
  * Runs public-website database work for ONE legislator, as the restricted database role
  * `civiq_web`, inside a transaction tagged with that tenant. Postgres row-level security then
  * refuses rows belonging to any other legislator, even if a query forgets its tenant filter.
- * The console keeps using the normal role and is protected by access control.
+ * The portal keeps using the normal role and is protected by access control.
  */
 export const asSite = async <T>(tenant: TenantID, fn: (req: Partial<PayloadRequest>) => Promise<T>): Promise<T> => {
   const payload = await getClient()

@@ -1,19 +1,19 @@
 # Civiq — digital platform for Nigerian legislators
 
-One Next.js app on Vercel serves **every legislator's website**, each on its own domain, plus the **Civiq console** where their teams update content. All sites share one template; only the content differs. A fix or feature shipped here reaches every site at once.
+One Next.js app on Vercel serves **every legislator's website**, each on its own domain, plus the **Civiq Portal** where their teams update content. All sites share one template; only the content differs. A fix or feature shipped here reaches every site at once.
 
 | Address | What it is |
 |---|---|
 | `saidumusa.ng`, `adaokafor.ng`, … | Each legislator's public site (home, news, contact form), with a small “Powered by Civiq” badge |
-| `<slug>.civiq.ng` | Preview of a legislator's site before their own domain is live |
-| `console.civiq.ng/admin` | The Civiq console. `/admin` on any legislator's domain redirects here. |
+| `<slug>.theciviq.com.ng` | Preview of a legislator's site before their own domain is live |
+| `portal.theciviq.com.ng/admin` | The Civiq Portal. `/admin` on any legislator's domain redirects here. |
 
 ```
 saidumusa.ng ─┐
 adaokafor.ng ─┼─► Vercel (one Civiq project)
-x.civiq.ng   ─┘      │  src/proxy.ts: domain → /<domain>/… → that legislator's content
+x.theciviq.com.ng   ─┘      │  src/proxy.ts: domain → /<domain>/… → that legislator's content
                      ▼
-     public sites (one shared template)      console.civiq.ng: Payload admin, scoped per team
+     public sites (one shared template)      portal.theciviq.com.ng: Payload admin, scoped per team
                      │
        Neon Postgres (every row tagged with its tenant) · Vercel Blob (photos) · Resend (email)
 ```
@@ -27,9 +27,9 @@ x.civiq.ng   ─┘      │  src/proxy.ts: domain → /<domain>/… → that le
 | **Editor** | one legislator | All content, settings and the inbox |
 | **Contributor** | one legislator | Write drafts of news and projects; cannot publish, delete or see the inbox |
 
-A person can work for several legislators (a role on each); the console's **Legislator** switcher picks which one they are editing. Every save is checked on the server against the user's role *in that document's site*, so teams can never read or change another legislator's data.
+A person can work for several legislators (a role on each); the portal's **Legislator** switcher picks which one they are editing. Every save is checked on the server against the user's role *in that document's site*, so teams can never read or change another legislator's data.
 
-## What teams edit in the console
+## What teams edit in the portal
 
 | Section | Contents |
 |---|---|
@@ -51,18 +51,18 @@ Saving updates that legislator's live site immediately.
 - Supporters and messages are only created by the site's own server-side forms, never through the API, and only team admins/editors can read them.
 
 ### Database-level isolation (row-level security)
-Public-site queries run as the restricted Postgres role `civiq_web` inside a transaction tagged with the site's tenant (`asSite()` in `src/lib/payload.ts`). Row-level security on every tenant-owned table only shows and accepts that tenant's rows; with no tenant set it sees nothing. `civiq_web` cannot read users or console tables and can only insert messages and supporters. The console uses the normal role, protected by access control. The database user in `DATABASE_URL` needs the `CREATEROLE` privilege (Neon's default owner role has it); locally run `ALTER ROLE <user> CREATEROLE;` as a superuser.
+Public-site queries run as the restricted Postgres role `civiq_web` inside a transaction tagged with the site's tenant (`asSite()` in `src/lib/payload.ts`). Row-level security on every tenant-owned table only shows and accepts that tenant's rows; with no tenant set it sees nothing. `civiq_web` cannot read users or portal tables and can only insert messages and supporters. The portal uses the normal role, protected by access control. The database user in `DATABASE_URL` needs the `CREATEROLE` privilege (Neon's default owner role has it); locally run `ALTER ROLE <user> CREATEROLE;` as a superuser.
 
 ---
 
 ## Onboarding a new legislator
 
-1. **Console → Civiq platform → Legislator sites → Create new:** name, slug (e.g. `adaokafor`), main domain (e.g. `adaokafor.ng`) and any extra domains (`www.adaokafor.ng`).
-2. **Vercel → Project → Settings → Domains:** add the same domains, then set the DNS records Vercel shows at the legislator's registrar. HTTPS is automatic. (Phase 2 automates this step from the console.)
-3. Switch the console's **Legislator** menu to the new site and fill in **Site settings** (and About / Agenda).
+1. **Portal → Civiq platform → Legislator sites → Create new:** name, slug (e.g. `adaokafor`), main domain (e.g. `adaokafor.ng`) and any extra domains (`www.adaokafor.ng`).
+2. **Vercel → Project → Settings → Domains:** add the same domains, then set the DNS records Vercel shows at the legislator's registrar. HTTPS is automatic. (Phase 2 automates this step from the portal.)
+3. Switch the portal's **Legislator** menu to the new site and fill in **Site settings** (and About / Agenda).
 4. **Team → Users:** create their team admin with a role on that legislator; they can then add their own editors.
 
-Until DNS is live the site is visible at `adaokafor.civiq.ng` (needs `PLATFORM_ROOT_DOMAIN`). Search engines may index a site only on its main domain.
+Until DNS is live the site is visible at `adaokafor.theciviq.com.ng` (needs `PLATFORM_ROOT_DOMAIN`). Search engines may index a site only on its main domain.
 
 ---
 
@@ -76,8 +76,8 @@ Hosting: Vercel (Pro required before launch), Neon Postgres and Vercel Blob conn
 | `BLOB_READ_WRITE_TOKEN` | Added by the Blob integration |
 | `PAYLOAD_SECRET` | Long random string; never change it |
 | `RESEND_API_KEY`, `EMAIL_FROM_ADDRESS`, `EMAIL_FROM_NAME` | Email via Resend |
-| `CONSOLE_URL` | e.g. `https://console.civiq.ng` once that domain is attached. Until set, the console runs on the deployment's own address. |
-| `PLATFORM_ROOT_DOMAIN` | e.g. `civiq.ng`, for `<slug>.civiq.ng` previews (add `*.civiq.ng` as a wildcard domain in Vercel) |
+| `PORTAL_URL` | e.g. `https://portal.theciviq.com.ng` once that domain is attached. Until set, the portal runs on the deployment's own address. |
+| `PLATFORM_ROOT_DOMAIN` | e.g. `theciviq.com.ng`, for `<slug>.theciviq.com.ng` previews (add `*.theciviq.com.ng` as a wildcard domain in Vercel) |
 | `DEFAULT_TENANT_SLUG` | Optional: which site `*.vercel.app` and `localhost` show (default: the first site) |
 
 Every **production** deploy runs `scripts/build.mjs`: database migrations → first-run seed (only on an empty database) → `next build`. Preview deployments skip the database steps.
@@ -105,13 +105,13 @@ npm run dev                 # http://localhost:3000 (first site), http://<slug>.
 
 ```
 src/
-  proxy.ts                 domain → tenant routing, console redirects
+  proxy.ts                 domain → tenant routing, portal redirects
   payload.config.ts        CMS configuration and multi-tenant plugin
   access.ts                platform and per-tenant roles
   collections/             Tenants, Site settings, About, Agenda, News, Projects, Media, Supporters, Messages, Users
   lib/tenant.ts            finds the legislator site for a domain
   app/(frontend)/[domain]/ the shared site template
-  app/(payload)/           console and API (generated by Payload)
+  app/(payload)/           portal and API (generated by Payload)
   migrations/              database history, incl. the multi-tenant data migration
   seed/                    first-run content for a brand-new database
 ```

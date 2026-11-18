@@ -38,7 +38,7 @@ export default async function Home(props: DomainParams) {
             </div>
           </div>
           <div className="hero-photo">
-            <Img media={s.hero?.image} size="large" alt={s.name} label="Official portrait — upload in the console → Site settings → Home banner" />
+            <Img media={s.hero?.image} size="large" alt={s.name} label="Official portrait — upload in the portal → Site settings → Home banner" />
           </div>
         </div>
       </section>
@@ -60,7 +60,7 @@ export default async function Home(props: DomainParams) {
       <section id="about" style={{ paddingTop: 40 }}>
         <div className="wrap about-grid">
           <div className="about-photo">
-            <Img media={about.image} size="card" label="Photo with constituents — upload in the console → About & timeline" />
+            <Img media={about.image} size="card" label="Photo with constituents — upload in the portal → About & timeline" />
           </div>
           <div>
             <span className="eyebrow">About {s.shortName}</span>

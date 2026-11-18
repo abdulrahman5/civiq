@@ -243,7 +243,7 @@ export interface Tenant {
   id: number;
   name: string;
   /**
-   * Short ID, also used for the preview address slug.civiq.ng. Example: saidumusa
+   * Short ID, also used for the preview address slug.theciviq.com.ng. Example: saidumusa
    */
   slug: string;
   /**
@@ -518,7 +518,7 @@ export interface Message {
   createdAt: string;
 }
 /**
- * People who can log in to the Civiq console. Team admins can add and remove members of their own team.
+ * People who can log in to the Civiq Portal. Team admins can add and remove members of their own team.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
