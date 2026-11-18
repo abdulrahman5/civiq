@@ -96,3 +96,25 @@ a.cq-stat:hover { border-color: var(--theme-elevation-400); }
 .cq-reply__error { color: var(--theme-error-500); font-weight: 600; }
 .cq-reply__warning { color: var(--theme-warning-650, #9a6700); font-weight: 600; }
 .cq-reply__form label .cq-muted { font-weight: 400; }
+
+// Newsletter send panel (sidebar)
+.cq-send { margin: 0 0 24px; padding: 16px; border: 1px solid var(--theme-elevation-150); border-radius: 8px; background: var(--theme-elevation-0); display: grid; gap: 10px; }
+.cq-send h3 { margin: 0; font-size: 1rem; }
+.cq-send p { margin: 0; }
+.cq-send__small { font-size: 0.85rem; line-height: 1.45; }
+.cq-send__count { font-size: 0.95rem; }
+.cq-send__status { font-weight: 600; }
+.cq-send__status--sent { color: var(--cq-accent); }
+.cq-send__actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.cq-send .btn { margin: 0; }
+.cq-send__go { width: 100%; }
+.cq-send progress { width: 100%; accent-color: var(--cq-accent); }
+.cq-send__schedule summary { cursor: pointer; font-size: 0.9rem; font-weight: 600; }
+.cq-send__schedule[open] { display: grid; gap: 8px; }
+.cq-send__schedule label { display: grid; gap: 4px; margin-top: 8px; }
+.cq-send__schedule input { font: inherit; padding: 8px 10px; border: 1px solid var(--theme-elevation-150); border-radius: 4px; background: var(--theme-input-bg, var(--theme-elevation-0)); color: var(--theme-text); }
+.cq-send__stats { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.cq-send__stats div { padding: 8px 10px; background: var(--theme-elevation-50); border-radius: 6px; }
+.cq-send__stats dt { font-size: 0.78rem; color: var(--theme-elevation-700); }
+.cq-send__stats dd { margin: 2px 0 0; font-size: 1.1rem; font-weight: 700; }
+.cq-send__stats dd span { font-size: 0.8rem; font-weight: 400; color: var(--theme-elevation-700); }

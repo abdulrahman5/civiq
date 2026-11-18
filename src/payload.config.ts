@@ -14,6 +14,8 @@ import { Audiences } from './collections/Audiences'
 import { Agenda } from './collections/Agenda'
 import { Media } from './collections/Media'
 import { Messages } from './collections/Messages'
+import { NewsletterDeliveries } from './collections/NewsletterDeliveries'
+import { Newsletters } from './collections/Newsletters'
 import { News } from './collections/News'
 import { Projects } from './collections/Projects'
 import { SiteSettings } from './collections/SiteSettings'
@@ -81,7 +83,7 @@ export default buildConfig({
       },
     },
   },
-  collections: [SiteSettings, About, Agenda, News, Projects, Media, Supporters, Audiences, Messages, Users, Tenants],
+  collections: [SiteSettings, About, Agenda, News, Projects, Media, Supporters, Audiences, Messages, Newsletters, NewsletterDeliveries, Users, Tenants],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },
@@ -117,6 +119,8 @@ export default buildConfig({
         messages: {},
         supporters: {},
         audiences: {},
+        newsletters: {},
+        'newsletter-deliveries': {},
       },
       tenantsArrayField: {
         includeDefaultField: true,

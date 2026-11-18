@@ -27,6 +27,7 @@ import { ExportButton as ExportButton_d374f1d98c0ba3d31281c1d26b6f2d1a } from '@
 import { MarkRead as MarkRead_c1fc60b27608c006f5bc2e9fdda07e78 } from '@/components/portal/MarkRead'
 import { ReplyBox as ReplyBox_a6782f01beb13ccc253c97e37b99fd5a } from '@/components/portal/ReplyBox'
 import { InboxTabs as InboxTabs_fba1360d359a90485aa4ad103e613337 } from '@/components/portal/InboxTabs'
+import { SendPanel as SendPanel_48a8bdf742169aecafe1bb677bb8ab61 } from '@/components/portal/SendPanel'
 import { WatchTenantCollection as WatchTenantCollection_1d0591e3cf4f332c83a86da13a0de59a } from '@payloadcms/plugin-multi-tenant/client'
 import { Icon as Icon_534076e2c753ea5d539a54b05f456b1b } from '@/components/admin/Icon'
 import { Logo as Logo_a44df17d0fc3dcd873dae43dc3bf66bd } from '@/components/admin/Logo'
@@ -70,6 +71,7 @@ export const importMap = {
   "@/components/portal/MarkRead#MarkRead": MarkRead_c1fc60b27608c006f5bc2e9fdda07e78,
   "@/components/portal/ReplyBox#ReplyBox": ReplyBox_a6782f01beb13ccc253c97e37b99fd5a,
   "@/components/portal/InboxTabs#InboxTabs": InboxTabs_fba1360d359a90485aa4ad103e613337,
+  "@/components/portal/SendPanel#SendPanel": SendPanel_48a8bdf742169aecafe1bb677bb8ab61,
   "@payloadcms/plugin-multi-tenant/client#WatchTenantCollection": WatchTenantCollection_1d0591e3cf4f332c83a86da13a0de59a,
   "@/components/admin/Icon#Icon": Icon_534076e2c753ea5d539a54b05f456b1b,
   "@/components/admin/Logo#Logo": Logo_a44df17d0fc3dcd873dae43dc3bf66bd,

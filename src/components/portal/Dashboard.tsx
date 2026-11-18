@@ -102,7 +102,7 @@ export async function Dashboard({ payload, user }: Props) {
     )
   }
 
-  const [sup, msgs, weekly, wards, interests, recent] = await Promise.all([
+  const [sup, msgs, weekly, wards, interests, recent, lastNewsletter] = await Promise.all([
     supporterTotals(payload, t),
     messageTotals(payload, t),
     weeklySignups(payload, t, 12),
@@ -117,13 +117,22 @@ export async function Dashboard({ payload, user }: Props) {
       overrideAccess: false,
       user: ctx.user,
     }),
+    payload
+      .find({ collection: 'newsletters', where: { tenant: { equals: t }, status: { in: ['sending', 'sent'] } }, sort: '-sentAt', limit: 1, depth: 0, overrideAccess: false, user: ctx.user })
+      .then((r) => r.docs[0] ?? null),
   ])
 
   const daysSinceNews = news.lastPublished ? Math.floor((Date.now() - new Date(news.lastPublished).getTime()) / 86400000) : null
+  const daysSinceNewsletter = lastNewsletter?.sentAt ? Math.floor((Date.now() - new Date(lastNewsletter.sentAt).getTime()) / 86400000) : null
   const attention = [
     msgs.unread > 0 && { text: `${fmt(msgs.unread)} unread ${msgs.unread === 1 ? 'message' : 'messages'} in the inbox`, href: '/admin/collections/messages?where[status][equals]=unread' },
     news.drafts > 0 && { text: `${fmt(news.drafts)} news ${news.drafts === 1 ? 'draft' : 'drafts'} not yet published`, href: '/admin/collections/news?where[_status][equals]=draft' },
     (daysSinceNews === null || daysSinceNews > 21) && { text: daysSinceNews === null ? 'No news published yet' : `No news published in ${daysSinceNews} days`, href: '/admin/collections/news/create' },
+    sup.withEmail > 0 &&
+      (daysSinceNewsletter === null || daysSinceNewsletter > 30) && {
+        text: daysSinceNewsletter === null ? `No newsletter sent yet: ${fmt(sup.withEmail)} supporters can receive email` : `No newsletter sent in ${daysSinceNewsletter} days`,
+        href: '/admin/collections/newsletters/create',
+      },
     placeholders > 0 && { text: `${fmt(placeholders)} placeholder ${placeholders === 1 ? 'text' : 'texts'} like “[…]” still on the website`, href: '/admin/collections/site-settings' },
     !ctx.tenant.primaryDomain && ctx.platformAdmin && { text: 'No main domain set: the site is not yet visible to search engines', href: `/admin/collections/tenants/${t}` },
   ].filter(Boolean) as { text: string; href: string }[]
@@ -187,6 +196,7 @@ function QuickActions({ community }: { community: boolean }) {
   return (
     <section className="cq-actions" aria-label="Quick actions">
       <a className="btn btn--style-primary btn--size-medium" href="/admin/collections/news/create">Post news</a>
+      {community && <a className="btn btn--style-secondary btn--size-medium" href="/admin/collections/newsletters/create">Send a newsletter</a>}
       {community && <a className="btn btn--style-secondary btn--size-medium" href="/admin/collections/messages">Open inbox</a>}
       {community && <a className="btn btn--style-secondary btn--size-medium" href="/admin/community">Community insights</a>}
       {community && <a className="btn btn--style-secondary btn--size-medium" href="/api/supporters/export-csv">Download supporters (CSV)</a>}

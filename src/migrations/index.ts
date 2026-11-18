@@ -4,6 +4,7 @@ import * as migration_20261118_135149_supporters_privacy from './20261118_135149
 import * as migration_20261118_140000_row_level_security from './20261118_140000_row_level_security';
 import * as migration_20261118_151901_audiences from './20261118_151901_audiences';
 import * as migration_20261118_160300_inbox from './20261118_160300_inbox';
+import * as migration_20261118_162452_newsletters from './20261118_162452_newsletters';
 
 export const migrations = [
   {
@@ -34,6 +35,11 @@ export const migrations = [
   {
     up: migration_20261118_160300_inbox.up,
     down: migration_20261118_160300_inbox.down,
-    name: '20261118_160300_inbox'
+    name: '20261118_160300_inbox',
+  },
+  {
+    up: migration_20261118_162452_newsletters.up,
+    down: migration_20261118_162452_newsletters.down,
+    name: '20261118_162452_newsletters'
   },
 ];

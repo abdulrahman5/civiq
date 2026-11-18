@@ -8,7 +8,7 @@ import type { Payload } from 'payload'
 type TenantID = number
 export type Row = { label: string; n: number }
 
-const run = async <T>(payload: Payload, query: ReturnType<typeof sql>) =>
+export const run = async <T>(payload: Payload, query: ReturnType<typeof sql>) =>
   ((await (payload.db as unknown as PostgresAdapter).drizzle.execute(query)).rows ?? []) as T[]
 
 const int = (v: unknown) => Number(v ?? 0)
@@ -133,12 +133,16 @@ export type AudienceFilters = {
 }
 
 // Drizzle expands JS arrays into separate parameters, so build a real Postgres text[] explicitly.
-const textArray = (values: string[]) => sql`ARRAY[${sql.join(values.map((v) => sql`${v}`), sql`, `)}]::text[]`
+export const textArray = (values: string[]) => sql`ARRAY[${sql.join(values.map((v) => sql`${v}`), sql`, `)}]::text[]`
 
 const lowered = (xs?: string[] | null) => (xs ?? []).map((x) => x.trim().replace(/\s+/g, ' ').toLowerCase()).filter(Boolean)
 
-/** How many subscribed supporters match a saved audience. Matching on places ignores case and spacing. */
-export async function countAudience(payload: Payload, tenant: TenantID, f: AudienceFilters) {
+/**
+ * SQL condition (on supporters aliased `s`) for the subscribed supporters of one tenant that match a
+ * saved audience. Matching on places ignores case and spacing. Used for counts AND for newsletter
+ * recipient lists, so the number shown is the number emailed.
+ */
+export function audienceWhere(tenant: TenantID, f: AudienceFilters) {
   const wards = lowered(f.wards)
   const lgas = lowered(f.lgas)
   const states = lowered(f.states)
@@ -146,15 +150,18 @@ export async function countAudience(payload: Payload, tenant: TenantID, f: Audie
   const channels = f.channels ?? []
   const place = (col: string, values: string[]) =>
     values.length ? sql`AND lower(regexp_replace(trim(${sql.raw(`s."${col}"`)}), '\\s+', ' ', 'g')) = ANY(${textArray(values)})` : sql``
-  const [r] = await run<{ n: unknown }>(
-    payload,
-    sql`SELECT count(*) AS n FROM supporters s
-        WHERE s.tenant_id = ${tenant} AND s.status = 'subscribed'
+  return sql`s.tenant_id = ${tenant} AND s.status = 'subscribed'
         ${place('ward', wards)} ${place('lga', lgas)} ${place('state', states)}
         ${interests.length ? sql`AND EXISTS (SELECT 1 FROM supporters_interests i WHERE i.parent_id = s.id AND i.value::text = ANY(${textArray(interests)}))` : sql``}
         ${channels.length ? sql`AND EXISTS (SELECT 1 FROM supporters_channels c WHERE c.parent_id = s.id AND c.value::text = ANY(${textArray(channels)}))` : sql``}
-        ${f.requireEmail ? sql`AND coalesce(s.email, '') <> ''` : sql``}`,
-  )
+        ${f.requireEmail ? sql`AND coalesce(s.email, '') <> ''` : sql``}`
+}
+
+/** How many subscribed supporters match a saved audience. */
+export async function countAudience(payload: Payload, tenant: TenantID, f: AudienceFilters) {
+  // With requireEmail it counts addresses, not people: newsletters send one copy per address.
+  const counted = f.requireEmail ? sql`count(DISTINCT lower(s.email))` : sql`count(*)`
+  const [r] = await run<{ n: unknown }>(payload, sql`SELECT ${counted} AS n FROM supporters s WHERE ${audienceWhere(tenant, f)}`)
   return int(r?.n)
 }
 
