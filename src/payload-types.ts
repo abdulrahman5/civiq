@@ -76,6 +76,8 @@ export interface Config {
     supporters: Supporter;
     audiences: Audience;
     messages: Message;
+    newsletters: Newsletter;
+    'newsletter-deliveries': NewsletterDelivery;
     users: User;
     tenants: Tenant;
     'payload-kv': PayloadKv;
@@ -94,6 +96,8 @@ export interface Config {
     supporters: SupportersSelect<false> | SupportersSelect<true>;
     audiences: AudiencesSelect<false> | AudiencesSelect<true>;
     messages: MessagesSelect<false> | MessagesSelect<true>;
+    newsletters: NewslettersSelect<false> | NewslettersSelect<true>;
+    'newsletter-deliveries': NewsletterDeliveriesSelect<false> | NewsletterDeliveriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     tenants: TenantsSelect<false> | TenantsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -624,6 +628,82 @@ export interface User {
   collection: 'users';
 }
 /**
+ * Email updates to supporters. Write a draft, save it, preview and send yourself a test, then send to everyone or a saved audience.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "newsletters".
+ */
+export interface Newsletter {
+  id: number;
+  tenant?: (number | null) | Tenant;
+  subject: string;
+  /**
+   * Shown after the subject in most inboxes. One short sentence.
+   */
+  previewText?: string | null;
+  /**
+   * Leave empty to send to every subscribed supporter with an email address.
+   */
+  audience?: (number | null) | Audience;
+  image?: (number | null) | Media;
+  body: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * Optional, e.g. “Read the full update”
+   */
+  buttonLabel?: string | null;
+  buttonUrl?: string | null;
+  status: 'draft' | 'scheduled' | 'sending' | 'sent';
+  scheduledAt?: string | null;
+  sentAt?: string | null;
+  sentByName?: string | null;
+  audienceCount?: number | null;
+  stats?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "newsletter-deliveries".
+ */
+export interface NewsletterDelivery {
+  id: number;
+  tenant?: (number | null) | Tenant;
+  newsletter: number | Newsletter;
+  supporter?: (number | null) | Supporter;
+  email: string;
+  status: 'queued' | 'claimed' | 'sent' | 'failed' | 'bounced' | 'complained';
+  resendId?: string | null;
+  sentAt?: string | null;
+  deliveredAt?: string | null;
+  openedAt?: string | null;
+  clickedAt?: string | null;
+  error?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -682,6 +762,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'messages';
         value: number | Message;
+      } | null)
+    | ({
+        relationTo: 'newsletters';
+        value: number | Newsletter;
+      } | null)
+    | ({
+        relationTo: 'newsletter-deliveries';
+        value: number | NewsletterDelivery;
       } | null)
     | ({
         relationTo: 'users';
@@ -989,6 +1077,47 @@ export interface MessagesSelect<T extends boolean = true> {
   notes?: T;
   consentAt?: T;
   consentText?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "newsletters_select".
+ */
+export interface NewslettersSelect<T extends boolean = true> {
+  tenant?: T;
+  subject?: T;
+  previewText?: T;
+  audience?: T;
+  image?: T;
+  body?: T;
+  buttonLabel?: T;
+  buttonUrl?: T;
+  status?: T;
+  scheduledAt?: T;
+  sentAt?: T;
+  sentByName?: T;
+  audienceCount?: T;
+  stats?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "newsletter-deliveries_select".
+ */
+export interface NewsletterDeliveriesSelect<T extends boolean = true> {
+  tenant?: T;
+  newsletter?: T;
+  supporter?: T;
+  email?: T;
+  status?: T;
+  resendId?: T;
+  sentAt?: T;
+  deliveredAt?: T;
+  openedAt?: T;
+  clickedAt?: T;
+  error?: T;
   updatedAt?: T;
   createdAt?: T;
 }
