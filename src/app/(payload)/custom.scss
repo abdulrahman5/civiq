@@ -161,3 +161,20 @@ a.cq-stat:hover { border-color: var(--theme-elevation-400); }
 .cq-invite__linkrow input { flex: 1 1 260px; font-size: 0.82rem; }
 .cq-invite__linkrow .btn { margin: 0; }
 .cq-invite-status .cq-invite__link { margin-top: 4px; }
+
+// Legislator site: template (chamber) picker
+.cq-chamber { margin-bottom: var(--spacing-field, 24px); }
+.cq-chamber__options { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; max-width: 620px; margin: 6px 0; }
+.cq-chamber__card { position: relative; display: grid; gap: 10px; padding: 10px; text-align: left; font: inherit; color: var(--theme-text); background: var(--theme-elevation-0); border: 2px solid var(--theme-elevation-150); border-radius: 10px; cursor: pointer; }
+.cq-chamber__card:hover:not(:disabled) { border-color: var(--theme-elevation-400); }
+.cq-chamber__card.is-selected { border-color: var(--theme-text); }
+.cq-chamber__card:disabled { cursor: default; opacity: 0.8; }
+.cq-chamber__card:focus-visible { outline: 2px solid var(--theme-success-500, #1a7a50); outline-offset: 2px; }
+.cq-chamber__preview { display: grid; gap: 6px; align-content: start; height: 84px; padding: 12px; border-radius: 6px; }
+.cq-chamber__bar { width: 34%; height: 6px; border-radius: 3px; }
+.cq-chamber__line { width: 80%; height: 8px; border-radius: 4px; background: rgba(255, 255, 255, 0.85); }
+.cq-chamber__line--short { width: 55%; background: rgba(255, 255, 255, 0.55); }
+.cq-chamber__btn { width: 30%; height: 12px; border-radius: 999px; margin-top: 2px; }
+.cq-chamber__text { display: grid; gap: 2px; font-size: 0.9rem; }
+.cq-chamber__text span { color: var(--theme-elevation-700); font-size: 0.82rem; }
+.cq-chamber__tick { position: absolute; top: 16px; right: 16px; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: #fff; color: #111; font-size: 0.8rem; font-weight: 700; }

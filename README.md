@@ -1,6 +1,6 @@
 # Civiq — digital platform for Nigerian legislators
 
-One Next.js app on Vercel serves **every legislator's website**, each on its own domain, plus the **Civiq Portal** where their teams update content. All sites share one template; only the content differs. A fix or feature shipped here reaches every site at once.
+One Next.js app on Vercel serves **every legislator's website**, each on its own domain, plus the **Civiq Portal** where their teams update content. All sites share one template in two colour themes, chosen per site: **Senate** (red) and **House of Representatives** (green). Apart from the theme, only the content differs. A fix or feature shipped here reaches every site at once.
 
 | Address | What it is |
 |---|---|
@@ -43,7 +43,7 @@ Code: `src/components/portal/` (screens, charts, which-legislator logic) and `sr
 
 | Section | Contents |
 |---|---|
-| **Website → Site settings** | Name, party, brand colours, home banner and portrait, key numbers, quote, contact details, social links |
+| **Website → Site settings** | Name, party, home banner and portrait, key numbers, quote, contact details, social links |
 | **Website → About & timeline**, **Agenda / priorities** | Biography, facts, milestones, priority cards |
 | **Website → News & press**, **Projects**, **Photo library** | With drafts and photos |
 | **Community → Supporters** | People who joined the movement: contact details, ward/LGA, interests, preferred channels, subscription status and the consent they gave. CSV export. |
@@ -67,7 +67,9 @@ Public-site queries run as the restricted Postgres role `civiq_web` inside a tra
 
 ## Onboarding a new legislator
 
-1. **Portal → Civiq platform → Legislator sites → Create new:** name, slug (e.g. `adaokafor`), main domain (e.g. `adaokafor.ng`) and any extra domains (`www.adaokafor.ng`; extra domains forward to the main one). Save.
+Full playbook, from agreement to the first 30 days: **[docs/launching-a-new-site.md](docs/launching-a-new-site.md)**, with the **[client intake checklist](docs/client-intake-checklist.md)** to send to new clients. The portal steps in short:
+
+1. **Portal → Civiq platform → Legislator sites → Create new:** name, **template** (Senate or House of Representatives, which sets the colours), slug (e.g. `adaokafor`), main domain (e.g. `adaokafor.ng`) and any extra domains (`www.adaokafor.ng`; extra domains forward to the main one). Save.
 2. On the same screen, **Connect domains**. The portal adds them to Vercel and shows the exact DNS records to give the legislator's registrar (with copy buttons). Press **Check again** later: each domain turns **Live** once DNS works, and HTTPS is automatic. A domain already used on another Vercel account first shows a TXT “ownership check” record.
 3. Switch the portal's **Legislator** menu to the new site and fill in **Site settings** (and About / Agenda). The **Setup checklist** next to the domains shows what is left.
 4. **Team → Users → Invite a team member:** name, email and role. They get an email with a link to choose their own password (valid 7 days, works once); the inviter also sees the link, to share on WhatsApp if needed. Team admins then invite the rest of their team the same way. The Users list shows who is **Active** (last active time) and who was **Invited, not joined yet**; open someone to **Resend invite**.
