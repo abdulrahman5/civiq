@@ -12,5 +12,25 @@ export const getPortalUrl = () => {
 const portalSetting = () => process.env.PORTAL_URL || process.env.CONSOLE_URL
 export const getPortalHost = () => (portalSetting() ? new URL(portalSetting()!).hostname : null)
 
-// Every tenant also gets a preview address at <slug>.<root domain>, e.g. saidumusa.theciviq.com.ng
-export const getRootDomain = () => (process.env.PLATFORM_ROOT_DOMAIN || '').toLowerCase().replace(/^\.+|\.+$/g, '')
+/** "https://www.theciviq.com.ng/" → "theciviq.com.ng": forgiving about how the setting was typed. */
+export const normaliseRootDomain = (v: string) =>
+  v
+    .trim()
+    .toLowerCase()
+    .replace(/^[a-z]+:\/\//, '')
+    .replace(/[/?#].*$/, '')
+    .replace(/:\d+$/, '')
+    .replace(/^(\*\.|www\.)/, '')
+    .replace(/^\.+|\.+$/g, '')
+
+// Civiq's own domain: the marketing site lives on it, and every tenant gets a preview address at
+// <slug>.<root domain>, e.g. saidumusa.theciviq.com.ng. From PLATFORM_ROOT_DOMAIN, or else worked out from
+// PORTAL_URL (portal.theciviq.com.ng → theciviq.com.ng).
+export const getRootDomain = () => {
+  const set = normaliseRootDomain(process.env.PLATFORM_ROOT_DOMAIN || '')
+  if (set) return set
+  const portal = getPortalHost()
+  if (!portal || portal.endsWith('.vercel.app') || portal === 'localhost') return ''
+  const labels = portal.split('.')
+  return labels.length >= 3 ? labels.slice(1).join('.') : ''
+}

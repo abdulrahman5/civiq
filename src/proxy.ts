@@ -1,5 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 
+import { getRootDomain } from './lib/site-url'
+
 // Every legislator's site is served by this one app. The proxy reads the domain a request came
 // in on and rewrites it to /<domain>/<path>, where [domain] pages look up that legislator's content.
 // The portal (/admin) lives on one Civiq address: once PORTAL_URL is set, /admin on any
@@ -22,7 +24,7 @@ export function proxy(request: NextRequest) {
 
   // Civiq's own marketing site on the root domain (theciviq.com.ng); www forwards to it.
   // civiq.localhost shows it in local development.
-  const root = (process.env.PLATFORM_ROOT_DOMAIN || '').toLowerCase().replace(/^\.+|\.+$/g, '')
+  const root = getRootDomain()
   if (root && host === `www.${root}`) {
     const to = url.clone()
     to.host = root
