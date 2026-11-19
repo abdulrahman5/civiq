@@ -178,3 +178,6 @@ a.cq-stat:hover { border-color: var(--theme-elevation-400); }
 .cq-chamber__text { display: grid; gap: 2px; font-size: 0.9rem; }
 .cq-chamber__text span { color: var(--theme-elevation-700); font-size: 0.82rem; }
 .cq-chamber__tick { position: absolute; top: 16px; right: 16px; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: #fff; color: #111; font-size: 0.8rem; font-weight: 700; }
+
+// Leads
+.cq-lead__select { font: inherit; padding: 6px 8px; border: 1px solid var(--theme-elevation-150); border-radius: 4px; background: var(--theme-input-bg, var(--theme-elevation-0)); color: var(--theme-text); }

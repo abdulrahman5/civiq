@@ -5,6 +5,7 @@ One Next.js app on Vercel serves **every legislator's website**, each on its own
 | Address | What it is |
 |---|---|
 | `saidumusa.ng`, `adaokafor.ng`, … | Each legislator's public site (home, news, contact form), with a small “Powered by Civiq” badge |
+| `theciviq.com.ng` | Civiq's own marketing site (`www.` forwards to it): features, templates, showcase, demo requests |
 | `<slug>.theciviq.com.ng` | Preview of a legislator's site before their own domain is live |
 | `portal.theciviq.com.ng/admin` | The Civiq Portal. `/admin` on any legislator's domain redirects here. |
 
@@ -53,6 +54,16 @@ Code: `src/components/portal/` (screens, charts, which-legislator logic) and `sr
 
 Saving updates that legislator's live site immediately.
 
+## The marketing site (theciviq.com.ng)
+
+Part of the same app: `src/proxy.ts` sends the root domain (`PLATFORM_ROOT_DOMAIN`) to `src/app/(marketing)/civiq/`, and `www.` forwards to the bare domain. Locally, open `civiq.localhost:3000`. Page copy lives in code; what changes often lives in the portal (Civiq team only):
+
+- **Civiq platform → Leads**: every **Request a demo** submission, with consent record and a simple status (New → Contacted → Demo booked → Signed / Not now). An alert email goes to the address in Civiq settings. When a lead signs, **Create legislator site** on the lead starts their site with the name and template filled in (then follow the onboarding guide from step 3).
+- **Civiq platform → Civiq marketing site**: sales email, WhatsApp number (adds “Chat on WhatsApp”), LinkedIn/X, and who gets lead alerts.
+- **Showcase**: tick **Show on theciviq.com.ng** on a legislator site (with their agreement). It appears once its main domain is set.
+
+Slugs that would clash with Civiq's own addresses (`www`, `portal`, `demo`, `api`, …) are refused for legislator sites (`src/lib/reserved.ts`).
+
 ## Constituents' data and privacy
 
 - **Join the movement** (`#join` on every site) adds a supporter. People who join again with the same phone (normalised to `+234…`) or email are updated, not duplicated; interests are added to, not replaced.
@@ -94,7 +105,7 @@ Hosting: Vercel (Pro required before launch), Neon Postgres and Vercel Blob conn
 | `CRON_SECRET` | Long random string. Vercel sends it to `/api/newsletters/cron` (set in `vercel.json`), which sends scheduled newsletters and finishes large sends |
 | `NEWSLETTER_CRON_FREQUENT` | Set to `1` after moving to Vercel Pro and changing the cron in `vercel.json` to every 5 minutes (`*/5 * * * *`). On the free plan the cron runs once a day at 07:00 UTC |
 | `PORTAL_URL` | e.g. `https://portal.theciviq.com.ng` once that domain is attached. Until set, the portal runs on the deployment's own address. |
-| `PLATFORM_ROOT_DOMAIN` | e.g. `theciviq.com.ng`, for `<slug>.theciviq.com.ng` previews (add `*.theciviq.com.ng` as a wildcard domain in Vercel) |
+| `PLATFORM_ROOT_DOMAIN` | e.g. `theciviq.com.ng`: the marketing site on the bare domain, and `<slug>.theciviq.com.ng` previews. Add `theciviq.com.ng`, `www.theciviq.com.ng` and the wildcard `*.theciviq.com.ng` as domains in Vercel |
 | `DEFAULT_TENANT_SLUG` | Optional: which site `*.vercel.app` and `localhost` show (default: the first site) |
 
 Every **production** deploy runs `scripts/build.mjs`: database migrations → first-run seed (only on an empty database) → `next build`. Preview deployments skip the database steps.

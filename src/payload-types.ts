@@ -80,6 +80,7 @@ export interface Config {
     'newsletter-deliveries': NewsletterDelivery;
     users: User;
     tenants: Tenant;
+    leads: Lead;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -100,6 +101,7 @@ export interface Config {
     'newsletter-deliveries': NewsletterDeliveriesSelect<false> | NewsletterDeliveriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     tenants: TenantsSelect<false> | TenantsSelect<true>;
+    leads: LeadsSelect<false> | LeadsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -109,8 +111,12 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'civiq-settings': CiviqSetting;
+  };
+  globalsSelect: {
+    'civiq-settings': CiviqSettingsSelect<false> | CiviqSettingsSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -268,6 +274,10 @@ export interface Tenant {
    * Suspended sites show “site not found” to visitors.
    */
   status: 'active' | 'suspended';
+  /**
+   * Lists this site in the showcase on Civiq’s own website, once its main domain is set. Only with the legislator’s agreement.
+   */
+  showcase?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -707,6 +717,31 @@ export interface NewsletterDelivery {
   createdAt: string;
 }
 /**
+ * Demo requests from theciviq.com.ng. When one signs, open it and use “Create legislator site”.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "leads".
+ */
+export interface Lead {
+  id: number;
+  name: string;
+  role?: ('Legislator' | 'Chief of staff' | 'Media aide' | 'Other office staff' | 'Party or caucus' | 'Other') | null;
+  phone?: string | null;
+  email?: string | null;
+  legislatorName?: string | null;
+  chamber?: ('senate' | 'reps' | 'unsure') | null;
+  constituency?: string | null;
+  message?: string | null;
+  status: 'new' | 'contacted' | 'demo-booked' | 'signed' | 'not-now';
+  notes?: string | null;
+  site?: (number | null) | Tenant;
+  consentAt?: string | null;
+  consentText?: string | null;
+  source?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -781,6 +816,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'tenants';
         value: number | Tenant;
+      } | null)
+    | ({
+        relationTo: 'leads';
+        value: number | Lead;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -1175,6 +1214,29 @@ export interface TenantsSelect<T extends boolean = true> {
         id?: T;
       };
   status?: T;
+  showcase?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "leads_select".
+ */
+export interface LeadsSelect<T extends boolean = true> {
+  name?: T;
+  role?: T;
+  phone?: T;
+  email?: T;
+  legislatorName?: T;
+  chamber?: T;
+  constituency?: T;
+  message?: T;
+  status?: T;
+  notes?: T;
+  site?: T;
+  consentAt?: T;
+  consentText?: T;
+  source?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1217,6 +1279,45 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * Contact details and lead alerts for theciviq.com.ng. Legislators shown on the site are chosen on each Legislator site (“Show on theciviq.com.ng”).
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "civiq-settings".
+ */
+export interface CiviqSetting {
+  id: number;
+  /**
+   * Shown on the site, e.g. hello@theciviq.com.ng
+   */
+  salesEmail?: string | null;
+  /**
+   * International format, e.g. +2348030000000. Adds a “Chat on WhatsApp” button.
+   */
+  whatsapp?: string | null;
+  /**
+   * Who is emailed when someone requests a demo.
+   */
+  leadNotifyEmail?: string | null;
+  linkedin?: string | null;
+  x?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "civiq-settings_select".
+ */
+export interface CiviqSettingsSelect<T extends boolean = true> {
+  salesEmail?: T;
+  whatsapp?: T;
+  leadNotifyEmail?: T;
+  linkedin?: T;
+  x?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

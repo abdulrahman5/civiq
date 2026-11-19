@@ -7,6 +7,7 @@ import * as migration_20261118_160300_inbox from './20261118_160300_inbox';
 import * as migration_20261118_162452_newsletters from './20261118_162452_newsletters';
 import * as migration_20261118_165419_onboarding from './20261118_165419_onboarding';
 import * as migration_20261119_133957_chamber_templates from './20261119_133957_chamber_templates';
+import * as migration_20261119_145950_marketing_site from './20261119_145950_marketing_site';
 
 export const migrations = [
   {
@@ -52,6 +53,11 @@ export const migrations = [
   {
     up: migration_20261119_133957_chamber_templates.up,
     down: migration_20261119_133957_chamber_templates.down,
-    name: '20261119_133957_chamber_templates'
+    name: '20261119_133957_chamber_templates',
+  },
+  {
+    up: migration_20261119_145950_marketing_site.up,
+    down: migration_20261119_145950_marketing_site.down,
+    name: '20261119_145950_marketing_site'
   },
 ];

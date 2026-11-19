@@ -33,6 +33,7 @@ import { InviteForm as InviteForm_afd7ab780b27cbf419c458e26e877e61 } from '@/com
 import { ChamberPicker as ChamberPicker_2d8b416b8108cb8575e2e9b412696d2b } from '@/components/portal/ChamberPicker'
 import { DomainPanel as DomainPanel_63f4fc87ba9d433ffecf3d0c19fe69a3 } from '@/components/portal/DomainPanel'
 import { WatchTenantCollection as WatchTenantCollection_1d0591e3cf4f332c83a86da13a0de59a } from '@payloadcms/plugin-multi-tenant/client'
+import { LeadToSite as LeadToSite_3f9ce1b4b722e23659dc95f8619b57d1 } from '@/components/portal/LeadToSite'
 import { Icon as Icon_534076e2c753ea5d539a54b05f456b1b } from '@/components/admin/Icon'
 import { Logo as Logo_a44df17d0fc3dcd873dae43dc3bf66bd } from '@/components/admin/Logo'
 import { GlobalViewRedirect as GlobalViewRedirect_d6d5f193a167989e2ee7d14202901e62 } from '@payloadcms/plugin-multi-tenant/rsc'
@@ -81,6 +82,7 @@ export const importMap = {
   "@/components/portal/ChamberPicker#ChamberPicker": ChamberPicker_2d8b416b8108cb8575e2e9b412696d2b,
   "@/components/portal/DomainPanel#DomainPanel": DomainPanel_63f4fc87ba9d433ffecf3d0c19fe69a3,
   "@payloadcms/plugin-multi-tenant/client#WatchTenantCollection": WatchTenantCollection_1d0591e3cf4f332c83a86da13a0de59a,
+  "@/components/portal/LeadToSite#LeadToSite": LeadToSite_3f9ce1b4b722e23659dc95f8619b57d1,
   "@/components/admin/Icon#Icon": Icon_534076e2c753ea5d539a54b05f456b1b,
   "@/components/admin/Logo#Logo": Logo_a44df17d0fc3dcd873dae43dc3bf66bd,
   "@payloadcms/plugin-multi-tenant/rsc#GlobalViewRedirect": GlobalViewRedirect_d6d5f193a167989e2ee7d14202901e62,
