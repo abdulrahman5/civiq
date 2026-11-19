@@ -22,16 +22,11 @@ export function proxy(request: NextRequest) {
     return portalHost ? NextResponse.redirect(new URL(url.pathname + url.search, portalUrl)) : NextResponse.next()
   }
 
-  // Civiq's own marketing site on the root domain (theciviq.com.ng); www forwards to it.
-  // civiq.localhost shows it in local development.
+  // Civiq's own marketing site on the root domain (theciviq.com.ng) and www. Which of the two forwards
+  // to the other is left to Vercel's domain settings (a redirect here as well can loop with Vercel's);
+  // the pages' canonical links point search engines at the bare domain. civiq.localhost is for local development.
   const root = getRootDomain()
-  if (root && host === `www.${root}`) {
-    const to = url.clone()
-    to.host = root
-    to.port = ''
-    return NextResponse.redirect(to, 308)
-  }
-  if ((root && host === root) || host === 'civiq.localhost') {
+  if ((root && (host === root || host === `www.${root}`)) || host === 'civiq.localhost') {
     const rewritten = url.clone()
     rewritten.pathname = `/civiq${url.pathname === '/' ? '' : url.pathname}`
     return NextResponse.rewrite(rewritten)

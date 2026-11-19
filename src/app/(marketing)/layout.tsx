@@ -7,7 +7,7 @@ import { getPortalUrl, getRootDomain } from '@/lib/site-url'
 import './marketing.css'
 
 // Civiq's own website (theciviq.com.ng). src/proxy.ts sends the root domain here (as /civiq/…).
-const siteUrl = () => (getRootDomain() ? `https://${getRootDomain()}` : 'http://civiq.localhost:3000')
+const siteUrl = () => `https://${getRootDomain() || 'theciviq.com.ng'}`
 
 // Built per request (not at build time), so it always uses the live PLATFORM_ROOT_DOMAIN.
 export const generateMetadata = (): Metadata => ({
