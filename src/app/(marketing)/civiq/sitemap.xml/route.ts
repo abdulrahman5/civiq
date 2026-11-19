@@ -1,6 +1,6 @@
 import { getRootDomain } from '@/lib/site-url'
 
-export const dynamic = 'force-static'
+export const dynamic = 'force-dynamic' // reads PLATFORM_ROOT_DOMAIN at request time, not build time
 
 export function GET() {
   const base = `https://${getRootDomain() || 'theciviq.com.ng'}`

@@ -9,7 +9,8 @@ import './marketing.css'
 // Civiq's own website (theciviq.com.ng). src/proxy.ts sends the root domain here (as /civiq/…).
 const siteUrl = () => (getRootDomain() ? `https://${getRootDomain()}` : 'http://civiq.localhost:3000')
 
-export const metadata: Metadata = {
+// Built per request (not at build time), so it always uses the live PLATFORM_ROOT_DOMAIN.
+export const generateMetadata = (): Metadata => ({
   metadataBase: new URL(siteUrl()),
   title: { default: 'Civiq | Digital platforms for Nigerian legislators', template: '%s | Civiq' },
   description:
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: { type: 'website', siteName: 'Civiq', url: '/' },
   twitter: { card: 'summary' },
   alternates: { canonical: '/' },
-}
+})
 
 export const viewport: Viewport = { themeColor: '#0b5d3b' }
 

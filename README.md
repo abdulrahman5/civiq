@@ -105,7 +105,7 @@ Hosting: Vercel (Pro required before launch), Neon Postgres and Vercel Blob conn
 | `CRON_SECRET` | Long random string. Vercel sends it to `/api/newsletters/cron` (set in `vercel.json`), which sends scheduled newsletters and finishes large sends |
 | `NEWSLETTER_CRON_FREQUENT` | Set to `1` after moving to Vercel Pro and changing the cron in `vercel.json` to every 5 minutes (`*/5 * * * *`). On the free plan the cron runs once a day at 07:00 UTC |
 | `PORTAL_URL` | e.g. `https://portal.theciviq.com.ng` once that domain is attached. Until set, the portal runs on the deployment's own address. |
-| `PLATFORM_ROOT_DOMAIN` | e.g. `theciviq.com.ng`: the marketing site on the bare domain, and `<slug>.theciviq.com.ng` previews. Add `theciviq.com.ng`, `www.theciviq.com.ng` and the wildcard `*.theciviq.com.ng` as domains in Vercel |
+| `PLATFORM_ROOT_DOMAIN` | `theciviq.com.ng` (just the domain). Needed for the marketing site on the bare domain and `<slug>.theciviq.com.ng` previews; if missing, it is worked out from `PORTAL_URL` (`portal.theciviq.com.ng` → `theciviq.com.ng`). Add `theciviq.com.ng`, `www.theciviq.com.ng` and the wildcard `*.theciviq.com.ng` as domains in Vercel |
 | `DEFAULT_TENANT_SLUG` | Optional: which site `*.vercel.app` and `localhost` show (default: the first site) |
 
 Every **production** deploy runs `scripts/build.mjs`: database migrations → first-run seed (only on an empty database) → `next build`. Preview deployments skip the database steps.
