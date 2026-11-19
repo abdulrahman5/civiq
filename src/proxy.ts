@@ -20,6 +20,21 @@ export function proxy(request: NextRequest) {
     return portalHost ? NextResponse.redirect(new URL(url.pathname + url.search, portalUrl)) : NextResponse.next()
   }
 
+  // Civiq's own marketing site on the root domain (theciviq.com.ng); www forwards to it.
+  // civiq.localhost shows it in local development.
+  const root = (process.env.PLATFORM_ROOT_DOMAIN || '').toLowerCase().replace(/^\.+|\.+$/g, '')
+  if (root && host === `www.${root}`) {
+    const to = url.clone()
+    to.host = root
+    to.port = ''
+    return NextResponse.redirect(to, 308)
+  }
+  if ((root && host === root) || host === 'civiq.localhost') {
+    const rewritten = url.clone()
+    rewritten.pathname = `/civiq${url.pathname === '/' ? '' : url.pathname}`
+    return NextResponse.rewrite(rewritten)
+  }
+
   const rewritten = url.clone()
   rewritten.pathname = `/${host}${url.pathname === '/' ? '' : url.pathname}`
   return NextResponse.rewrite(rewritten)
@@ -27,5 +42,5 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   // Everything except Next.js internals, the Payload API and static files in /public.
-  matcher: ['/((?!_next/|api/|civiq-mark\\.svg$).*)'],
+  matcher: ['/((?!_next/|api/|civiq-mark\\.svg$|marketing/).*)'],
 }

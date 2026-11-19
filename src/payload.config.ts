@@ -14,7 +14,9 @@ import { Audiences } from './collections/Audiences'
 import { Agenda } from './collections/Agenda'
 import { Media } from './collections/Media'
 import { Messages } from './collections/Messages'
+import { Leads } from './collections/Leads'
 import { NewsletterDeliveries } from './collections/NewsletterDeliveries'
+import { CiviqSettings } from './globals/CiviqSettings'
 import { Newsletters } from './collections/Newsletters'
 import { News } from './collections/News'
 import { Projects } from './collections/Projects'
@@ -83,7 +85,8 @@ export default buildConfig({
       },
     },
   },
-  collections: [SiteSettings, About, Agenda, News, Projects, Media, Supporters, Audiences, Messages, Newsletters, NewsletterDeliveries, Users, Tenants],
+  collections: [SiteSettings, About, Agenda, News, Projects, Media, Supporters, Audiences, Messages, Newsletters, NewsletterDeliveries, Users, Tenants, Leads],
+  globals: [CiviqSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },

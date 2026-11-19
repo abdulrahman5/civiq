@@ -3,6 +3,7 @@ import type { CollectionConfig, FieldHook, TextFieldSingleValidation } from 'pay
 import { isLoggedIn, isPlatformAdmin, platformAdminOnly } from '../access'
 import { revalidateAfterChange, revalidateAfterDelete } from '../hooks/revalidate'
 import { domainConnectEndpoint, domainStatusEndpoint } from '../lib/domains'
+import { RESERVED_SLUGS } from '../lib/reserved'
 import { CHAMBER_OPTIONS } from '../lib/themes'
 
 export const normaliseDomain = (v: string) =>
@@ -20,7 +21,13 @@ const domainFormat: TextFieldSingleValidation = (value) =>
     : 'Enter a domain such as saidumusa.ng (no https:// or slashes)'
 
 const slugFormat: TextFieldSingleValidation = (value) =>
-  !value || /^[a-z0-9](?:[a-z0-9-]{0,40}[a-z0-9])?$/.test(value) ? true : 'Lowercase letters, numbers and hyphens only'
+  !value
+    ? true
+    : !/^[a-z0-9](?:[a-z0-9-]{0,40}[a-z0-9])?$/.test(value)
+      ? 'Lowercase letters, numbers and hyphens only'
+      : RESERVED_SLUGS.has(value)
+        ? `“${value}” is reserved for Civiq's own addresses. Choose another slug.`
+        : true
 
 const toDomain: FieldHook = ({ value }) => (typeof value === 'string' ? normaliseDomain(value) : value)
 
@@ -96,6 +103,13 @@ export const Tenants: CollectionConfig = {
         { label: 'Suspended', value: 'suspended' },
       ],
       admin: { position: 'sidebar', description: 'Suspended sites show “site not found” to visitors.' },
+    },
+    {
+      name: 'showcase',
+      label: 'Show on theciviq.com.ng',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: { position: 'sidebar', description: 'Lists this site in the showcase on Civiq’s own website, once its main domain is set. Only with the legislator’s agreement.' },
     },
   ],
 }
