@@ -67,6 +67,8 @@ Public-site queries run as the restricted Postgres role `civiq_web` inside a tra
 
 ## Onboarding a new legislator
 
+Full playbook, from agreement to the first 30 days: **[docs/launching-a-new-site.md](docs/launching-a-new-site.md)**, with the **[client intake checklist](docs/client-intake-checklist.md)** to send to new clients. The portal steps in short:
+
 1. **Portal → Civiq platform → Legislator sites → Create new:** name, slug (e.g. `adaokafor`), main domain (e.g. `adaokafor.ng`) and any extra domains (`www.adaokafor.ng`; extra domains forward to the main one). Save.
 2. On the same screen, **Connect domains**. The portal adds them to Vercel and shows the exact DNS records to give the legislator's registrar (with copy buttons). Press **Check again** later: each domain turns **Live** once DNS works, and HTTPS is automatic. A domain already used on another Vercel account first shows a TXT “ownership check” record.
 3. Switch the portal's **Legislator** menu to the new site and fill in **Site settings** (and About / Agenda). The **Setup checklist** next to the domains shows what is left.
