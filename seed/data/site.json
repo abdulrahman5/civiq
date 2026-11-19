@@ -7,10 +7,6 @@
   "party": "All Progressives Congress (APC)",
   "siteUrl": "https://YOUR-SITE.vercel.app",
   "seoDescription": "Official website of Hon. Saidu Musa Abdullahi (SMA), Member, House of Representatives, Bida/Gbako/Katcha Federal Constituency, Niger State.",
-  "colors": {
-    "primary": "#0b5d3b",
-    "accent": "#c8a13a"
-  },
   "hero": {
     "badge": "Member, House of Representatives · Niger State",
     "headline": "Representation that",

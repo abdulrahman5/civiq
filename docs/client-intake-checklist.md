@@ -14,9 +14,8 @@ Used in step 2 of [Launching a new legislator site](launching-a-new-site.md).
 - [ ] **Constituency** and **state**
 - [ ] **Domain** they own or want, e.g. *adaokafor.ng*
 
-## Brand
-- [ ] **Main colour** and **accent colour** (party colours are fine), or "Civiq to choose"
-  - The main colour sits behind white text, so it must be fairly dark.
+## Chamber
+- [ ] **Senate** or **House of Representatives**. This sets the site's theme: Senate sites are red, House sites are green. Colours cannot be customised per legislator.
 
 ## Photos
 - [ ] **Official portrait**: upright, well lit, face clearly visible, at least 1200 px tall
@@ -26,7 +25,7 @@ Used in step 2 of [Launching a new legislator site](launching-a-new-site.md).
 
 ## Home page
 - [ ] **Headline**, e.g. *Delivering for Anambra*
-- [ ] **Words to highlight** in the accent colour (optional)
+- [ ] **Words to highlight** in gold (optional)
 - [ ] **Intro paragraph** (2–3 sentences)
 - [ ] **Badge**, e.g. *APC · Anambra South* (optional)
 - [ ] **3–4 key numbers** with labels, e.g. *12 bills sponsored*, *40 boreholes*

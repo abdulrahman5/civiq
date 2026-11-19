@@ -3,9 +3,6 @@ import type { CollectionConfig, TextFieldSingleValidation } from 'payload'
 import { anyone, guardTenantWrite, platformAdminOnly, tenantRole } from '../access'
 import { revalidateAfterChange } from '../hooks/revalidate'
 
-const hexColour: TextFieldSingleValidation = (value) =>
-  !value || /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(value) ? true : 'Use a hex colour code such as #0b5d3b'
-
 const url: TextFieldSingleValidation = (value) =>
   !value || /^https:\/\/\S+$/i.test(value) ? true : 'Enter a full link starting with https://'
 
@@ -34,25 +31,13 @@ export const SiteSettings: CollectionConfig = {
             {
               type: 'row',
               fields: [
-                { name: 'office', type: 'text' },
+                { name: 'office', type: 'text', admin: { description: 'e.g. Senator or Member, House of Representatives' } },
                 { name: 'constituency', type: 'text' },
                 { name: 'state', type: 'text' },
               ],
             },
             { name: 'seoDescription', label: 'Search engine description', type: 'textarea', admin: { description: 'Shown by Google and in link previews (about 155 characters).' } },
             { name: 'shareImage', label: 'Link preview image', type: 'upload', relationTo: 'media', admin: { description: 'Shown when the site is shared on WhatsApp, Facebook, X, etc. Ideal size 1200×630. Defaults to the portrait.' } },
-          ],
-        },
-        {
-          label: 'Brand colours',
-          fields: [
-            {
-              type: 'row',
-              fields: [
-                { name: 'primaryColor', label: 'Primary colour', type: 'text', defaultValue: '#0b5d3b', validate: hexColour, admin: { description: 'Main colour: header, banners, buttons.' } },
-                { name: 'accentColor', label: 'Accent colour', type: 'text', defaultValue: '#c8a13a', validate: hexColour, admin: { description: 'Highlights and secondary buttons.' } },
-              ],
-            },
           ],
         },
         {

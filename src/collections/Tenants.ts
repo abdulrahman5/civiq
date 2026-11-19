@@ -3,6 +3,7 @@ import type { CollectionConfig, FieldHook, TextFieldSingleValidation } from 'pay
 import { isLoggedIn, isPlatformAdmin, platformAdminOnly } from '../access'
 import { revalidateAfterChange, revalidateAfterDelete } from '../hooks/revalidate'
 import { domainConnectEndpoint, domainStatusEndpoint } from '../lib/domains'
+import { CHAMBER_OPTIONS } from '../lib/themes'
 
 export const normaliseDomain = (v: string) =>
   v
@@ -30,7 +31,7 @@ export const Tenants: CollectionConfig = {
   admin: {
     group: 'Civiq platform',
     useAsTitle: 'name',
-    defaultColumns: ['name', 'slug', 'primaryDomain', 'status'],
+    defaultColumns: ['name', 'chamber', 'slug', 'primaryDomain', 'status'],
     description: 'Each legislator on Civiq. Only Civiq platform admins can add sites or change domains.',
     hidden: ({ user }) => !isPlatformAdmin(user as Parameters<typeof isPlatformAdmin>[0]),
   },
@@ -47,6 +48,17 @@ export const Tenants: CollectionConfig = {
   },
   fields: [
     { name: 'name', label: 'Legislator / site name', type: 'text', required: true },
+    {
+      name: 'chamber',
+      label: 'Template',
+      type: 'select',
+      required: true,
+      options: CHAMBER_OPTIONS,
+      admin: {
+        description: 'Senate sites use the red theme, House of Representatives sites the green theme. Everything else is identical.',
+        components: { Field: '@/components/portal/ChamberPicker#ChamberPicker' },
+      },
+    },
     {
       name: 'slug',
       type: 'text',

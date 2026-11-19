@@ -7,9 +7,9 @@ import type { Newsletter } from '@/payload-types'
 import { idOf } from '../../access'
 import { isPlaceholder } from '../placeholder'
 import { getPortalUrl } from '../site-url'
+import { themeOf } from '../themes'
 
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!)
-const hex = (v: string | null | undefined, fallback: string) => (v && /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(v) ? v : fallback)
 export const validEmail = (s?: string | null) => (s && !isPlaceholder(s) && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s) ? s : null)
 
 // ---- Unsubscribe links: signed per supporter, so nobody can unsubscribe someone else by guessing ----
@@ -42,8 +42,8 @@ export async function getBranding(payload: Payload, tenant: number): Promise<Bra
   const address = settings?.contact?.address && !isPlaceholder(settings.contact.address) ? settings.contact.address : null
   return {
     office: settings?.name || tenantDoc.name,
-    brand: hex(settings?.primaryColor, '#0b5d3b'),
-    accent: hex(settings?.accentColor, '#c8a13a'),
+    brand: themeOf(tenantDoc).brand,
+    accent: themeOf(tenantDoc).accent,
     address,
     replyTo: validEmail(settings?.contact?.email) ?? validEmail(settings?.contact?.notifyEmail) ?? validEmail(settings?.privacyEmail),
     siteUrl: tenantDoc.primaryDomain ? `https://${tenantDoc.primaryDomain}` : null,

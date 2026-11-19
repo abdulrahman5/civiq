@@ -152,6 +152,9 @@ export interface SiteSetting {
    */
   shortName: string;
   party?: string | null;
+  /**
+   * e.g. Senator or Member, House of Representatives
+   */
   office?: string | null;
   constituency?: string | null;
   state?: string | null;
@@ -163,14 +166,6 @@ export interface SiteSetting {
    * Shown when the site is shared on WhatsApp, Facebook, X, etc. Ideal size 1200×630. Defaults to the portrait.
    */
   shareImage?: (number | null) | Media;
-  /**
-   * Main colour: header, banners, buttons.
-   */
-  primaryColor?: string | null;
-  /**
-   * Highlights and secondary buttons.
-   */
-  accentColor?: string | null;
   hero: {
     badge?: string | null;
     headline: string;
@@ -248,6 +243,10 @@ export interface SiteSetting {
 export interface Tenant {
   id: number;
   name: string;
+  /**
+   * Senate sites use the red theme, House of Representatives sites the green theme. Everything else is identical.
+   */
+  chamber: 'senate' | 'reps';
   /**
    * Short ID, also used for the preview address slug.theciviq.com.ng. Example: saidumusa
    */
@@ -839,8 +838,6 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   state?: T;
   seoDescription?: T;
   shareImage?: T;
-  primaryColor?: T;
-  accentColor?: T;
   hero?:
     | T
     | {
@@ -1168,6 +1165,7 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface TenantsSelect<T extends boolean = true> {
   name?: T;
+  chamber?: T;
   slug?: T;
   primaryDomain?: T;
   domains?:

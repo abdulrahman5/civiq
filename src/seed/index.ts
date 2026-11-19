@@ -27,6 +27,7 @@ const { id: tenant } = await payload.create({
   data: {
     name: site.name,
     slug: process.env.SEED_TENANT_SLUG || 'saidumusa',
+    chamber: 'reps',
     primaryDomain: process.env.SEED_TENANT_DOMAIN || null,
     status: 'active',
   },
@@ -45,8 +46,6 @@ await payload.create({
     state: site.state,
     party: site.party,
     seoDescription: site.seoDescription,
-    primaryColor: site.colors.primary,
-    accentColor: site.colors.accent,
     hero: { badge: site.hero.badge, headline: site.hero.headline, highlight: site.hero.highlight, intro: site.hero.intro },
     stats: site.stats,
     quote: site.quote,

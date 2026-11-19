@@ -2,7 +2,8 @@ import type { Metadata, Viewport } from 'next'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
 
-import { absoluteUrl, hex, imageUrl } from '@/lib/payload'
+import { absoluteUrl, imageUrl } from '@/lib/payload'
+import { themeOf } from '@/lib/themes'
 import { isIndexable } from '@/lib/tenant'
 import { MobileNav } from './MobileNav'
 import { type DomainParams, siteFromParams } from './site'
@@ -29,8 +30,8 @@ export async function generateMetadata(props: DomainParams): Promise<Metadata> {
 }
 
 export async function generateViewport(props: DomainParams): Promise<Viewport> {
-  const { settings } = await siteFromParams(props)
-  return { themeColor: hex(settings.primaryColor, '#0b5d3b') }
+  const { tenant } = await siteFromParams(props)
+  return { themeColor: themeOf(tenant).brand }
 }
 
 const SOCIALS = [
@@ -42,9 +43,9 @@ const SOCIALS = [
 ] as const
 
 export default async function SiteLayout(props: DomainParams & { children: ReactNode }) {
-  const { settings: s } = await siteFromParams(props)
-  const brand = hex(s.primaryColor, '#0b5d3b')
-  const accent = hex(s.accentColor, '#c8a13a')
+  const { tenant, settings: s } = await siteFromParams(props)
+  // Colours come from the site's template (Senate or House of Representatives).
+  const { brand, accent } = themeOf(tenant)
   const socials = SOCIALS.filter(([k]) => s.socials?.[k])
 
   return (

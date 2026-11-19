@@ -36,6 +36,7 @@ While waiting, you can already do steps 3 and 5 (create the site and connect the
 1. Log in to the portal as a Civiq platform admin.
 2. **Civiq platform → Legislator sites → Create new:**
    - **Legislator / site name:** `Hon. Ada Okafor`
+   - **Template:** **Senate** (red theme) or **House of Representatives** (green theme). This sets the site's colours; everything else is identical. Only the Civiq team can change it later.
    - **Slug:** `adaokafor` (lowercase, no spaces; it also forms the preview address)
    - **Main domain:** `adaokafor.ng`
    - **Other domains:** `www.adaokafor.ng` (these forward to the main domain)
@@ -45,14 +46,13 @@ The site exists straight away at its **preview address**, `https://adaokafor.the
 
 ## 4. Design and fill the site
 
-On Civiq, "design" means filling the shared template with the client's identity and content. It does not mean a new layout.
+On Civiq, "design" means filling the shared template with the client's identity and content. It does not mean a new layout or custom colours: the colours come from the template chosen in step 3 (red for the Senate, green for the House of Representatives).
 
 Switch the portal's **Legislator** menu (top of the sidebar) to *Hon. Ada Okafor*, then work through:
 
 | Portal section | What to fill in |
 |---|---|
 | **Website → Site settings → General** | Full name / title, short name (logo), party, office, constituency, state, search engine description, link preview image |
-| **Site settings → Brand colours** | Main colour and accent colour |
 | **Site settings → Home banner** | Badge, headline and highlighted words, intro, portrait photo, key numbers, signature quote |
 | **Site settings → Contact & social** | Office address, public email, phone/WhatsApp, where contact-form alerts go, social media links |
 | **Site settings → Privacy** | Privacy contact email (leave the standard notice unless their lawyer provides one) |
@@ -68,12 +68,11 @@ Then:
 2. Send the client the preview link to approve. Make their changes, then get a written "approved".
 
 **Design tips**
-- **Colours.** White text sits on the main colour (header, banners, buttons), so the main colour must be dark enough to read white text on. Very light party colours (yellow, light green) work better as the accent colour.
 - **Portrait.** Upright (4:5), well lit, face clearly visible, at least 1200 px tall. It is the most important image on the site.
 - **Link preview image.** 1200×630. This is what people see when the site is shared on WhatsApp, Facebook or X. Without it the portrait is used.
 - **Key numbers.** Use 3–4 concrete, checkable figures. Avoid vague claims.
 
-**Requests outside the template.** A new section, a different layout or a custom feature cannot be built for one client alone. A template change applies to every legislator's site, which is what keeps Civiq affordable and easy to run. Record such requests as roadmap items and tell the client they may come to all sites later.
+**Requests outside the template.** Custom colours (for example party colours), a new section, a different layout or a custom feature cannot be built for one client alone. A template change applies to every legislator's site, which is what keeps Civiq affordable and easy to run. Record such requests as roadmap items and tell the client they may come to all sites later.
 
 ## 5. Connect the domain
 
@@ -155,4 +154,3 @@ Improvements that would make this process faster, not yet built:
 
 1. **Client intake inside the portal.** Today the [intake checklist](client-intake-checklist.md) is sent outside the portal; a shareable intake form would stop content arriving in pieces.
 2. **Pre-filled starter content.** New sites start nearly empty. Guided example text (an About layout, sample agenda items) would speed up step 4 and show clients what good looks like.
-3. **Colour check.** The portal does not yet warn when the main colour makes white text hard to read.
