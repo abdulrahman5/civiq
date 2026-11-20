@@ -98,3 +98,7 @@ export const guardTenantWrite =
     }
     return data
   }
+
+/** Contributors only write drafts: they don't see settings, About/Agenda, the community or the inbox. */
+export const isOnlyContributor = (user: UserLike | null | undefined) =>
+  Boolean(user) && !isPlatformAdmin(user) && tenantIdsFor(user, ['admin', 'editor']).length === 0

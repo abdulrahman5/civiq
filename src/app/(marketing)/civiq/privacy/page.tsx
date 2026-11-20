@@ -2,7 +2,11 @@ import type { Metadata } from 'next'
 
 import { getCiviqSettings } from '@/lib/marketing'
 
-export const metadata: Metadata = { title: 'Privacy notice', alternates: { canonical: '/privacy' } }
+export const metadata: Metadata = {
+  title: 'Privacy notice',
+  description: 'How Civiq handles personal data on theciviq.com.ng and in the Civiq Portal, under the Nigeria Data Protection Act 2023.',
+  alternates: { canonical: '/privacy' },
+}
 export const revalidate = 3600
 
 export default async function CiviqPrivacy() {

@@ -1,6 +1,6 @@
 import type { CollectionConfig, TextFieldSingleValidation } from 'payload'
 
-import { anyone, guardTenantWrite, platformAdminOnly, tenantRole } from '../access'
+import { anyone, guardTenantWrite, isOnlyContributor, isPlatformAdmin, platformAdminOnly, roleIn, tenantRole } from '../access'
 import { revalidateAfterChange } from '../hooks/revalidate'
 
 const url: TextFieldSingleValidation = (value) =>
@@ -9,7 +9,9 @@ const url: TextFieldSingleValidation = (value) =>
 export const SiteSettings: CollectionConfig = {
   slug: 'site-settings',
   labels: { singular: 'Site settings', plural: 'Site settings' },
-  admin: { group: 'Website', useAsTitle: 'name' },
+  admin: {
+    hidden: ({ user }) => isOnlyContributor(user as Parameters<typeof isOnlyContributor>[0]),
+    group: 'Website', useAsTitle: 'name' },
   // One document per legislator (the multi-tenant plugin treats this collection like a global).
   access: { read: anyone, create: tenantRole('admin', 'editor'), update: tenantRole('admin', 'editor'), delete: platformAdminOnly },
   hooks: { beforeChange: [guardTenantWrite(['admin', 'editor'])], afterChange: [revalidateAfterChange] },
@@ -97,7 +99,9 @@ export const SiteSettings: CollectionConfig = {
                   name: 'notifyEmail',
                   label: 'Send contact-form alerts to',
                   type: 'email',
-                  admin: { description: 'Each new website message is emailed here (and always saved in the Inbox).' },
+                  admin: { description: 'Each new website message is emailed here (and always saved in the Inbox). Not shown publicly.' },
+                  // Internal address: only that legislator's team (and the Civiq team) can read it, never the public API.
+                  access: { read: ({ req, doc }) => isPlatformAdmin(req.user as Parameters<typeof isPlatformAdmin>[0]) || Boolean(roleIn(req.user as Parameters<typeof roleIn>[0], doc?.tenant)) },
                 },
               ],
             },

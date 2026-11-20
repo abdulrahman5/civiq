@@ -279,3 +279,20 @@ body.mk { margin: 0; background: var(--paper); color: var(--text); font: 16px/1.
 .mk-legal h2 { font: 700 22px/1.3 Fraunces, Georgia, serif; margin: 36px 0 10px; }
 .mk-legal p, .mk-legal li { color: var(--text); }
 .mk-legal .mk-updated { color: var(--muted); margin-top: 0; }
+
+/* Mobile menu */
+.mk-mobile { display: none; position: relative; }
+.mk-mobile__toggle { width: 42px; height: 42px; border: 1px solid var(--line); border-radius: 10px; background: #fff; display: grid; place-items: center; cursor: pointer; padding: 0; }
+.mk-mobile__bars, .mk-mobile__bars::before, .mk-mobile__bars::after { display: block; width: 18px; height: 2px; background: var(--ink); border-radius: 2px; position: relative; content: ''; }
+.mk-mobile__bars::before { position: absolute; top: -6px; }
+.mk-mobile__bars::after { position: absolute; top: 6px; }
+.mk-mobile__toggle[aria-expanded=true] .mk-mobile__bars { background: transparent; }
+.mk-mobile__toggle[aria-expanded=true] .mk-mobile__bars::before { top: 0; transform: rotate(45deg); }
+.mk-mobile__toggle[aria-expanded=true] .mk-mobile__bars::after { top: 0; transform: rotate(-45deg); }
+.mk-mobile__panel { position: fixed; left: 16px; right: 16px; top: 76px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: 0 24px 48px -20px rgba(15,28,22,.35); padding: 12px 16px 18px; display: grid; gap: 12px; }
+.mk-mobile__panel ul { list-style: none; margin: 0; padding: 0; }
+.mk-mobile__panel li a { display: block; padding: 12px 4px; border-bottom: 1px solid var(--line); text-decoration: none; font-weight: 600; color: var(--ink); }
+.mk-mobile__panel .mk-btn { width: 100%; }
+.mk-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (max-width: 860px) { .mk-mobile { display: block; } .mk-hide-sm { display: none; } }
+@media (max-width: 380px) { .mk-nav__cta .mk-btn--sm { display: none; } }

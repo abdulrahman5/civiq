@@ -1,6 +1,10 @@
 import type { Metadata } from 'next'
 
-export const metadata: Metadata = { title: 'Terms of use', alternates: { canonical: '/terms' } }
+export const metadata: Metadata = {
+  title: 'Terms of use',
+  description: 'The terms for using theciviq.com.ng, the website of Civiq, digital platforms for Nigerian legislators.',
+  alternates: { canonical: '/terms' },
+}
 
 export default function CiviqTerms() {
   return (
