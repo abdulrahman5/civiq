@@ -4,6 +4,7 @@ import type { ReactNode } from 'react'
 
 import { getCiviqSettings } from '@/lib/marketing'
 import { getPortalUrl, getRootDomain } from '@/lib/site-url'
+import { MobileMenu } from './MobileMenu'
 import './marketing.css'
 
 // Civiq's own website (theciviq.com.ng). src/proxy.ts sends the root domain here (as /civiq/…).
@@ -16,8 +17,13 @@ export const generateMetadata = (): Metadata => ({
   description:
     'Civiq gives Senators and Members of the House of Representatives their own website, supporter list, constituent inbox and email newsletters, run by their team from one simple portal.',
   icons: { icon: { url: '/civiq-mark.svg', type: 'image/svg+xml' } },
-  openGraph: { type: 'website', siteName: 'Civiq', url: '/' },
-  twitter: { card: 'summary' },
+  openGraph: {
+    type: 'website',
+    siteName: 'Civiq',
+    url: '/',
+    images: [{ url: '/marketing/og.png', width: 1200, height: 630, alt: 'Civiq: digital platforms for Nigerian legislators' }],
+  },
+  twitter: { card: 'summary_large_image', images: ['/marketing/og.png'] },
   alternates: { canonical: '/' },
 })
 
@@ -53,8 +59,9 @@ export default async function MarketingLayout({ children }: { children: ReactNod
               </ul>
             </nav>
             <div className="mk-nav__cta">
-              <a href={portal} className="mk-link">Log in</a>
+              <a href={portal} className="mk-link mk-hide-sm">Log in</a>
               <Link href="/#demo" className="mk-btn mk-btn--gold mk-btn--sm">Request a demo</Link>
+              <MobileMenu portal={portal} />
             </div>
           </div>
         </header>

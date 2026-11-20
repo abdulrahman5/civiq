@@ -12,7 +12,7 @@ export const Messages: CollectionConfig = {
   slug: 'messages',
   labels: { singular: 'Message', plural: 'Inbox' },
   admin: {
-    group: 'Inbox',
+    group: 'Community',
     useAsTitle: 'name',
     defaultColumns: ['name', 'topic', 'ward', 'status', 'lastRepliedAt', 'createdAt'],
     description: 'Messages sent through the website contact form. Open one to read it and reply by email.',

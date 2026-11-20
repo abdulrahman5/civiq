@@ -1,13 +1,15 @@
 import type { CollectionConfig } from 'payload'
 
-import { anyone, guardTenantWrite, platformAdminOnly, tenantRole } from '../access'
+import { anyone, guardTenantWrite, isOnlyContributor, platformAdminOnly, tenantRole } from '../access'
 import { revalidateAfterChange } from '../hooks/revalidate'
 import { ICON_NAMES } from '../lib/icons'
 
 export const Agenda: CollectionConfig = {
   slug: 'agenda',
   labels: { singular: 'Agenda / priorities', plural: 'Agenda / priorities' },
-  admin: { group: 'Website', useAsTitle: 'id' },
+  admin: {
+    hidden: ({ user }) => isOnlyContributor(user as Parameters<typeof isOnlyContributor>[0]),
+    group: 'Website', useAsTitle: 'id' },
   // One document per legislator (the multi-tenant plugin treats this collection like a global).
   access: { read: anyone, create: tenantRole('admin', 'editor'), update: tenantRole('admin', 'editor'), delete: platformAdminOnly },
   hooks: { beforeChange: [guardTenantWrite(['admin', 'editor'])], afterChange: [revalidateAfterChange] },

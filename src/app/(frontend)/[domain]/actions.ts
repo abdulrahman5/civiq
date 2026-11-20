@@ -64,7 +64,9 @@ export async function submitMessage(domain: string, _prev: ContactState, fd: For
     // and only for this legislator (the database refuses any other tenant).
     await asSite(tenant.id, (req) => payload.create({ collection: 'messages', data, overrideAccess: true, req }))
 
-    const to = settings?.contact?.notifyEmail
+    // The alert address is not publicly readable, so it is looked up with full (server) access.
+    const to = (await payload.find({ collection: 'site-settings', where: { tenant: { equals: tenant.id } }, limit: 1, depth: 0, overrideAccess: true })).docs[0]?.contact
+      ?.notifyEmail
     if (to) {
       const rows = Object.entries({ Name: name, Email: email, Phone: data.phone, Ward: data.ward, Topic: data.topic })
         .map(([k, v]) => `<tr><td style="padding:4px 12px 4px 0;color:#666">${k}</td><td>${escapeHtml(v)}</td></tr>`)

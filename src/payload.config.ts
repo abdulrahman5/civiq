@@ -87,6 +87,8 @@ export default buildConfig({
   },
   collections: [SiteSettings, About, Agenda, News, Projects, Media, Supporters, Audiences, Messages, Newsletters, NewsletterDeliveries, Users, Tenants, Leads],
   globals: [CiviqSettings],
+  // Plain-English wording on the login screen ("Log in", not "Login").
+  i18n: { translations: { en: { authentication: { login: 'Log in', logout: 'Log out' } } } },
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },

@@ -181,3 +181,14 @@ a.cq-stat:hover { border-color: var(--theme-elevation-400); }
 
 // Leads
 .cq-lead__select { font: inherit; padding: 6px 8px; border: 1px solid var(--theme-elevation-150); border-radius: 4px; background: var(--theme-input-bg, var(--theme-elevation-0)); color: var(--theme-text); }
+
+// Phones: stop long breadcrumbs and document details from pushing the page sideways
+@media (max-width: 768px) {
+  .app-header__controls-wrapper { min-width: 0; }
+  .app-header__step-nav-wrapper { min-width: 0; overflow: hidden; }
+  .app-header__step-nav { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .app-header__account { flex-shrink: 0; }
+  .doc-controls__meta { flex-wrap: wrap; row-gap: 4px; min-width: 0; }
+  .doc-controls__value { white-space: normal; }
+  .payload-settings { overflow-x: hidden; } // Payload's language/theme box has invisible overflow
+}

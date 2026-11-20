@@ -106,7 +106,7 @@ export async function newsTotals(payload: Payload, tenant: TenantID) {
 export async function platformOverview(payload: Payload) {
   const rows = await run<Record<string, unknown>>(
     payload,
-    sql`SELECT t.id, t.name, t.slug, t.primary_domain, t.status,
+    sql`SELECT t.id, t.name, t.slug, t.primary_domain, t.status, t.chamber,
           (SELECT count(*) FROM supporters s WHERE s.tenant_id = t.id AND s.status = 'subscribed') AS supporters,
           (SELECT count(*) FROM supporters s WHERE s.tenant_id = t.id AND s.created_at >= now() - interval '7 days') AS new7,
           (SELECT count(*) FROM messages m WHERE m.tenant_id = t.id AND m.status = 'unread') AS unread
@@ -118,6 +118,7 @@ export async function platformOverview(payload: Payload) {
     slug: String(r.slug),
     domain: (r.primary_domain as string | null) ?? null,
     status: String(r.status),
+    chamber: String(r.chamber),
     supporters: int(r.supporters),
     new7: int(r.new7),
     unread: int(r.unread),

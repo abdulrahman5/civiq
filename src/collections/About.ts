@@ -1,12 +1,14 @@
 import type { CollectionConfig } from 'payload'
 
-import { anyone, guardTenantWrite, platformAdminOnly, tenantRole } from '../access'
+import { anyone, guardTenantWrite, isOnlyContributor, platformAdminOnly, tenantRole } from '../access'
 import { revalidateAfterChange } from '../hooks/revalidate'
 
 export const About: CollectionConfig = {
   slug: 'about',
   labels: { singular: 'About & timeline', plural: 'About & timeline' },
-  admin: { group: 'Website', useAsTitle: 'id' },
+  admin: {
+    hidden: ({ user }) => isOnlyContributor(user as Parameters<typeof isOnlyContributor>[0]),
+    group: 'Website', useAsTitle: 'id' },
   // One document per legislator (the multi-tenant plugin treats this collection like a global).
   access: { read: anyone, create: tenantRole('admin', 'editor'), update: tenantRole('admin', 'editor'), delete: platformAdminOnly },
   hooks: { beforeChange: [guardTenantWrite(['admin', 'editor'])], afterChange: [revalidateAfterChange] },

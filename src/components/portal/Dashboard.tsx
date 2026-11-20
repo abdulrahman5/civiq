@@ -3,6 +3,7 @@ import type { Payload } from 'payload'
 
 import { countPlaceholders, messageTotals, multiBreakdown, newsTotals, platformOverview, supporterTotals, topPlaces, weeklySignups } from '@/lib/insights'
 import { BarList, StatTile, Trend, WeeklyBars } from './charts'
+import { OpenDashboard } from './OpenDashboard'
 import { fmt, getPortalContext } from './context'
 
 type Props = { payload: Payload; user?: unknown }
@@ -32,23 +33,25 @@ export async function Dashboard({ payload, user }: Props) {
       <Gutter className="cq-portal">
         <header className="cq-head">
           <h1>{greeting()}{firstName ? `, ${firstName}` : ''}</h1>
-          <p className="cq-muted">Choose a legislator in the <b>Legislator</b> menu on the left to see their dashboard.</p>
+          <p className="cq-muted">Click a legislator below to open their dashboard. You can also switch with the <b>Legislator</b> menu in the sidebar (☰).</p>
         </header>
         {ctx.platformAdmin && (
           <section className="cq-card">
             <h2>All legislator sites</h2>
             <div className="cq-table-wrap">
               <table className="cq-table">
-                <thead><tr><th>Legislator</th><th>Main domain</th><th className="num">Supporters</th><th className="num">New (7 days)</th><th className="num">Unread messages</th><th>Status</th></tr></thead>
+                <thead><tr><th>Legislator</th><th>Template</th><th>Main domain</th><th className="num">Supporters</th><th className="num">New (7 days)</th><th className="num">Unread messages</th><th>Status</th><th><span className="cq-sr-only">Settings</span></th></tr></thead>
                 <tbody>
                   {sites.map((s) => (
                     <tr key={s.id}>
-                      <td><a href={`/admin/collections/tenants/${s.id}`}>{s.name}</a></td>
+                      <td><OpenDashboard id={s.id} name={s.name} /></td>
+                      <td>{s.chamber === 'senate' ? 'Senate' : 'House of Reps'}</td>
                       <td>{s.domain ?? <span className="cq-muted">Not set</span>}</td>
                       <td className="num">{fmt(s.supporters)}</td>
                       <td className="num">{fmt(s.new7)}</td>
                       <td className="num">{fmt(s.unread)}</td>
                       <td>{s.status === 'active' ? 'Active' : 'Suspended'}</td>
+                      <td><a href={`/admin/collections/tenants/${s.id}`} className="cq-muted">Site settings</a></td>
                     </tr>
                   ))}
                 </tbody>

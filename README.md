@@ -5,7 +5,7 @@ One Next.js app on Vercel serves **every legislator's website**, each on its own
 | Address | What it is |
 |---|---|
 | `saidumusa.ng`, `adaokafor.ng`, … | Each legislator's public site (home, news, contact form), with a small “Powered by Civiq” badge |
-| `theciviq.com.ng` | Civiq's own marketing site (`www.` forwards to it): features, templates, showcase, demo requests |
+| `theciviq.com.ng` | Civiq's own marketing site (also on `www.`; set `www` to redirect to the bare domain in Vercel → Domains): features, templates, showcase, demo requests |
 | `<slug>.theciviq.com.ng` | Preview of a legislator's site before their own domain is live |
 | `portal.theciviq.com.ng/admin` | The Civiq Portal. `/admin` on any legislator's domain redirects here. |
 
@@ -34,7 +34,7 @@ A person can work for several legislators (a role on each); the portal's **Legis
 
 - **Home** (`/admin`): greeting, headline numbers (supporters, new in the last 7 days, unread messages, published news), “Needs attention” (unread messages, unpublished drafts, no recent news, placeholder text still on the site), supporter growth, latest messages, top wards, top interests and quick actions. Contributors see a content-only version. Civiq platform admins who have not picked a legislator see an overview of every site.
 - **Community insights** (`/admin/community`): supporter totals, new sign-ups per week, breakdowns by ward, LGA, state, interest and preferred contact, and saved audiences with live counts. Admins and editors only.
-- **Inbox** (Inbox): messages are **Unread, Read or Archived**, with tabs and counts above the list. Opening a message marks it read. **Reply by email** from the message screen: it is sent from “Office of <legislator>” with the office email (Site settings → Contact & social) as reply-to, and every reply is logged on the message with who sent it and when. Only the legislator's admins and editors can read or reply. No assignment or deadlines, by design.
+- **Inbox** (Community → Inbox): messages are **Unread, Read or Archived**, with tabs and counts above the list. Opening a message marks it read. **Reply by email** from the message screen: it is sent from “Office of <legislator>” with the office email (Site settings → Contact & social) as reply-to, and every reply is logged on the message with who sent it and when. Only the legislator's admins and editors can read or reply. No assignment or deadlines, by design.
 - **Newsletters** (Outreach → Newsletters): write an email update (subject, preview text, header image, text, optional button), pick everyone or a saved audience, then **Preview**, **Send test to me**, **Send** or **Schedule** from the panel on the right. It goes to subscribed supporters with an email address, one copy per address, from “Office of <legislator>” with the office email as reply-to. Every email carries the office address and a one-click unsubscribe link; unsubscribing (or marking it as spam) sets the supporter to Unsubscribed. After sending, the panel shows sent, delivered, opened and clicked counts. Sent newsletters are locked. Admins and editors only. Sending needs the office email and address in Site settings.
 - **Audiences** (Community → Audiences): saved groups of subscribed supporters (by ward, LGA, state, interest, contact preference, has-email), for newsletters. Place matching ignores case and extra spaces.
 
@@ -48,7 +48,7 @@ Code: `src/components/portal/` (screens, charts, which-legislator logic) and `sr
 | **Website → About & timeline**, **Agenda / priorities** | Biography, facts, milestones, priority cards |
 | **Website → News & press**, **Projects**, **Photo library** | With drafts and photos |
 | **Community → Supporters** | People who joined the movement: contact details, ward/LGA, interests, preferred channels, subscription status and the consent they gave. CSV export. |
-| **Inbox** | Contact-form messages for that legislator, with status, notes, consent record and CSV export |
+| **Community → Inbox** | Contact-form messages for that legislator, with status, notes, consent record and CSV export |
 | **Team → Users** | Team members (team admins and platform admins) |
 | **Civiq platform → Legislator sites** | Platform admins only: each legislator's name, preview slug, main domain, other domains, status |
 
@@ -56,7 +56,7 @@ Saving updates that legislator's live site immediately.
 
 ## The marketing site (theciviq.com.ng)
 
-Part of the same app: `src/proxy.ts` sends the root domain (`PLATFORM_ROOT_DOMAIN`) to `src/app/(marketing)/civiq/`, and `www.` forwards to the bare domain. Locally, open `civiq.localhost:3000`. Page copy lives in code; what changes often lives in the portal (Civiq team only):
+Part of the same app: `src/proxy.ts` sends the root domain (`PLATFORM_ROOT_DOMAIN`) and its `www.` to `src/app/(marketing)/civiq/`. Which of the two redirects to the other is set in Vercel → Domains (bare domain as the main one); the app does not redirect, to avoid loops. Locally, open `civiq.localhost:3000`. Page copy lives in code; what changes often lives in the portal (Civiq team only):
 
 - **Civiq platform → Leads**: every **Request a demo** submission, with consent record and a simple status (New → Contacted → Demo booked → Signed / Not now). An alert email goes to the address in Civiq settings. When a lead signs, **Create legislator site** on the lead starts their site with the name and template filled in (then follow the onboarding guide from step 3).
 - **Civiq platform → Civiq marketing site**: sales email, WhatsApp number (adds “Chat on WhatsApp”), LinkedIn/X, and who gets lead alerts.
