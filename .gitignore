@@ -7,3 +7,6 @@ out/
 /media/
 next-env.d.ts
 *.tsbuildinfo
+
+# Local support-request uploads (production uses Vercel Blob)
+/support-files
