@@ -4,6 +4,7 @@ import type { Payload } from 'payload'
 
 import { appForHost, getAdminUrl, requestHost } from '@/lib/apps'
 import { getPortalUrl } from '@/lib/site-url'
+import { openSupportRequests } from '@/lib/support'
 
 import { countPlaceholders, messageTotals, multiBreakdown, newsTotals, platformOverview, supporterTotals, topPlaces, weeklySignups } from '@/lib/insights'
 import { BarList, StatTile, Trend, WeeklyBars } from './charts'
@@ -36,7 +37,7 @@ export async function Dashboard({ payload, user }: Props) {
   const settingsHref = (id: number) => (inAdmin || !adminUrl ? '' : adminUrl) + `/admin/collections/tenants/${id}`
 
   if (!ctx.tenant || inAdmin) {
-    const sites = ctx.platformAdmin ? await platformOverview(payload) : []
+    const [sites, support] = ctx.platformAdmin ? await Promise.all([platformOverview(payload), openSupportRequests(payload)]) : [[], null]
     return (
       <Gutter className="cq-portal">
         <header className="cq-head">
@@ -77,6 +78,35 @@ export async function Dashboard({ payload, user }: Props) {
             </div>
           </section>
         )}
+        {support && (
+          <section className="cq-card">
+            <div className="cq-card__head">
+              <h2>Open support requests ({fmt(support.total)})</h2>
+              <a href="/admin/collections/support-requests?where[status][not_equals]=resolved">All open requests →</a>
+            </div>
+            {support.docs.length === 0 ? (
+              <p className="cq-muted">Nothing open. Every request has been resolved.</p>
+            ) : (
+              <div className="cq-table-wrap">
+                <table className="cq-table">
+                  <thead><tr><th>Request</th><th>Legislator</th><th>Status</th><th>Last activity</th></tr></thead>
+                  <tbody>
+                    {support.docs.map((r) => (
+                      <tr key={r.id}>
+                        <td>
+                          {r.priority === 'urgent' && <b className="cq-urgent">Urgent</b>} <a href={`/admin/collections/support-requests/${r.id}`}>{r.subject}</a>
+                        </td>
+                        <td>{typeof r.tenant === 'object' && r.tenant ? r.tenant.name : ''}</td>
+                        <td>{({ new: 'New', 'in-progress': 'In progress', waiting: 'Waiting on office' } as Record<string, string>)[r.status] ?? r.status}</td>
+                        <td>{r.lastActivityAt ? ago(r.lastActivityAt) : ''}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </section>
+        )}
       </Gutter>
     )
   }
@@ -108,7 +138,7 @@ export async function Dashboard({ payload, user }: Props) {
     )
   }
 
-  const [sup, msgs, weekly, wards, interests, recent, lastNewsletter] = await Promise.all([
+  const [sup, msgs, weekly, wards, interests, recent, lastNewsletter, waitingOnUs] = await Promise.all([
     supporterTotals(payload, t),
     messageTotals(payload, t),
     weeklySignups(payload, t, 12),
@@ -126,11 +156,13 @@ export async function Dashboard({ payload, user }: Props) {
     payload
       .find({ collection: 'newsletters', where: { tenant: { equals: t }, status: { in: ['sending', 'sent'] } }, sort: '-sentAt', limit: 1, depth: 0, overrideAccess: false, user: ctx.user })
       .then((r) => r.docs[0] ?? null),
+    payload.count({ collection: 'support-requests', where: { tenant: { equals: t }, status: { equals: 'waiting' } }, overrideAccess: true }).then((r) => r.totalDocs),
   ])
 
   const daysSinceNews = news.lastPublished ? Math.floor((Date.now() - new Date(news.lastPublished).getTime()) / 86400000) : null
   const daysSinceNewsletter = lastNewsletter?.sentAt ? Math.floor((Date.now() - new Date(lastNewsletter.sentAt).getTime()) / 86400000) : null
   const attention = [
+    waitingOnUs > 0 && { text: `The Civiq team is waiting for your reply on ${waitingOnUs} support ${waitingOnUs === 1 ? 'request' : 'requests'}`, href: '/admin/collections/support-requests?where[status][equals]=waiting' },
     msgs.unread > 0 && { text: `${fmt(msgs.unread)} unread ${msgs.unread === 1 ? 'message' : 'messages'} in the inbox`, href: '/admin/collections/messages?where[status][equals]=unread' },
     news.drafts > 0 && { text: `${fmt(news.drafts)} news ${news.drafts === 1 ? 'draft' : 'drafts'} not yet published`, href: '/admin/collections/news?where[_status][equals]=draft' },
     (daysSinceNews === null || daysSinceNews > 21) && { text: daysSinceNews === null ? 'No news published yet' : `No news published in ${daysSinceNews} days`, href: '/admin/collections/news/create' },

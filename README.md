@@ -64,6 +64,14 @@ Code: `src/components/portal/` (screens, charts, which-legislator logic) and `sr
 
 Saving updates that legislator's live site immediately.
 
+## Help & support (feedback, issues, requests)
+
+Legislators' teams report problems, ask questions, request changes and send feedback to the Civiq team (`src/collections/SupportRequests.ts`, `src/lib/support.ts`).
+
+- **In the Portal:** **Need help?** in the header (it remembers the page they were on), or **Help & support → Support requests**. Every role can submit, with optional screenshots or PDFs (private to that office and Civiq) and an **Urgent** option. They see their office's requests, reply in the conversation and can mark a request resolved; replying to a resolved request reopens it. Home shows “The Civiq team is waiting for your reply” when Civiq needs an answer.
+- **In the Civiq Admin:** Home lists open requests (urgent first). Each request has the conversation with a reply box (choose the status after replying), **Assigned to** and **Internal notes**, which the office never sees. Statuses: New → In progress → Waiting on office → Resolved.
+- **Email:** new requests and office replies go to **Send support requests to** (Civiq platform → Civiq marketing site; falls back to the lead alerts address). Civiq replies and resolutions are emailed to the person who submitted. Links point to the Admin or the Portal as appropriate.
+
 ## The marketing site (theciviq.com.ng)
 
 Part of the same app: `src/proxy.ts` sends the root domain (`PLATFORM_ROOT_DOMAIN`) and its `www.` to `src/app/(marketing)/civiq/`. Which of the two redirects to the other is set in Vercel → Domains (bare domain as the main one); the app does not redirect, to avoid loops. Locally, open `civiq.localhost:3000`. Page copy lives in code; what changes often lives in the portal (Civiq team only):

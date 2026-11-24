@@ -81,6 +81,8 @@ export interface Config {
     users: User;
     tenants: Tenant;
     leads: Lead;
+    'support-requests': SupportRequest;
+    'support-files': SupportFile;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -102,6 +104,8 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     tenants: TenantsSelect<false> | TenantsSelect<true>;
     leads: LeadsSelect<false> | LeadsSelect<true>;
+    'support-requests': SupportRequestsSelect<false> | SupportRequestsSelect<true>;
+    'support-files': SupportFilesSelect<false> | SupportFilesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -742,6 +746,70 @@ export interface Lead {
   createdAt: string;
 }
 /**
+ * Report a problem, ask a question, request a change or share feedback with the Civiq team. You will be emailed when we reply.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "support-requests".
+ */
+export interface SupportRequest {
+  id: number;
+  tenant?: (number | null) | Tenant;
+  type: 'issue' | 'request' | 'question' | 'feedback';
+  priority: 'normal' | 'urgent';
+  subject: string;
+  /**
+   * What happened, what you expected, and the steps to see it. For a change, describe what you need and why.
+   */
+  description: string;
+  /**
+   * Optional. Images or PDFs, up to 5. Only your team and the Civiq team can see them.
+   */
+  attachments?: (number | SupportFile)[] | null;
+  pageUrl?: string | null;
+  messages?:
+    | {
+        at: string;
+        authorName?: string | null;
+        fromCiviq?: boolean | null;
+        body: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Set by the Civiq team.
+   */
+  status: 'new' | 'in-progress' | 'waiting' | 'resolved';
+  assignee?: (number | null) | User;
+  /**
+   * Never shown to the legislator’s team.
+   */
+  internalNotes?: string | null;
+  submittedBy?: (number | null) | User;
+  submittedByName?: string | null;
+  lastActivityAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "support-files".
+ */
+export interface SupportFile {
+  id: number;
+  tenant?: (number | null) | Tenant;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -820,6 +888,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'leads';
         value: number | Lead;
+      } | null)
+    | ({
+        relationTo: 'support-requests';
+        value: number | SupportRequest;
+      } | null)
+    | ({
+        relationTo: 'support-files';
+        value: number | SupportFile;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -1242,6 +1318,54 @@ export interface LeadsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "support-requests_select".
+ */
+export interface SupportRequestsSelect<T extends boolean = true> {
+  tenant?: T;
+  type?: T;
+  priority?: T;
+  subject?: T;
+  description?: T;
+  attachments?: T;
+  pageUrl?: T;
+  messages?:
+    | T
+    | {
+        at?: T;
+        authorName?: T;
+        fromCiviq?: T;
+        body?: T;
+        id?: T;
+      };
+  status?: T;
+  assignee?: T;
+  internalNotes?: T;
+  submittedBy?: T;
+  submittedByName?: T;
+  lastActivityAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "support-files_select".
+ */
+export interface SupportFilesSelect<T extends boolean = true> {
+  tenant?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
@@ -1300,6 +1424,10 @@ export interface CiviqSetting {
    * Who is emailed when someone requests a demo.
    */
   leadNotifyEmail?: string | null;
+  /**
+   * Who is emailed when a legislator’s team submits or replies to a support request. Defaults to the lead alerts address.
+   */
+  supportEmail?: string | null;
   linkedin?: string | null;
   x?: string | null;
   updatedAt?: string | null;
@@ -1313,6 +1441,7 @@ export interface CiviqSettingsSelect<T extends boolean = true> {
   salesEmail?: T;
   whatsapp?: T;
   leadNotifyEmail?: T;
+  supportEmail?: T;
   linkedin?: T;
   x?: T;
   updatedAt?: T;
