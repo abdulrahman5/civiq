@@ -72,6 +72,14 @@ Legislators' teams report problems, ask questions, request changes and send feed
 - **In the Civiq Admin:** Home lists open requests (urgent first). Each request has the conversation with a reply box (choose the status after replying), **Assigned to** and **Internal notes**, which the office never sees. Statuses: New → In progress → Waiting on office → Resolved.
 - **Email:** new requests and office replies go to **Send support requests to** (Civiq platform → Civiq marketing site; falls back to the lead alerts address). Civiq replies and resolutions are emailed to the person who submitted. Links point to the Admin or the Portal as appropriate.
 
+## Site health (Civiq Admin → Site health)
+
+Live status and health of every legislator site, for the Civiq team (`src/lib/monitoring.ts`, `src/components/portal/Monitoring.tsx`).
+
+- **Uptime checks:** each active site's main domain (or its preview address) is loaded like a visitor would; it is **up** when it returns a page that is not “Site not found”. Results (response time, error) are kept for 30 days and give the 7-day uptime. Checks run on the Vercel cron (`/api/site-checks/cron`, daily on the free plan; change it to every 15 minutes in `vercel.json` after moving to Pro) and on **Check now**.
+- **Alerts:** when a live site goes down or comes back, the Civiq support address (Civiq marketing site settings) is emailed.
+- **Health:** each site is **Down**, **Needs attention** (with reasons: placeholder text, missing office details, no news in 30 days, unread messages older than 7 days, no team admin or no team activity in 14 days, urgent support requests, no main domain) or **Healthy**. Admin Home shows a one-line summary.
+
 ## The marketing site (theciviq.com.ng)
 
 Part of the same app: `src/proxy.ts` sends the root domain (`PLATFORM_ROOT_DOMAIN`) and its `www.` to `src/app/(marketing)/civiq/`. Which of the two redirects to the other is set in Vercel → Domains (bare domain as the main one); the app does not redirect, to avoid loops. Locally, open `civiq.localhost:3000`. Page copy lives in code; what changes often lives in the portal (Civiq team only):

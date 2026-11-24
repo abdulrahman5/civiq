@@ -16,6 +16,7 @@ import { Agenda } from './collections/Agenda'
 import { Media } from './collections/Media'
 import { Messages } from './collections/Messages'
 import { Leads } from './collections/Leads'
+import { SiteChecks } from './collections/SiteChecks'
 import { SupportFiles } from './collections/SupportFiles'
 import { SupportRequests } from './collections/SupportRequests'
 import { NewsletterDeliveries } from './collections/NewsletterDeliveries'
@@ -84,6 +85,8 @@ export default buildConfig({
         // The portal's Home screen and Community insights page.
         dashboard: { Component: '@/components/portal/Dashboard#Dashboard' },
         community: { Component: '@/components/portal/Community#Community', path: '/community', meta: { title: 'Community insights' } },
+        // Civiq Admin: live status and health of every legislator site.
+        monitoring: { Component: '@/components/portal/Monitoring#Monitoring', path: '/monitoring', meta: { title: 'Site health' } },
       },
       graphics: {
         Logo: '@/components/admin/Logo#Logo',
@@ -91,7 +94,7 @@ export default buildConfig({
       },
     },
   },
-  collections: [SiteSettings, About, Agenda, News, Projects, Media, Supporters, Audiences, Messages, Newsletters, NewsletterDeliveries, Users, Tenants, Leads, SupportRequests, SupportFiles],
+  collections: [SiteSettings, About, Agenda, News, Projects, Media, Supporters, Audiences, Messages, Newsletters, NewsletterDeliveries, Users, Tenants, Leads, SupportRequests, SupportFiles, SiteChecks],
   globals: [CiviqSettings],
   // Plain-English wording on the login screen ("Log in", not "Login").
   i18n: { translations: { en: { authentication: { login: 'Log in', logout: 'Log out' } } } },

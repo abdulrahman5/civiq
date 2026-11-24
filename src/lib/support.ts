@@ -30,7 +30,7 @@ const portalLink = (id: Ticket['id']) => `${getPortalUrl()}/admin/collections/su
 const adminLink = (id: Ticket['id']) => `${getAdminUrl() ?? getPortalUrl()}/admin/collections/support-requests/${id}`
 
 /** Where support requests are emailed: "Send support requests to" in Civiq marketing site settings, else lead alerts. */
-async function civiqInbox(payload: Payload) {
+export async function civiqInbox(payload: Payload) {
   const s = await payload.findGlobal({ slug: 'civiq-settings', depth: 0, overrideAccess: true }).catch(() => null)
   return validEmail(s?.supportEmail) ?? validEmail(s?.leadNotifyEmail)
 }

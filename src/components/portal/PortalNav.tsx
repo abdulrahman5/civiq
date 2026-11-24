@@ -11,6 +11,7 @@ const isOnlyContributor = (u: NavUser) => Boolean(u) && u!.platformRole !== 'pla
 const LINKS = [
   { href: '/admin', label: 'Home', exact: true },
   { href: '/admin/community', label: 'Community insights', exact: false, community: true },
+  { href: '/admin/monitoring', label: 'Site health', exact: false, civiq: true },
 ]
 
 export function PortalNav() {
@@ -19,7 +20,7 @@ export function PortalNav() {
   const contributor = isOnlyContributor(user as NavUser)
   return (
     <div className="cq-nav">
-      {LINKS.filter((l) => !(contributor && 'community' in l)).map((l) => {
+      {LINKS.filter((l) => !(contributor && 'community' in l) && !('civiq' in l && (user as NavUser)?.platformRole !== 'platform-admin')).map((l) => {
         const active = l.exact ? path === l.href : path?.startsWith(l.href)
         return (
           <a key={l.href} href={l.href} className={`nav__link${active ? ' cq-nav--active' : ''}`} aria-current={active ? 'page' : undefined}>

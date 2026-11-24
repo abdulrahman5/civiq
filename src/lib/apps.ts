@@ -9,7 +9,7 @@ export const getAdminHost = () => {
 }
 
 /** Screens that belong to the Civiq Admin only. */
-export const PLATFORM_PATHS = ['/admin/collections/tenants', '/admin/collections/leads', '/admin/globals/civiq-settings']
+export const PLATFORM_PATHS = ['/admin/monitoring', '/admin/collections/tenants', '/admin/collections/leads', '/admin/globals/civiq-settings']
 
 /** Screens that belong to the Portal only (a legislator's content, community and outreach). */
 export const TEAM_PATHS = [

@@ -83,6 +83,7 @@ export interface Config {
     leads: Lead;
     'support-requests': SupportRequest;
     'support-files': SupportFile;
+    'site-checks': SiteCheck;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -106,6 +107,7 @@ export interface Config {
     leads: LeadsSelect<false> | LeadsSelect<true>;
     'support-requests': SupportRequestsSelect<false> | SupportRequestsSelect<true>;
     'support-files': SupportFilesSelect<false> | SupportFilesSelect<true>;
+    'site-checks': SiteChecksSelect<false> | SiteChecksSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -778,7 +780,7 @@ export interface SupportRequest {
   /**
    * Set by the Civiq team.
    */
-  status: 'new' | 'in-progress' | 'waiting' | 'resolved';
+  status?: ('new' | 'in-progress' | 'waiting' | 'resolved') | null;
   assignee?: (number | null) | User;
   /**
    * Never shown to the legislator’s team.
@@ -808,6 +810,21 @@ export interface SupportFile {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-checks".
+ */
+export interface SiteCheck {
+  id: number;
+  site: number | Tenant;
+  url: string;
+  ok?: boolean | null;
+  statusCode?: number | null;
+  responseMs?: number | null;
+  error?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -896,6 +913,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'support-files';
         value: number | SupportFile;
+      } | null)
+    | ({
+        relationTo: 'site-checks';
+        value: number | SiteCheck;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -1363,6 +1384,20 @@ export interface SupportFilesSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-checks_select".
+ */
+export interface SiteChecksSelect<T extends boolean = true> {
+  site?: T;
+  url?: T;
+  ok?: T;
+  statusCode?: T;
+  responseMs?: T;
+  error?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

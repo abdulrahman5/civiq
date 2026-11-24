@@ -4,6 +4,7 @@ import type { Payload } from 'payload'
 
 import { appForHost, getAdminUrl, requestHost } from '@/lib/apps'
 import { getPortalUrl } from '@/lib/site-url'
+import { siteHealth } from '@/lib/monitoring'
 import { openSupportRequests } from '@/lib/support'
 
 import { countPlaceholders, messageTotals, multiBreakdown, newsTotals, platformOverview, supporterTotals, topPlaces, weeklySignups } from '@/lib/insights'
@@ -37,7 +38,11 @@ export async function Dashboard({ payload, user }: Props) {
   const settingsHref = (id: number) => (inAdmin || !adminUrl ? '' : adminUrl) + `/admin/collections/tenants/${id}`
 
   if (!ctx.tenant || inAdmin) {
-    const [sites, support] = ctx.platformAdmin ? await Promise.all([platformOverview(payload), openSupportRequests(payload)]) : [[], null]
+    const [sites, support, health] = ctx.platformAdmin
+      ? await Promise.all([platformOverview(payload), openSupportRequests(payload), inAdmin ? siteHealth(payload) : Promise.resolve(null)])
+      : [[], null, null]
+    const down = health?.filter((h) => h.status === 'down').length ?? 0
+    const attention = health?.filter((h) => h.status === 'attention' || h.status === 'unchecked').length ?? 0
     return (
       <Gutter className="cq-portal">
         <header className="cq-head">
@@ -48,6 +53,12 @@ export async function Dashboard({ payload, user }: Props) {
             <p className="cq-muted">Click a legislator below to open their dashboard. You can also switch with the <b>Legislator</b> menu in the sidebar (☰).</p>
           )}
         </header>
+        {health && (
+          <a className={`cq-card cq-health-banner${down ? ' cq-health-banner--down' : ''}`} href="/admin/monitoring">
+            <b>Site health:</b> {down ? `${down} site${down === 1 ? '' : 's'} down` : 'all live sites loading'}
+            {attention ? ` · ${attention} need${attention === 1 ? 's' : ''} attention` : ''} <span className="cq-muted">Open Site health →</span>
+          </a>
+        )}
         {ctx.platformAdmin && (
           <section className="cq-card">
             <h2>All legislator sites</h2>
@@ -97,7 +108,7 @@ export async function Dashboard({ payload, user }: Props) {
                           {r.priority === 'urgent' && <b className="cq-urgent">Urgent</b>} <a href={`/admin/collections/support-requests/${r.id}`}>{r.subject}</a>
                         </td>
                         <td>{typeof r.tenant === 'object' && r.tenant ? r.tenant.name : ''}</td>
-                        <td>{({ new: 'New', 'in-progress': 'In progress', waiting: 'Waiting on office' } as Record<string, string>)[r.status] ?? r.status}</td>
+                        <td>{({ new: 'New', 'in-progress': 'In progress', waiting: 'Waiting on office' } as Record<string, string>)[r.status ?? ''] ?? r.status}</td>
                         <td>{r.lastActivityAt ? ago(r.lastActivityAt) : ''}</td>
                       </tr>
                     ))}
