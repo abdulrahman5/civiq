@@ -192,3 +192,17 @@ a.cq-stat:hover { border-color: var(--theme-elevation-400); }
   .doc-controls__value { white-space: normal; }
   .payload-settings { overflow-x: hidden; } // Payload's language/theme box has invisible overflow
 }
+
+// Support requests
+.cq-help-btn { display: inline-flex; align-items: center; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--theme-elevation-200); font-size: 0.85rem; font-weight: 600; text-decoration: none; color: var(--theme-text); background: var(--theme-elevation-0); white-space: nowrap; }
+.cq-help-btn:hover { border-color: var(--cq-accent); color: var(--cq-accent); }
+.cq-support h3 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.cq-support__status { font-size: 0.75rem; font-weight: 700; padding: 2px 10px; border-radius: 999px; background: var(--theme-elevation-100); color: var(--theme-elevation-800); }
+.cq-support__status--new { background: color-mix(in srgb, #c8a13a 22%, transparent); color: var(--theme-warning-650, #8a5d00); }
+.cq-support__status--waiting { background: color-mix(in srgb, var(--cq-accent) 16%, transparent); color: var(--cq-accent); }
+.cq-support__status--resolved { background: var(--theme-elevation-100); color: var(--theme-elevation-700); }
+.cq-support .cq-reply__history li.cq-support__civiq { border-left-color: #c8a13a; }
+.cq-support__next { display: flex; align-items: center; gap: 6px; font-size: 0.88rem; font-weight: 400 !important; }
+.cq-support__next select { font: inherit; padding: 6px 8px; border: 1px solid var(--theme-elevation-150); border-radius: 4px; background: var(--theme-input-bg, var(--theme-elevation-0)); color: var(--theme-text); }
+.cq-support__intro { margin: 0 0 16px; max-width: 720px; }
+.cq-urgent { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--theme-error-500); margin-right: 4px; }

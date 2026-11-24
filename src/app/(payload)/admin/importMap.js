@@ -34,8 +34,11 @@ import { ChamberPicker as ChamberPicker_2d8b416b8108cb8575e2e9b412696d2b } from 
 import { DomainPanel as DomainPanel_63f4fc87ba9d433ffecf3d0c19fe69a3 } from '@/components/portal/DomainPanel'
 import { WatchTenantCollection as WatchTenantCollection_1d0591e3cf4f332c83a86da13a0de59a } from '@payloadcms/plugin-multi-tenant/client'
 import { LeadToSite as LeadToSite_3f9ce1b4b722e23659dc95f8619b57d1 } from '@/components/portal/LeadToSite'
+import { SupportPageCapture as SupportPageCapture_0c98cf700e39c364949181c3aadfedfe } from '@/components/portal/SupportPageCapture'
+import { SupportThread as SupportThread_47fda2c499944ab837fa7e1d74a48934 } from '@/components/portal/SupportThread'
 import { Icon as Icon_534076e2c753ea5d539a54b05f456b1b } from '@/components/admin/Icon'
 import { Logo as Logo_a44df17d0fc3dcd873dae43dc3bf66bd } from '@/components/admin/Logo'
+import { HelpButton as HelpButton_2787b3868224dfb257b2e0b86415a0d0 } from '@/components/portal/HelpButton'
 import { GlobalViewRedirect as GlobalViewRedirect_d6d5f193a167989e2ee7d14202901e62 } from '@payloadcms/plugin-multi-tenant/rsc'
 import { TenantSelector as TenantSelector_d6d5f193a167989e2ee7d14202901e62 } from '@payloadcms/plugin-multi-tenant/rsc'
 import { NavScope as NavScope_355cf020e8cd451b47158435fdf810fd } from '@/components/portal/NavScope'
@@ -84,8 +87,11 @@ export const importMap = {
   "@/components/portal/DomainPanel#DomainPanel": DomainPanel_63f4fc87ba9d433ffecf3d0c19fe69a3,
   "@payloadcms/plugin-multi-tenant/client#WatchTenantCollection": WatchTenantCollection_1d0591e3cf4f332c83a86da13a0de59a,
   "@/components/portal/LeadToSite#LeadToSite": LeadToSite_3f9ce1b4b722e23659dc95f8619b57d1,
+  "@/components/portal/SupportPageCapture#SupportPageCapture": SupportPageCapture_0c98cf700e39c364949181c3aadfedfe,
+  "@/components/portal/SupportThread#SupportThread": SupportThread_47fda2c499944ab837fa7e1d74a48934,
   "@/components/admin/Icon#Icon": Icon_534076e2c753ea5d539a54b05f456b1b,
   "@/components/admin/Logo#Logo": Logo_a44df17d0fc3dcd873dae43dc3bf66bd,
+  "@/components/portal/HelpButton#HelpButton": HelpButton_2787b3868224dfb257b2e0b86415a0d0,
   "@payloadcms/plugin-multi-tenant/rsc#GlobalViewRedirect": GlobalViewRedirect_d6d5f193a167989e2ee7d14202901e62,
   "@payloadcms/plugin-multi-tenant/rsc#TenantSelector": TenantSelector_d6d5f193a167989e2ee7d14202901e62,
   "@/components/portal/NavScope#NavScope": NavScope_355cf020e8cd451b47158435fdf810fd,

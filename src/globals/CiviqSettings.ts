@@ -38,7 +38,13 @@ export const CiviqSettings: GlobalConfig = {
         { name: 'whatsapp', label: 'WhatsApp number', type: 'text', admin: { description: 'International format, e.g. +2348030000000. Adds a “Chat on WhatsApp” button.' } },
       ],
     },
-    { name: 'leadNotifyEmail', label: 'Send new lead alerts to', type: 'text', validate: email, admin: { description: 'Who is emailed when someone requests a demo.' } },
+    {
+      type: 'row',
+      fields: [
+        { name: 'leadNotifyEmail', label: 'Send new lead alerts to', type: 'text', validate: email, admin: { description: 'Who is emailed when someone requests a demo.' } },
+        { name: 'supportEmail', label: 'Send support requests to', type: 'text', validate: email, admin: { description: 'Who is emailed when a legislator’s team submits or replies to a support request. Defaults to the lead alerts address.' } },
+      ],
+    },
     {
       type: 'row',
       fields: [

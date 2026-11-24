@@ -16,6 +16,8 @@ import { Agenda } from './collections/Agenda'
 import { Media } from './collections/Media'
 import { Messages } from './collections/Messages'
 import { Leads } from './collections/Leads'
+import { SupportFiles } from './collections/SupportFiles'
+import { SupportRequests } from './collections/SupportRequests'
 import { NewsletterDeliveries } from './collections/NewsletterDeliveries'
 import { CiviqSettings } from './globals/CiviqSettings'
 import { Newsletters } from './collections/Newsletters'
@@ -77,6 +79,7 @@ export default buildConfig({
     },
     components: {
       beforeNavLinks: ['@/components/portal/NavScope#NavScope', '@/components/portal/PortalNav#PortalNav'],
+      actions: ['@/components/portal/HelpButton#HelpButton'],
       views: {
         // The portal's Home screen and Community insights page.
         dashboard: { Component: '@/components/portal/Dashboard#Dashboard' },
@@ -88,7 +91,7 @@ export default buildConfig({
       },
     },
   },
-  collections: [SiteSettings, About, Agenda, News, Projects, Media, Supporters, Audiences, Messages, Newsletters, NewsletterDeliveries, Users, Tenants, Leads],
+  collections: [SiteSettings, About, Agenda, News, Projects, Media, Supporters, Audiences, Messages, Newsletters, NewsletterDeliveries, Users, Tenants, Leads, SupportRequests, SupportFiles],
   globals: [CiviqSettings],
   // Plain-English wording on the login screen ("Log in", not "Login").
   i18n: { translations: { en: { authentication: { login: 'Log in', logout: 'Log out' } } } },
@@ -129,6 +132,8 @@ export default buildConfig({
         audiences: {},
         newsletters: {},
         'newsletter-deliveries': {},
+        'support-requests': {},
+        'support-files': {},
       },
       tenantsArrayField: {
         includeDefaultField: true,
@@ -141,7 +146,7 @@ export default buildConfig({
     // Photos go to Vercel Blob in production; locally (no token) they are saved to ./media.
     vercelBlobStorage({
       enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
-      collections: { media: true },
+      collections: { media: true, 'support-files': true },
       token: process.env.BLOB_READ_WRITE_TOKEN,
       // Upload straight from the browser to Blob, avoiding Vercel's 4.5 MB request limit for phone photos.
       clientUploads: true,
