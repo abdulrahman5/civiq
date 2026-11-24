@@ -10,6 +10,7 @@ import * as migration_20261119_133957_chamber_templates from './20261119_133957_
 import * as migration_20261119_145950_marketing_site from './20261119_145950_marketing_site';
 import * as migration_20261124_142824_support_desk from './20261124_142824_support_desk';
 import * as migration_20261124_151755_site_health from './20261124_151755_site_health';
+import * as migration_20261124_233436_blob_storage_fields from './20261124_233436_blob_storage_fields';
 
 export const migrations = [
   {
@@ -70,6 +71,11 @@ export const migrations = [
   {
     up: migration_20261124_151755_site_health.up,
     down: migration_20261124_151755_site_health.down,
-    name: '20261124_151755_site_health'
+    name: '20261124_151755_site_health',
+  },
+  {
+    up: migration_20261124_233436_blob_storage_fields.up,
+    down: migration_20261124_233436_blob_storage_fields.down,
+    name: '20261124_233436_blob_storage_fields'
   },
 ];

@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { anyone, guardTenantWrite, tenantRole } from '../access'
+import { legacyPhotoRedirect } from '../lib/blob'
 
 export const Media: CollectionConfig = {
   slug: 'media',
@@ -19,6 +20,8 @@ export const Media: CollectionConfig = {
   hooks: {
     beforeChange: [guardTenantWrite(['admin', 'editor', 'contributor'])],
   },
+  // With Vercel Blob, photos are served from its CDN; old app addresses forward there (src/lib/blob.ts).
+  endpoints: process.env.BLOB_READ_WRITE_TOKEN ? [legacyPhotoRedirect] : [],
   upload: {
     // SVG is deliberately excluded: it can carry scripts.
     mimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/gif'],

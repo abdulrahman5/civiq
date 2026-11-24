@@ -122,7 +122,7 @@ Hosting: Vercel (Pro required before launch), Neon Postgres and Vercel Blob conn
 | Variable | Value |
 |---|---|
 | `DATABASE_URL` | Added by the Neon integration (pooled connection) |
-| `BLOB_READ_WRITE_TOKEN` | Added by the Blob integration |
+| `BLOB_READ_WRITE_TOKEN` | Added by the Blob integration. Required in production: website photos are uploaded to Blob and served straight from its CDN (old `/api/media/file/…` links forward there); support attachments stay private behind Payload's access control |
 | `PAYLOAD_SECRET` | Long random string; never change it |
 | `RESEND_API_KEY`, `EMAIL_FROM_ADDRESS`, `EMAIL_FROM_NAME` | Email via Resend |
 | `VERCEL_TOKEN` | A Vercel access token (Vercel → Account settings → Tokens) with access to this project's team. Lets the portal add domains and check their DNS. Without it domains are added by hand in Vercel |

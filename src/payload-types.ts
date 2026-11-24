@@ -300,6 +300,8 @@ export interface Media {
    * Briefly describe the photo (used by screen readers and search engines).
    */
   alt: string;
+  prefix?: string | null;
+  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -799,6 +801,8 @@ export interface SupportRequest {
 export interface SupportFile {
   id: number;
   tenant?: (number | null) | Tenant;
+  prefix?: string | null;
+  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -1099,6 +1103,8 @@ export interface ProjectsSelect<T extends boolean = true> {
 export interface MediaSelect<T extends boolean = true> {
   tenant?: T;
   alt?: T;
+  prefix?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -1373,6 +1379,8 @@ export interface SupportRequestsSelect<T extends boolean = true> {
  */
 export interface SupportFilesSelect<T extends boolean = true> {
   tenant?: T;
+  prefix?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

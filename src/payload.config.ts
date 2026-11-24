@@ -147,9 +147,13 @@ export default buildConfig({
       i18n: { translations: { en: { 'nav-tenantSelector-label': 'Legislator' } } },
     }),
     // Photos go to Vercel Blob in production; locally (no token) they are saved to ./media.
+    // Website photos are public, so they are served straight from Blob's CDN (no server function per image).
+    // Support attachments stay behind Payload's access control: only that office and Civiq can open them.
     vercelBlobStorage({
       enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
-      collections: { media: true, 'support-files': true },
+      collections: { media: { disablePayloadAccessControl: true }, 'support-files': true },
+      // Keep the storage fields in the schema even locally (no token), so the database matches production.
+      alwaysInsertFields: true,
       token: process.env.BLOB_READ_WRITE_TOKEN,
       // Upload straight from the browser to Blob, avoiding Vercel's 4.5 MB request limit for phone photos.
       clientUploads: true,
