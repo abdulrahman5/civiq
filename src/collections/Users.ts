@@ -1,6 +1,8 @@
-import { type Access, type CollectionConfig, type FieldAccess, Forbidden, ValidationError } from 'payload'
+import { type Access, APIError, type CollectionConfig, type FieldAccess, Forbidden, ValidationError } from 'payload'
 
 import { idOf, isPlatformAdmin, PLATFORM_ROLES, tenantIdsFor } from '../access'
+import { appForHost, requestHost } from '../lib/apps'
+import { getPortalUrl } from '../lib/site-url'
 import { inviteEndpoint, inviteOptionsEndpoint, resendInviteEndpoint, touchLastSeen } from '../lib/team'
 
 const MIN_PASSWORD_LENGTH = 10
@@ -51,13 +53,25 @@ export const Users: CollectionConfig = {
     cookies: { sameSite: 'Lax', secure: process.env.NODE_ENV === 'production' },
   },
   access: {
-    admin: ({ req }) => Boolean(req.user),
+    // The Civiq Admin address is for the Civiq team only; checked on every page, not just at login.
+    admin: ({ req }) => Boolean(req.user) && (appForHost(requestHost(req.headers)) !== 'admin' || isPlatformAdmin(userOf(req))),
     read: ({ req }) => Boolean(req.user), // the plugin narrows this to self + users of the same tenants
     create: canManageUsers,
     update: updateAccess,
     delete: deleteAccess,
   },
   hooks: {
+    beforeLogin: [
+      // A friendly refusal for legislators' teams who try the Civiq Admin address.
+      ({ req, user }) => {
+        if (appForHost(requestHost(req.headers)) === 'admin' && !isPlatformAdmin(user as UserArg)) {
+          const err = new APIError(`This sign-in is for the Civiq team. Please log in at ${getPortalUrl().replace(/^https?:\/\//, '')}.`, 403, null, true)
+          err.name = 'CiviqTeamOnly' // a named error is shown as-is on the login screen
+          throw err
+        }
+        return user
+      },
+    ],
     afterLogin: [({ req, user }) => touchLastSeen(req, user)],
     beforeValidate: [
       ({ data }) => {

@@ -33,7 +33,7 @@ While waiting, you can already do steps 3 and 5 (create the site and connect the
 
 ## 3. Create the site
 
-1. Log in to the portal as a Civiq platform admin.
+1. Log in to the **Civiq Admin** (`admin.theciviq.com.ng`) as a Civiq platform admin.
 2. **Civiq platform → Legislator sites → Create new:**
    - **Legislator / site name:** `Hon. Ada Okafor`
    - **Template:** **Senate** (red theme) or **House of Representatives** (green theme). This sets the site's colours; everything else is identical. Only the Civiq team can change it later.
@@ -48,7 +48,7 @@ The site exists straight away at its **preview address**, `https://adaokafor.the
 
 On Civiq, "design" means filling the shared template with the client's identity and content. It does not mean a new layout or custom colours: the colours come from the template chosen in step 3 (red for the Senate, green for the House of Representatives).
 
-Switch the portal's **Legislator** menu (top of the sidebar) to *Hon. Ada Okafor*, then work through:
+In the Civiq Admin's Home, click **Open in portal** next to *Hon. Ada Okafor* (or, in the Portal, switch the **Legislator** menu at the top of the sidebar), then work through:
 
 | Portal section | What to fill in |
 |---|---|
@@ -78,7 +78,7 @@ Then:
 
 Needs `VERCEL_TOKEN` and `VERCEL_PROJECT_ID` to be set (see the README). Without them, add the domains by hand in Vercel → Project → Settings → Domains.
 
-1. Open the site in **Civiq platform → Legislator sites**.
+1. Open the site in the Civiq Admin: **Civiq platform → Legislator sites**.
 2. In the **Domains** panel, click **Connect domains**. The portal adds the main and extra domains to Vercel.
 3. The panel then lists the **DNS records** to set, with copy buttons. Usually:
 

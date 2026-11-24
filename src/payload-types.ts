@@ -201,7 +201,7 @@ export interface SiteSetting {
     email?: string | null;
     phone?: string | null;
     /**
-     * Each new website message is emailed here (and always saved in the Inbox).
+     * Each new website message is emailed here (and always saved in the Inbox). Not shown publicly.
      */
     notifyEmail?: string | null;
   };

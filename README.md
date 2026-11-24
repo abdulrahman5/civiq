@@ -7,7 +7,8 @@ One Next.js app on Vercel serves **every legislator's website**, each on its own
 | `saidumusa.ng`, `adaokafor.ng`, … | Each legislator's public site (home, news, contact form), with a small “Powered by Civiq” badge |
 | `theciviq.com.ng` | Civiq's own marketing site (also on `www.`; set `www` to redirect to the bare domain in Vercel → Domains): features, templates, showcase, demo requests |
 | `<slug>.theciviq.com.ng` | Preview of a legislator's site before their own domain is live |
-| `portal.theciviq.com.ng/admin` | The Civiq Portal. `/admin` on any legislator's domain redirects here. |
+| `portal.theciviq.com.ng/admin` | The Civiq Portal, for legislators' teams (and the Civiq team when helping one). `/admin` on any legislator's domain redirects here. |
+| `admin.theciviq.com.ng/admin` | The Civiq Admin, for the Civiq team only: all sites, Legislator sites, Leads, Civiq marketing site settings, every user account. |
 
 ```
 saidumusa.ng ─┐
@@ -18,6 +19,15 @@ x.theciviq.com.ng   ─┘      │  src/proxy.ts: domain → /<domain>/… → 
                      │
        Neon Postgres (every row tagged with its tenant) · Vercel Blob (photos) · Resend (email)
 ```
+
+## Civiq Admin and Portal
+
+The Admin and the Portal are the same app on two addresses (`src/lib/apps.ts`, `src/proxy.ts`):
+
+- **Who can log in.** Only Civiq platform admins can log in to the Admin; everyone else is refused with a pointer to the Portal. The check runs at login and on every page (`access.admin` on Users), so a Portal session cannot open Admin screens. Platform admins can log in to both.
+- **Separate sessions.** Login cookies belong to one address, so platform admins sign in to each separately with the same email and password.
+- **Screens.** The Admin shows Home (all-sites overview with **Open in portal**), Team → Users and Civiq platform; a legislator's screens open in the Portal. The Portal hides Civiq platform, whose pages open in the Admin. Menus are tidied by `NavScope`; pages are redirected by the proxy.
+- **Turning it on.** Set `ADMIN_URL`. Until then everything runs in the Portal as before.
 
 ## Roles
 
@@ -50,7 +60,7 @@ Code: `src/components/portal/` (screens, charts, which-legislator logic) and `sr
 | **Community → Supporters** | People who joined the movement: contact details, ward/LGA, interests, preferred channels, subscription status and the consent they gave. CSV export. |
 | **Community → Inbox** | Contact-form messages for that legislator, with status, notes, consent record and CSV export |
 | **Team → Users** | Team members (team admins and platform admins) |
-| **Civiq platform → Legislator sites** | Platform admins only: each legislator's name, preview slug, main domain, other domains, status |
+| **Civiq Admin → Civiq platform → Legislator sites** | Platform admins only: each legislator's name, preview slug, main domain, other domains, status |
 
 Saving updates that legislator's live site immediately.
 
@@ -58,8 +68,8 @@ Saving updates that legislator's live site immediately.
 
 Part of the same app: `src/proxy.ts` sends the root domain (`PLATFORM_ROOT_DOMAIN`) and its `www.` to `src/app/(marketing)/civiq/`. Which of the two redirects to the other is set in Vercel → Domains (bare domain as the main one); the app does not redirect, to avoid loops. Locally, open `civiq.localhost:3000`. Page copy lives in code; what changes often lives in the portal (Civiq team only):
 
-- **Civiq platform → Leads**: every **Request a demo** submission, with consent record and a simple status (New → Contacted → Demo booked → Signed / Not now). An alert email goes to the address in Civiq settings. When a lead signs, **Create legislator site** on the lead starts their site with the name and template filled in (then follow the onboarding guide from step 3).
-- **Civiq platform → Civiq marketing site**: sales email, WhatsApp number (adds “Chat on WhatsApp”), LinkedIn/X, and who gets lead alerts.
+- **Civiq Admin → Civiq platform → Leads**: every **Request a demo** submission, with consent record and a simple status (New → Contacted → Demo booked → Signed / Not now). An alert email goes to the address in Civiq settings. When a lead signs, **Create legislator site** on the lead starts their site with the name and template filled in (then follow the onboarding guide from step 3).
+- **Civiq Admin → Civiq platform → Civiq marketing site**: sales email, WhatsApp number (adds “Chat on WhatsApp”), LinkedIn/X, and who gets lead alerts.
 - **Showcase**: tick **Show on theciviq.com.ng** on a legislator site (with their agreement). It appears once its main domain is set.
 
 Slugs that would clash with Civiq's own addresses (`www`, `portal`, `demo`, `api`, …) are refused for legislator sites (`src/lib/reserved.ts`).
@@ -80,7 +90,7 @@ Public-site queries run as the restricted Postgres role `civiq_web` inside a tra
 
 Full playbook, from agreement to the first 30 days: **[docs/launching-a-new-site.md](docs/launching-a-new-site.md)**, with the **[client intake checklist](docs/client-intake-checklist.md)** to send to new clients. The portal steps in short:
 
-1. **Portal → Civiq platform → Legislator sites → Create new:** name, **template** (Senate or House of Representatives, which sets the colours), slug (e.g. `adaokafor`), main domain (e.g. `adaokafor.ng`) and any extra domains (`www.adaokafor.ng`; extra domains forward to the main one). Save.
+1. **Civiq Admin → Civiq platform → Legislator sites → Create new:** name, **template** (Senate or House of Representatives, which sets the colours), slug (e.g. `adaokafor`), main domain (e.g. `adaokafor.ng`) and any extra domains (`www.adaokafor.ng`; extra domains forward to the main one). Save.
 2. On the same screen, **Connect domains**. The portal adds them to Vercel and shows the exact DNS records to give the legislator's registrar (with copy buttons). Press **Check again** later: each domain turns **Live** once DNS works, and HTTPS is automatic. A domain already used on another Vercel account first shows a TXT “ownership check” record.
 3. Switch the portal's **Legislator** menu to the new site and fill in **Site settings** (and About / Agenda). The **Setup checklist** next to the domains shows what is left.
 4. **Team → Users → Invite a team member:** name, email and role. They get an email with a link to choose their own password (valid 7 days, works once); the inviter also sees the link, to share on WhatsApp if needed. Team admins then invite the rest of their team the same way. The Users list shows who is **Active** (last active time) and who was **Invited, not joined yet**; open someone to **Resend invite**.
@@ -105,6 +115,7 @@ Hosting: Vercel (Pro required before launch), Neon Postgres and Vercel Blob conn
 | `CRON_SECRET` | Long random string. Vercel sends it to `/api/newsletters/cron` (set in `vercel.json`), which sends scheduled newsletters and finishes large sends |
 | `NEWSLETTER_CRON_FREQUENT` | Set to `1` after moving to Vercel Pro and changing the cron in `vercel.json` to every 5 minutes (`*/5 * * * *`). On the free plan the cron runs once a day at 07:00 UTC |
 | `PORTAL_URL` | e.g. `https://portal.theciviq.com.ng` once that domain is attached. Until set, the portal runs on the deployment's own address. |
+| `ADMIN_URL` | `https://admin.theciviq.com.ng`: turns on the separate Civiq Admin (add the domain in Vercel and its CNAME at the registrar first) |
 | `PLATFORM_ROOT_DOMAIN` | `theciviq.com.ng` (just the domain). Needed for the marketing site on the bare domain and `<slug>.theciviq.com.ng` previews; if missing, it is worked out from `PORTAL_URL` (`portal.theciviq.com.ng` → `theciviq.com.ng`). Add `theciviq.com.ng`, `www.theciviq.com.ng` and the wildcard `*.theciviq.com.ng` as domains in Vercel |
 | `DEFAULT_TENANT_SLUG` | Optional: which site `*.vercel.app` and `localhost` show (default: the first site) |
 
