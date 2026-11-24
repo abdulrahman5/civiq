@@ -7,7 +7,7 @@ import { appForHost, getAdminUrl, requestHost } from '@/lib/apps'
 // own address. The pages themselves are redirected by src/proxy.ts; this keeps the menu tidy, rendered on the
 // server so nothing flashes.
 const ADMIN_HIDES = ['[id="nav-group-Website"]', '[id="nav-group-Community"]', '[id="nav-group-Outreach"]', '.cq-nav a[href="/admin/community"]', '.nav .tenant-selector']
-const PORTAL_HIDES = ['[id="nav-group-Civiq platform"]']
+const PORTAL_HIDES = ['[id="nav-group-Civiq platform"]', '.cq-nav a[href="/admin/monitoring"]']
 
 export async function NavScope() {
   const app = appForHost(requestHost(await headers()))

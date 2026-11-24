@@ -206,3 +206,20 @@ a.cq-stat:hover { border-color: var(--theme-elevation-400); }
 .cq-support__next select { font: inherit; padding: 6px 8px; border: 1px solid var(--theme-elevation-150); border-radius: 4px; background: var(--theme-input-bg, var(--theme-elevation-0)); color: var(--theme-text); }
 .cq-support__intro { margin: 0 0 16px; max-width: 720px; }
 .cq-urgent { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--theme-error-500); margin-right: 4px; }
+
+// Site health (Civiq Admin)
+.cq-health__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+.cq-checknow { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.cq-checknow .btn { margin: 0; }
+.cq-health td { vertical-align: top; }
+.cq-health__small { font-size: 0.8rem; }
+.cq-health__pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; white-space: nowrap; background: var(--theme-elevation-100); color: var(--theme-elevation-800); }
+.cq-health__pill--down { background: color-mix(in srgb, var(--theme-error-500) 16%, transparent); color: var(--theme-error-500); }
+.cq-health__pill--attention, .cq-health__pill--unchecked { background: color-mix(in srgb, #c8a13a 22%, transparent); color: var(--theme-warning-650, #8a5d00); }
+.cq-health__pill--healthy { background: color-mix(in srgb, var(--cq-accent) 16%, transparent); color: var(--cq-accent); }
+.cq-health__reasons { margin: 8px 0 0; padding-left: 16px; font-size: 0.8rem; color: var(--theme-elevation-700); display: grid; gap: 2px; }
+.cq-health__reason--critical { color: var(--theme-error-500); font-weight: 600; }
+.cq-health__row--down td:first-child { box-shadow: inset 3px 0 0 var(--theme-error-500); }
+.cq-health-banner { display: block; text-decoration: none; color: var(--theme-text); margin-bottom: 16px; border-left: 4px solid var(--cq-accent); }
+.cq-health-banner--down { border-left-color: var(--theme-error-500); }
+.cq-health-banner:hover .cq-muted { text-decoration: underline; }

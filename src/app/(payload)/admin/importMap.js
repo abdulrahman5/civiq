@@ -46,6 +46,7 @@ import { PortalNav as PortalNav_a57a3159d7d50cf76217657d79439845 } from '@/compo
 import { TenantSelectionProvider as TenantSelectionProvider_d6d5f193a167989e2ee7d14202901e62 } from '@payloadcms/plugin-multi-tenant/rsc'
 import { Dashboard as Dashboard_5f402edc6103d8885d2be53fdd320695 } from '@/components/portal/Dashboard'
 import { Community as Community_b24afdb6762cc845804e76d2e9fd9cac } from '@/components/portal/Community'
+import { Monitoring as Monitoring_f94c8698833d510aa2e3c8580a0b01d4 } from '@/components/portal/Monitoring'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from '@payloadcms/storage-vercel-blob/client'
 
@@ -99,6 +100,7 @@ export const importMap = {
   "@payloadcms/plugin-multi-tenant/rsc#TenantSelectionProvider": TenantSelectionProvider_d6d5f193a167989e2ee7d14202901e62,
   "@/components/portal/Dashboard#Dashboard": Dashboard_5f402edc6103d8885d2be53fdd320695,
   "@/components/portal/Community#Community": Community_b24afdb6762cc845804e76d2e9fd9cac,
+  "@/components/portal/Monitoring#Monitoring": Monitoring_f94c8698833d510aa2e3c8580a0b01d4,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,
   "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e
 }
