@@ -1,5 +1,9 @@
 import { Gutter } from '@payloadcms/ui'
+import { headers } from 'next/headers'
 import type { Payload } from 'payload'
+
+import { appForHost, getAdminUrl, requestHost } from '@/lib/apps'
+import { getPortalUrl } from '@/lib/site-url'
 
 import { countPlaceholders, messageTotals, multiBreakdown, newsTotals, platformOverview, supporterTotals, topPlaces, weeklySignups } from '@/lib/insights'
 import { BarList, StatTile, Trend, WeeklyBars } from './charts'
@@ -26,32 +30,46 @@ export async function Dashboard({ payload, user }: Props) {
   if (!user) return null
   const ctx = await getPortalContext(payload, user)
   const firstName = ctx.user.name?.split(' ')[0] ?? ''
+  // On the Civiq Admin address, Home is always the all-sites overview; a legislator's dashboard opens in the Portal.
+  const inAdmin = appForHost(requestHost(await headers())) === 'admin'
+  const adminUrl = getAdminUrl()
+  const settingsHref = (id: number) => (inAdmin || !adminUrl ? '' : adminUrl) + `/admin/collections/tenants/${id}`
 
-  if (!ctx.tenant) {
+  if (!ctx.tenant || inAdmin) {
     const sites = ctx.platformAdmin ? await platformOverview(payload) : []
     return (
       <Gutter className="cq-portal">
         <header className="cq-head">
           <h1>{greeting()}{firstName ? `, ${firstName}` : ''}</h1>
-          <p className="cq-muted">Click a legislator below to open their dashboard. You can also switch with the <b>Legislator</b> menu in the sidebar (☰).</p>
+          {inAdmin ? (
+            <p className="cq-muted">Civiq Admin: every legislator site at a glance. <b>Open in portal</b> shows a legislator's dashboard as their team sees it.</p>
+          ) : (
+            <p className="cq-muted">Click a legislator below to open their dashboard. You can also switch with the <b>Legislator</b> menu in the sidebar (☰).</p>
+          )}
         </header>
         {ctx.platformAdmin && (
           <section className="cq-card">
             <h2>All legislator sites</h2>
             <div className="cq-table-wrap">
               <table className="cq-table">
-                <thead><tr><th>Legislator</th><th>Template</th><th>Main domain</th><th className="num">Supporters</th><th className="num">New (7 days)</th><th className="num">Unread messages</th><th>Status</th><th><span className="cq-sr-only">Settings</span></th></tr></thead>
+                <thead><tr><th>Legislator</th><th>Template</th><th>Main domain</th><th className="num">Supporters</th><th className="num">New (7 days)</th><th className="num">Unread messages</th><th>Status</th><th><span className="cq-sr-only">Actions</span></th></tr></thead>
                 <tbody>
                   {sites.map((s) => (
                     <tr key={s.id}>
-                      <td><OpenDashboard id={s.id} name={s.name} /></td>
+                      <td>{inAdmin ? <a href={`/admin/collections/tenants/${s.id}`}>{s.name}</a> : <OpenDashboard id={s.id} name={s.name} />}</td>
                       <td>{s.chamber === 'senate' ? 'Senate' : 'House of Reps'}</td>
                       <td>{s.domain ?? <span className="cq-muted">Not set</span>}</td>
                       <td className="num">{fmt(s.supporters)}</td>
                       <td className="num">{fmt(s.new7)}</td>
                       <td className="num">{fmt(s.unread)}</td>
                       <td>{s.status === 'active' ? 'Active' : 'Suspended'}</td>
-                      <td><a href={`/admin/collections/tenants/${s.id}`} className="cq-muted">Site settings</a></td>
+                      <td>
+                        {inAdmin ? (
+                          <a href={`${getPortalUrl()}/admin?legislator=${s.id}`} target="_blank" rel="noopener" className="cq-muted">Open in portal ↗</a>
+                        ) : (
+                          <a href={settingsHref(s.id)} className="cq-muted">Site settings</a>
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>

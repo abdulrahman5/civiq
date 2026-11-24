@@ -5,7 +5,9 @@ import { headers } from 'next/headers'
 import { CHAMBER_OPTIONS } from '@/lib/themes'
 import { LEAD_ROLES } from '@/collections/Leads'
 import { getCiviqSettings, leadConsentText } from '@/lib/marketing'
+import { getAdminUrl } from '@/lib/apps'
 import { getClient } from '@/lib/payload'
+import { getPortalUrl } from '@/lib/site-url'
 
 export type LeadState = { ok: boolean; error?: string }
 
@@ -58,7 +60,7 @@ export async function submitLead(_prev: LeadState, fd: FormData): Promise<LeadSt
           to,
           ...(email ? { replyTo: email } : {}),
           subject: `New demo request: ${data.legislatorName || name}`,
-          html: `<table>${rows}</table><p style="white-space:pre-wrap">${escapeHtml(data.message)}</p><p>Open it in the Civiq Portal under Civiq platform → Leads.</p>`,
+          html: `<table>${rows}</table><p style="white-space:pre-wrap">${escapeHtml(data.message)}</p><p>Open it in the Civiq Admin: ${escapeHtml(`${getAdminUrl() ?? getPortalUrl()}/admin/collections/leads`)}</p>`,
         })
         .catch((err: unknown) => payload.logger.error({ err }, 'Lead alert email failed'))
     }

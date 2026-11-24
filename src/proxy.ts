@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 
-import { getRootDomain } from './lib/site-url'
+import { appForHost, getAdminUrl, isUnder, PLATFORM_PATHS, TEAM_PATHS } from './lib/apps'
+import { getPortalUrl, getRootDomain } from './lib/site-url'
 
 // Every legislator's site is served by this one app. The proxy reads the domain a request came
 // in on and rewrites it to /<domain>/<path>, where [domain] pages look up that legislator's content.
@@ -13,7 +14,26 @@ export function proxy(request: NextRequest) {
 
   const portalUrl = process.env.PORTAL_URL || process.env.CONSOLE_URL
   const portalHost = portalUrl ? new URL(portalUrl).hostname : null
+  const adminUrl = getAdminUrl()
   const isAdmin = url.pathname === '/admin' || url.pathname.startsWith('/admin/')
+  // Sent as a full address on purpose: Next.js shortens a redirect it thinks is same-origin to a bare path,
+  // which would keep the browser on the address it came from.
+  const to = (base: string) => new NextResponse(null, { status: 307, headers: { Location: new URL(url.pathname + url.search, base).toString() } })
+
+  // The Civiq Admin: only the Civiq team's screens. A legislator's screens open in the Portal.
+  if (appForHost(host) === 'admin') {
+    if (!isAdmin) return NextResponse.redirect(new URL('/admin', url))
+    if (isUnder(url.pathname, TEAM_PATHS)) return to(getPortalUrl())
+    return NextResponse.next()
+  }
+  // The Portal: the Civiq platform screens live in the Admin once it has its own address.
+  if (isAdmin && adminUrl && isUnder(url.pathname, PLATFORM_PATHS)) return to(adminUrl)
+  // "Open in portal" from the Admin: pick that legislator in the Portal's Legislator menu, then show Home.
+  if (url.pathname === '/admin' && /^\d+$/.test(url.searchParams.get('legislator') ?? '')) {
+    const res = NextResponse.redirect(new URL('/admin', url))
+    res.cookies.set('payload-tenant', url.searchParams.get('legislator')!, { path: '/', sameSite: 'lax' })
+    return res
+  }
 
   if (portalHost && host === portalHost) {
     return isAdmin ? NextResponse.next() : NextResponse.redirect(new URL('/admin', portalUrl))

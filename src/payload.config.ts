@@ -9,6 +9,7 @@ import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 
 import { isPlatformAdmin, TENANT_ROLES } from './access'
+import { getAdminUrl } from './lib/apps'
 import { About } from './collections/About'
 import { Audiences } from './collections/Audiences'
 import { Agenda } from './collections/Agenda'
@@ -63,17 +64,19 @@ if (process.env.VERCEL) {
 export default buildConfig({
   // The portal (admin + API) lives on one Civiq address; legislators' own domains only serve their sites.
   serverURL: getPortalUrl(),
+  // The Civiq Admin (ADMIN_URL) is the same app on a second address: accept logged-in requests from both.
+  csrf: [getPortalUrl(), getAdminUrl()].filter((u): u is string => Boolean(u)),
   admin: {
     user: Users.slug,
     importMap: { baseDir: path.resolve(dirname) },
     // Built-in avatar instead of Gravatar, so admin email hashes are not sent to a third party.
     avatar: 'default',
     meta: {
-      titleSuffix: ' · Civiq Portal',
+      titleSuffix: ' · Civiq',
       icons: [{ rel: 'icon', type: 'image/svg+xml', url: '/civiq-mark.svg' }],
     },
     components: {
-      beforeNavLinks: ['@/components/portal/PortalNav#PortalNav'],
+      beforeNavLinks: ['@/components/portal/NavScope#NavScope', '@/components/portal/PortalNav#PortalNav'],
       views: {
         // The portal's Home screen and Community insights page.
         dashboard: { Component: '@/components/portal/Dashboard#Dashboard' },
