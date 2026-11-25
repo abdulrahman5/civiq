@@ -10,6 +10,7 @@ import { openSupportRequests } from '@/lib/support'
 import { countPlaceholders, messageTotals, multiBreakdown, newsTotals, platformOverview, supporterTotals, topPlaces, weeklySignups } from '@/lib/insights'
 import { BarList, StatTile, Trend, WeeklyBars } from './charts'
 import { OpenDashboard } from './OpenDashboard'
+import { IconActivity, IconAlert, IconArrow, IconBriefcase, IconChart, IconCheck, IconDownload, IconExternal, IconInbox, IconLandmark, IconLifeBuoy, IconMail, IconNews, IconPlus, IconUsers } from './icons'
 import { fmt, getPortalContext } from './context'
 
 type Props = { payload: Payload; user?: unknown }
@@ -46,6 +47,7 @@ export async function Dashboard({ payload, user }: Props) {
     return (
       <Gutter className="cq-portal">
         <header className="cq-head">
+          <p className="cq-hero__date">{today()}</p>
           <h1>{greeting()}{firstName ? `, ${firstName}` : ''}</h1>
           {inAdmin ? (
             <p className="cq-muted">Civiq Admin: every legislator site at a glance. <b>Open in portal</b> shows a legislator's dashboard as their team sees it.</p>
@@ -54,10 +56,19 @@ export async function Dashboard({ payload, user }: Props) {
           )}
         </header>
         {health && (
-          <a className={`cq-card cq-health-banner${down ? ' cq-health-banner--down' : ''}`} href="/admin/monitoring">
-            <b>Site health:</b> {down ? `${down} site${down === 1 ? '' : 's'} down` : 'all live sites loading'}
-            {attention ? ` · ${attention} need${attention === 1 ? 's' : ''} attention` : ''} <span className="cq-muted">Open Site health →</span>
-          </a>
+          <div className="cq-stats">
+            <StatTile label="Legislator sites" value={fmt(sites.length)} note={`${fmt(sites.filter((x) => x.domain).length)} on their own domain`} href="/admin/collections/tenants" icon={<IconLandmark />} />
+            <StatTile label="Supporters, all sites" value={fmt(sites.reduce((n, x) => n + x.supporters, 0))} note={`+${fmt(sites.reduce((n, x) => n + x.new7, 0))} in the last 7 days`} icon={<IconUsers />} />
+            <StatTile
+              label="Open support requests"
+              value={fmt(support?.total ?? 0)}
+              note={`${fmt(health.reduce((n, x) => n + x.urgentSupport, 0))} urgent`}
+              href="/admin/collections/support-requests?where[status][not_equals]=resolved"
+              icon={<IconLifeBuoy />}
+              tone={health.some((x) => x.urgentSupport) ? 'danger' : support?.total ? 'warn' : undefined}
+            />
+            <StatTile label="Sites down" value={fmt(down)} note={attention ? `${fmt(attention)} need attention` : 'Everything else healthy'} href="/admin/monitoring" icon={<IconActivity />} tone={down ? 'danger' : attention ? 'warn' : undefined} />
+          </div>
         )}
         {ctx.platformAdmin && (
           <section className="cq-card">
@@ -69,12 +80,12 @@ export async function Dashboard({ payload, user }: Props) {
                   {sites.map((s) => (
                     <tr key={s.id}>
                       <td>{inAdmin ? <a href={`/admin/collections/tenants/${s.id}`}>{s.name}</a> : <OpenDashboard id={s.id} name={s.name} />}</td>
-                      <td>{s.chamber === 'senate' ? 'Senate' : 'House of Reps'}</td>
+                      <td><span className={`cq-badge cq-badge--${s.chamber === 'senate' ? 'senate' : 'reps'}`}>{s.chamber === 'senate' ? 'Senate' : 'House of Reps'}</span></td>
                       <td>{s.domain ?? <span className="cq-muted">Not set</span>}</td>
                       <td className="num">{fmt(s.supporters)}</td>
                       <td className="num">{fmt(s.new7)}</td>
                       <td className="num">{fmt(s.unread)}</td>
-                      <td>{s.status === 'active' ? 'Active' : 'Suspended'}</td>
+                      <td><span className={`cq-badge cq-badge--${s.status === 'active' ? 'good' : 'danger'}`}>{s.status === 'active' ? 'Active' : 'Suspended'}</span></td>
                       <td>
                         {inAdmin ? (
                           <a href={`${getPortalUrl()}/admin?legislator=${s.id}`} target="_blank" rel="noopener" className="cq-muted">Open in portal ↗</a>
@@ -108,7 +119,7 @@ export async function Dashboard({ payload, user }: Props) {
                           {r.priority === 'urgent' && <b className="cq-urgent">Urgent</b>} <a href={`/admin/collections/support-requests/${r.id}`}>{r.subject}</a>
                         </td>
                         <td>{typeof r.tenant === 'object' && r.tenant ? r.tenant.name : ''}</td>
-                        <td>{({ new: 'New', 'in-progress': 'In progress', waiting: 'Waiting on office' } as Record<string, string>)[r.status ?? ''] ?? r.status}</td>
+                        <td><span className={`cq-badge cq-badge--${r.status === 'new' ? 'warn' : 'info'}`}>{({ new: 'New', 'in-progress': 'In progress', waiting: 'Waiting on office' } as Record<string, string>)[r.status ?? ''] ?? r.status}</span></td>
                         <td>{r.lastActivityAt ? ago(r.lastActivityAt) : ''}</td>
                       </tr>
                     ))}
@@ -127,12 +138,15 @@ export async function Dashboard({ payload, user }: Props) {
   const siteUrl = ctx.tenant.primaryDomain ? `https://${ctx.tenant.primaryDomain}` : null
 
   const header = (
-    <header className="cq-head">
-      <h1>{greeting()}{firstName ? `, ${firstName}` : ''}</h1>
-      <p className="cq-muted">
-        {ctx.tenant.name}
-        {siteUrl && <> · <a href={siteUrl} target="_blank" rel="noopener">{ctx.tenant.primaryDomain} ↗</a></>}
-      </p>
+    <header className="cq-head cq-hero">
+      <div>
+        <p className="cq-hero__date">{today()}</p>
+        <h1>{greeting()}{firstName ? `, ${firstName}` : ''}</h1>
+        <div className="cq-hero__meta">
+          <span className="cq-chip"><IconLandmark size={15} /> {ctx.tenant.name}</span>
+          {siteUrl && <a className="cq-chip" href={siteUrl} target="_blank" rel="noopener">{ctx.tenant.primaryDomain} <IconExternal size={14} /></a>}
+        </div>
+      </div>
     </header>
   )
 
@@ -140,11 +154,11 @@ export async function Dashboard({ payload, user }: Props) {
     return (
       <Gutter className="cq-portal">
         {header}
-        <div className="cq-stats">
-          <StatTile label="Published news" value={fmt(news.published)} href="/admin/collections/news" />
-          <StatTile label="Drafts" value={fmt(news.drafts)} note="Waiting for an editor to publish" href="/admin/collections/news" />
-        </div>
         <QuickActions community={false} />
+        <div className="cq-stats">
+          <StatTile label="Published news" value={fmt(news.published)} href="/admin/collections/news" icon={<IconNews />} />
+          <StatTile label="Drafts" value={fmt(news.drafts)} note="Waiting for an editor to publish" href="/admin/collections/news" icon={<IconNews />} tone={news.drafts ? 'warn' : undefined} />
+        </div>
       </Gutter>
     )
   }
@@ -189,19 +203,22 @@ export async function Dashboard({ payload, user }: Props) {
   return (
     <Gutter className="cq-portal">
       {header}
+      <QuickActions community />
 
       <div className="cq-stats">
-        <StatTile label="Supporters" value={fmt(sup.subscribed)} note={`${fmt(sup.withEmail)} can receive email`} href="/admin/community" />
-        <StatTile label="New (last 7 days)" value={fmt(sup.new7)} note={<Trend now={sup.new7} before={sup.prev7} />} href="/admin/community" />
-        <StatTile label="Unread messages" value={fmt(msgs.unread)} note={`${fmt(msgs.week)} received this week`} href="/admin/collections/messages?where[status][equals]=unread" />
-        <StatTile label="Published news" value={fmt(news.published)} note={news.drafts ? `${fmt(news.drafts)} in draft` : 'No drafts'} href="/admin/collections/news" />
+        <StatTile label="Supporters" value={fmt(sup.subscribed)} note={`${fmt(sup.withEmail)} can receive email`} href="/admin/community" icon={<IconUsers />} />
+        <StatTile label="New (last 7 days)" value={fmt(sup.new7)} note={<Trend now={sup.new7} before={sup.prev7} />} href="/admin/community" icon={<IconChart />} />
+        <StatTile label="Unread messages" value={fmt(msgs.unread)} note={`${fmt(msgs.week)} received this week`} href="/admin/collections/messages?where[status][equals]=unread" icon={<IconInbox />} tone={msgs.unread ? 'warn' : undefined} />
+        <StatTile label="Published news" value={fmt(news.published)} note={news.drafts ? `${fmt(news.drafts)} in draft` : 'No drafts'} href="/admin/collections/news" icon={<IconNews />} />
       </div>
 
-      {attention.length > 0 && (
+      {attention.length > 0 ? (
         <section className="cq-card cq-attention" aria-label="Needs attention">
-          <h2>Needs attention</h2>
-          <ul>{attention.map((a) => <li key={a.text}><a href={a.href}>{a.text} →</a></li>)}</ul>
+          <h2><IconAlert size={18} /> Needs attention</h2>
+          <ul>{attention.map((a) => <li key={a.text}><a href={a.href}><span>{a.text}</span> <IconArrow size={16} /></a></li>)}</ul>
         </section>
+      ) : (
+        <section className="cq-card cq-allclear" aria-label="Needs attention"><IconCheck size={20} /> All clear: nothing needs your attention right now.</section>
       )}
 
       <div className="cq-grid">
@@ -223,7 +240,7 @@ export async function Dashboard({ payload, user }: Props) {
               ))}
             </ul>
           ) : (
-            <p className="cq-empty">No messages yet. They appear here when people use the contact form on the website.</p>
+            <p className="cq-empty"><IconInbox size={18} /> No messages yet. They appear here when people use the contact form on the website.</p>
           )}
         </section>
         <section className="cq-card">
@@ -235,21 +252,20 @@ export async function Dashboard({ payload, user }: Props) {
           <BarList rows={interests.slice(0, 5)} total={sup.subscribed} empty="No interests yet. Supporters pick them when they join." />
         </section>
       </div>
-
-      <QuickActions community />
     </Gutter>
   )
 }
 
 function QuickActions({ community }: { community: boolean }) {
   return (
-    <section className="cq-actions" aria-label="Quick actions">
-      <a className="btn btn--style-primary btn--size-medium" href="/admin/collections/news/create">Post news</a>
-      {community && <a className="btn btn--style-secondary btn--size-medium" href="/admin/collections/newsletters/create">Send a newsletter</a>}
-      {community && <a className="btn btn--style-secondary btn--size-medium" href="/admin/collections/messages">Open inbox</a>}
-      {community && <a className="btn btn--style-secondary btn--size-medium" href="/admin/community">Community insights</a>}
-      {community && <a className="btn btn--style-secondary btn--size-medium" href="/api/supporters/export-csv">Download supporters (CSV)</a>}
-      <a className="btn btn--style-secondary btn--size-medium" href="/admin/collections/projects/create">Add a project</a>
-    </section>
+    <nav className="cq-quick" aria-label="Quick actions">
+      <a className="cq-quick--primary" href="/admin/collections/news/create"><IconPlus size={16} /> Post news</a>
+      {community && <a href="/admin/collections/newsletters/create"><IconMail size={16} /> Send a newsletter</a>}
+      {community && <a href="/admin/collections/messages"><IconInbox size={16} /> Open inbox</a>}
+      <a href="/admin/collections/projects/create"><IconBriefcase size={16} /> Add a project</a>
+      {community && <a href="/api/supporters/export-csv"><IconDownload size={16} /> Download supporters</a>}
+    </nav>
   )
 }
+
+const today = () => new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Africa/Lagos' })

@@ -84,6 +84,7 @@ export const SupportRequests: CollectionConfig = {
             { label: 'Normal', value: 'normal' },
             { label: 'Urgent: the website is down or showing wrong information', value: 'urgent' },
           ],
+          admin: { components: { Cell: '@/components/portal/StatusCell#StatusCell' } },
         },
       ],
     },
@@ -127,7 +128,7 @@ export const SupportRequests: CollectionConfig = {
       required: true,
       defaultValue: 'new',
       options: SUPPORT_STATUSES,
-      admin: { position: 'sidebar', description: 'Set by the Civiq team.', condition: (data) => Boolean(data?.id) },
+      admin: { components: { Cell: '@/components/portal/StatusCell#StatusCell' }, position: 'sidebar', description: 'Set by the Civiq team.', condition: (data) => Boolean(data?.id) },
       access: { update: civiqOnly },
     },
     {

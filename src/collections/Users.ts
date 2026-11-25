@@ -128,7 +128,7 @@ export const Users: CollectionConfig = {
       label: 'Status',
       type: 'text',
       virtual: true,
-      admin: { hidden: true },
+      admin: { components: { Cell: '@/components/portal/StatusCell#StatusCell' }, hidden: true },
       hooks: { afterRead: [({ data }) => (data?.lastSeenAt ? 'Active' : data?.invitedAt ? 'Invited, not joined yet' : 'No activity recorded yet')] },
     },
     // The pre-Civiq single-site role. Kept (hidden, read-only) only so the multi-tenant migration can
