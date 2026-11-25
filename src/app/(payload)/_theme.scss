@@ -1,0 +1,169 @@
+// Civiq look for the Admin and the Portal: brand colours, type, surfaces, menu, lists and login.
+// Payload's own styles live in the `payload-default` layer, so these plain rules take precedence.
+@use 'icons';
+
+:root {
+  --cq-brand: #0b5d3b;
+  --cq-brand-hover: #094d31;
+  --cq-brand-soft: #e7f1ec;
+  --cq-brand-ink: #0b5d3b;
+  --cq-gold: #c8a13a;
+  --cq-gold-soft: #faf3e0;
+  --cq-danger: #b42318;
+  --cq-danger-soft: #fdecea;
+  --cq-info: #1d5fa7;
+  --cq-info-soft: #e8f0fa;
+  --cq-surface: #ffffff;
+  --cq-page: #f5f7f5;
+  --cq-line: #e3e8e4;
+  --cq-shadow: 0 1px 2px rgba(16, 32, 24, 0.05), 0 6px 18px -10px rgba(16, 32, 24, 0.18);
+  --cq-radius: 12px;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+html[data-theme='dark'] {
+  --cq-brand: #3aa877;
+  --cq-brand-hover: #4cbc89;
+  --cq-brand-soft: rgba(58, 168, 119, 0.14);
+  --cq-brand-ink: #6fcf9f;
+  --cq-gold-soft: rgba(200, 161, 58, 0.16);
+  --cq-danger: #f2786d;
+  --cq-danger-soft: rgba(242, 120, 109, 0.14);
+  --cq-info: #7fb2ee;
+  --cq-info-soft: rgba(127, 178, 238, 0.14);
+  --cq-surface: var(--theme-elevation-50);
+  --cq-page: var(--theme-bg);
+  --cq-line: var(--theme-elevation-150);
+  --cq-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+html, body, button, input, select, textarea { font-family: var(--font-body); }
+html[data-theme='light'] { --theme-bg: var(--cq-page); }
+html[data-theme='light'] body { background: var(--cq-page); }
+
+// ---- Buttons and focus ----
+.btn--style-primary { --bg-color: var(--cq-brand); --hover-bg: var(--cq-brand-hover); --color: #fff; --hover-color: #fff; }
+html[data-theme='dark'] .btn--style-primary { --color: #06140d; --hover-color: #06140d; }
+.btn--style-secondary { --btn-border: 1px solid var(--cq-line); --hover-btn-border: 1px solid var(--cq-brand); --hover-color: var(--cq-brand-ink); background: var(--cq-surface); }
+.btn { border-radius: 999px !important; font-weight: 600; }
+:focus-visible { outline-color: var(--cq-brand) !important; }
+input[type='checkbox'], input[type='radio'] { accent-color: var(--cq-brand); }
+
+// ---- Fields ----
+.ContentEditable__root, .rich-text-lexical .editor { font-family: var(--font-body) !important; font-size: 1rem; line-height: 1.6; }
+.field-type input:not([type='checkbox']):not([type='radio']), .field-type textarea, .rs__control, .field-type .react-datepicker__input-container input {
+  border-radius: 8px !important;
+}
+.field-label { font-weight: 600; }
+
+// ---- Main surfaces ----
+.cq-card, .cq-stat, .cq-reply, .cq-send, .cq-domains, .cq-invite__form { border-radius: var(--cq-radius) !important; border-color: var(--cq-line) !important; background: var(--cq-surface) !important; box-shadow: var(--cq-shadow); }
+
+// ---- Side menu ----
+aside.nav { background: var(--cq-surface); border-right: 1px solid var(--cq-line); }
+.nav__wrap { gap: 2px; }
+.nav__link, .nav .cq-nav a {
+  display: flex !important; align-items: center; gap: 10px;
+  padding: 7px 10px !important; margin: 1px 0; border-radius: 8px;
+  color: var(--theme-elevation-800); text-decoration: none; font-size: 0.92rem;
+}
+.nav__link:hover { background: var(--theme-elevation-50); color: var(--theme-text); }
+.nav__link:hover::before { opacity: 1; }
+.nav__link-indicator { display: none !important; }
+// Payload marks the current page by placing an indicator inside its menu item.
+.nav__link:has(> .nav__link-indicator), .nav .cq-nav--active { background: var(--cq-brand-soft) !important; color: var(--cq-brand-ink) !important; font-weight: 600; }
+.nav__link:has(> .nav__link-indicator)::before, .nav .cq-nav--active::before { opacity: 1 !important; }
+.nav-group { margin-top: 12px; }
+.nav-group__toggle { padding: 4px 10px !important; }
+.nav-group__label { font-size: 0.7rem !important; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--theme-elevation-500) !important; }
+.nav .cq-nav { border-bottom: 0 !important; margin-bottom: 0 !important; padding-bottom: 0 !important; }
+.nav .tenant-selector { margin: 4px 0 8px; }
+
+// Brand block at the top of the menu
+.cq-navbrand { display: flex; align-items: center; gap: 10px; padding: 4px 10px 14px; margin-bottom: 10px; border-bottom: 1px solid var(--cq-line); }
+.cq-navbrand img { width: 34px; height: 34px; border-radius: 9px; flex-shrink: 0; }
+.cq-navbrand b { display: block; font-size: 0.98rem; line-height: 1.2; color: var(--theme-text); }
+.cq-navbrand span { display: block; font-size: 0.78rem; color: var(--theme-elevation-600); line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 190px; }
+.cq-navbrand__tag { display: inline-block !important; margin-top: 3px; font-size: 0.66rem !important; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 1px 7px; border-radius: 999px; background: var(--cq-gold-soft); color: #7a5b0c !important; }
+html[data-theme='dark'] .cq-navbrand__tag { color: var(--cq-gold) !important; }
+
+// ---- Header ----
+.app-header__bg { background: color-mix(in srgb, var(--cq-page) 88%, transparent) !important; backdrop-filter: blur(8px); }
+
+// ---- Page titles and lists ----
+.list-create-new-doc__create-new-button, .doc-header .btn--style-pill { --bg-color: var(--cq-brand); --hover-bg: var(--cq-brand-hover); --color: #fff; --hover-color: #fff; border-radius: 999px !important; padding: 2px 12px !important; }
+html[data-theme='dark'] .list-create-new-doc__create-new-button { --color: #06140d; --hover-color: #06140d; }
+.list-header__title, .doc-header__title { letter-spacing: -0.01em; }
+.list-header .pill, .list-create-new-doc__create-new-button .pill { background: var(--cq-brand) !important; color: #fff !important; border-radius: 999px !important; padding: 4px 12px !important; font-weight: 600; }
+.list-controls__wrap, .search-filter { border-radius: 10px; }
+.collection-list .table, .table { background: var(--cq-surface); border: 1px solid var(--cq-line); border-radius: var(--cq-radius); box-shadow: var(--cq-shadow); overflow: hidden; }
+.table thead th { font-size: 0.72rem; font-weight: 700 !important; letter-spacing: 0.06em; text-transform: uppercase; color: var(--theme-elevation-500) !important; }
+.table tbody tr { background: transparent !important; border-top: 1px solid var(--cq-line); }
+.table tbody tr:hover { background: var(--theme-elevation-50) !important; }
+.table td a, .table td a span { color: var(--theme-text); font-weight: 600; text-decoration: none; }
+.table td a:hover { color: var(--cq-brand-ink); text-decoration: underline; }
+
+// Status pills in lists (StatusCell)
+.cq-badge { display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: 999px; font-size: 0.78rem; font-weight: 600; white-space: nowrap; background: var(--theme-elevation-100); color: var(--theme-elevation-800); }
+.cq-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: 0.8; }
+.cq-badge--good { background: var(--cq-brand-soft); color: var(--cq-brand-ink); }
+.cq-badge--warn { background: var(--cq-gold-soft); color: #7a5b0c; }
+html[data-theme='dark'] .cq-badge--warn { color: var(--cq-gold); }
+.cq-badge--danger { background: var(--cq-danger-soft); color: var(--cq-danger); }
+.cq-badge--info { background: var(--cq-info-soft); color: var(--cq-info); }
+.cq-badge--senate { background: color-mix(in srgb, #8a1c24 12%, transparent); color: #8a1c24; }
+html[data-theme='dark'] .cq-badge--senate { color: #f08a92; }
+.cq-badge--reps { background: var(--cq-brand-soft); color: var(--cq-brand-ink); }
+
+// ---- Login ----
+.template-minimal.login {
+  background:
+    radial-gradient(circle at 85% 10%, rgba(200, 161, 58, 0.22), transparent 40%),
+    linear-gradient(140deg, #073d27 0%, #0b5d3b 65%, #0f7a4d 100%);
+  min-height: 100vh;
+}
+.template-minimal.login .template-minimal__wrap {
+  background: var(--cq-surface); border-radius: 18px; padding: 36px 36px 28px !important;
+  box-shadow: 0 30px 60px -24px rgba(0, 0, 0, 0.45); max-width: 440px !important; width: calc(100% - 32px);
+}
+.template-minimal.login .login__brand { margin-bottom: 28px; }
+.template-minimal.login .form-submit .btn { width: 100%; }
+.cq-login-foot { margin: 18px 0 0; text-align: center; font-size: 0.8rem; color: var(--theme-elevation-600); }
+
+// ---- Home page pieces ----
+.cq-hero { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+.cq-hero__date { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--cq-brand-ink); margin: 0 0 6px !important; }
+.cq-hero__meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 6px; color: var(--theme-elevation-700); }
+.cq-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--cq-line); background: var(--cq-surface); font-size: 0.85rem; font-weight: 600; color: var(--theme-text); text-decoration: none; }
+.cq-chip:hover { border-color: var(--cq-brand); color: var(--cq-brand-ink); }
+.cq-quick { display: flex; gap: 8px; flex-wrap: wrap; }
+.cq-quick a { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; border: 1px solid var(--cq-line); background: var(--cq-surface); color: var(--theme-text); font-weight: 600; font-size: 0.9rem; text-decoration: none; box-shadow: var(--cq-shadow); }
+.cq-quick a:hover { border-color: var(--cq-brand); color: var(--cq-brand-ink); }
+.cq-quick a.cq-quick--primary { background: var(--cq-brand); border-color: var(--cq-brand); color: #fff; }
+html[data-theme='dark'] .cq-quick a.cq-quick--primary { color: #06140d; }
+.cq-quick a.cq-quick--primary:hover { background: var(--cq-brand-hover); color: #fff; }
+
+.cq-stat { position: relative; padding: 18px 20px !important; transition: transform 0.15s, box-shadow 0.15s; }
+a.cq-stat:hover { transform: translateY(-1px); box-shadow: 0 2px 4px rgba(16, 32, 24, 0.06), 0 12px 24px -12px rgba(16, 32, 24, 0.25); }
+.cq-stat__icon { position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: var(--cq-brand-soft); color: var(--cq-brand-ink); }
+.cq-stat--warn .cq-stat__icon { background: var(--cq-gold-soft); color: #7a5b0c; }
+.cq-stat--danger .cq-stat__icon { background: var(--cq-danger-soft); color: var(--cq-danger); }
+.cq-stat--info .cq-stat__icon { background: var(--cq-info-soft); color: var(--cq-info); }
+.cq-stat--danger .cq-stat__value { color: var(--cq-danger); }
+
+.cq-attention { border-left: 0 !important; background: var(--cq-gold-soft) !important; border-color: color-mix(in srgb, var(--cq-gold) 35%, transparent) !important; box-shadow: none !important; }
+.cq-attention h2 { display: flex; align-items: center; gap: 8px; color: #7a5b0c; }
+html[data-theme='dark'] .cq-attention h2 { color: var(--cq-gold); }
+.cq-attention ul { list-style: none; padding: 0 !important; gap: 4px !important; }
+.cq-attention li a { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 12px; border-radius: 8px; background: var(--cq-surface); color: var(--theme-text); text-decoration: none; font-weight: 500; }
+.cq-attention li a:hover { color: var(--cq-brand-ink); }
+.cq-allclear { display: flex; align-items: center; gap: 10px; color: var(--cq-brand-ink); font-weight: 600; }
+
+.cq-empty { display: flex; align-items: center; gap: 10px; padding: 14px; border-radius: 10px; background: var(--theme-elevation-50); }
+.cq-card__head h2 { display: flex; align-items: center; gap: 8px; }
+.cq-card__head a { color: var(--cq-brand-ink); text-decoration: none; font-weight: 600; }
+.cq-card__head a:hover { text-decoration: underline; }
+.cq-table th { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--theme-elevation-500) !important; }
+.cq-table td a { color: var(--theme-text); font-weight: 600; text-decoration: none; }
+.cq-table td a:hover { color: var(--cq-brand-ink); text-decoration: underline; }
+.cq-table tbody tr:hover { background: var(--theme-elevation-50); }
+.cq-help-btn { border-color: var(--cq-line); background: var(--cq-surface); }

@@ -1,3 +1,4 @@
+@use 'theme';
 /* ---------- Civiq Portal: Home and Community screens ---------- */
 :root { --cq-bar: #1a7a50; --cq-accent: #0b5d3b; }
 html[data-theme='dark'] { --cq-bar: #3aa877; --cq-accent: #3aa877; }

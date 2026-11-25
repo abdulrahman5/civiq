@@ -60,15 +60,17 @@ export function BarList({ rows, total, empty, unit = 'supporters' }: { rows: Row
   )
 }
 
-export function StatTile({ label, value, note, href }: { label: string; value: string; note?: React.ReactNode; href?: string }) {
+export function StatTile({ label, value, note, href, icon, tone }: { label: string; value: string; note?: React.ReactNode; href?: string; icon?: React.ReactNode; tone?: 'warn' | 'danger' | 'info' }) {
   const body = (
     <>
+      {icon && <span className="cq-stat__icon">{icon}</span>}
       <span className="cq-stat__label">{label}</span>
       <span className="cq-stat__value">{value}</span>
       {note && <span className="cq-stat__note">{note}</span>}
     </>
   )
-  return href ? <a className="cq-stat" href={href}>{body}</a> : <div className="cq-stat">{body}</div>
+  const cls = `cq-stat${tone ? ` cq-stat--${tone}` : ''}`
+  return href ? <a className={cls} href={href}>{body}</a> : <div className={cls}>{body}</div>
 }
 
 /** "▲ 18% vs the 7 days before" in words as well as an arrow. */

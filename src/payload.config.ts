@@ -79,7 +79,8 @@ export default buildConfig({
       icons: [{ rel: 'icon', type: 'image/svg+xml', url: '/civiq-mark.svg' }],
     },
     components: {
-      beforeNavLinks: ['@/components/portal/NavScope#NavScope', '@/components/portal/PortalNav#PortalNav'],
+      beforeNavLinks: ['@/components/portal/NavBrand#NavBrand', '@/components/portal/NavScope#NavScope', '@/components/portal/PortalNav#PortalNav'],
+      afterLogin: ['@/components/admin/LoginFoot#LoginFoot'],
       actions: ['@/components/portal/HelpButton#HelpButton'],
       views: {
         // The portal's Home screen and Community insights page.

@@ -23,6 +23,7 @@ import { UnderlineFeatureClient as UnderlineFeatureClient_e70f5e05f09f93e00b997e
 import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { AssignTenantFieldTrigger as AssignTenantFieldTrigger_1d0591e3cf4f332c83a86da13a0de59a } from '@payloadcms/plugin-multi-tenant/client'
+import { StatusCell as StatusCell_1de5a258615e45d7423cfc933845fe70 } from '@/components/portal/StatusCell'
 import { ExportButton as ExportButton_d374f1d98c0ba3d31281c1d26b6f2d1a } from '@/components/admin/ExportButton'
 import { MarkRead as MarkRead_c1fc60b27608c006f5bc2e9fdda07e78 } from '@/components/portal/MarkRead'
 import { ReplyBox as ReplyBox_a6782f01beb13ccc253c97e37b99fd5a } from '@/components/portal/ReplyBox'
@@ -40,7 +41,9 @@ import { Icon as Icon_534076e2c753ea5d539a54b05f456b1b } from '@/components/admi
 import { Logo as Logo_a44df17d0fc3dcd873dae43dc3bf66bd } from '@/components/admin/Logo'
 import { HelpButton as HelpButton_2787b3868224dfb257b2e0b86415a0d0 } from '@/components/portal/HelpButton'
 import { GlobalViewRedirect as GlobalViewRedirect_d6d5f193a167989e2ee7d14202901e62 } from '@payloadcms/plugin-multi-tenant/rsc'
+import { LoginFoot as LoginFoot_5baf5cec5c74c658092a8e02b9f8b0f1 } from '@/components/admin/LoginFoot'
 import { TenantSelector as TenantSelector_d6d5f193a167989e2ee7d14202901e62 } from '@payloadcms/plugin-multi-tenant/rsc'
+import { NavBrand as NavBrand_6ce865dae0f874f579cbdba337097e3f } from '@/components/portal/NavBrand'
 import { NavScope as NavScope_355cf020e8cd451b47158435fdf810fd } from '@/components/portal/NavScope'
 import { PortalNav as PortalNav_a57a3159d7d50cf76217657d79439845 } from '@/components/portal/PortalNav'
 import { TenantSelectionProvider as TenantSelectionProvider_d6d5f193a167989e2ee7d14202901e62 } from '@payloadcms/plugin-multi-tenant/rsc'
@@ -77,6 +80,7 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#BoldFeatureClient": BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/plugin-multi-tenant/client#AssignTenantFieldTrigger": AssignTenantFieldTrigger_1d0591e3cf4f332c83a86da13a0de59a,
+  "@/components/portal/StatusCell#StatusCell": StatusCell_1de5a258615e45d7423cfc933845fe70,
   "@/components/admin/ExportButton#ExportButton": ExportButton_d374f1d98c0ba3d31281c1d26b6f2d1a,
   "@/components/portal/MarkRead#MarkRead": MarkRead_c1fc60b27608c006f5bc2e9fdda07e78,
   "@/components/portal/ReplyBox#ReplyBox": ReplyBox_a6782f01beb13ccc253c97e37b99fd5a,
@@ -94,7 +98,9 @@ export const importMap = {
   "@/components/admin/Logo#Logo": Logo_a44df17d0fc3dcd873dae43dc3bf66bd,
   "@/components/portal/HelpButton#HelpButton": HelpButton_2787b3868224dfb257b2e0b86415a0d0,
   "@payloadcms/plugin-multi-tenant/rsc#GlobalViewRedirect": GlobalViewRedirect_d6d5f193a167989e2ee7d14202901e62,
+  "@/components/admin/LoginFoot#LoginFoot": LoginFoot_5baf5cec5c74c658092a8e02b9f8b0f1,
   "@payloadcms/plugin-multi-tenant/rsc#TenantSelector": TenantSelector_d6d5f193a167989e2ee7d14202901e62,
+  "@/components/portal/NavBrand#NavBrand": NavBrand_6ce865dae0f874f579cbdba337097e3f,
   "@/components/portal/NavScope#NavScope": NavScope_355cf020e8cd451b47158435fdf810fd,
   "@/components/portal/PortalNav#PortalNav": PortalNav_a57a3159d7d50cf76217657d79439845,
   "@payloadcms/plugin-multi-tenant/rsc#TenantSelectionProvider": TenantSelectionProvider_d6d5f193a167989e2ee7d14202901e62,

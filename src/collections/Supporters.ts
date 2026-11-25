@@ -82,7 +82,7 @@ export const Supporters: CollectionConfig = {
         { label: 'Subscribed', value: 'subscribed' },
         { label: 'Unsubscribed', value: 'unsubscribed' },
       ],
-      admin: { position: 'sidebar', description: 'Set to Unsubscribed when someone asks to stop receiving messages.' },
+      admin: { components: { Cell: '@/components/portal/StatusCell#StatusCell' }, position: 'sidebar', description: 'Set to Unsubscribed when someone asks to stop receiving messages.' },
     },
     { name: 'unsubscribedAt', type: 'date', admin: { position: 'sidebar', readOnly: true, date: { pickerAppearance: 'dayAndTime' } } },
     { name: 'notes', label: 'Internal notes', type: 'textarea', admin: { position: 'sidebar' } },

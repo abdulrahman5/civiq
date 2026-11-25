@@ -63,7 +63,7 @@ export const Tenants: CollectionConfig = {
       options: CHAMBER_OPTIONS,
       admin: {
         description: 'Senate sites use the red theme, House of Representatives sites the green theme. Everything else is identical.',
-        components: { Field: '@/components/portal/ChamberPicker#ChamberPicker' },
+        components: { Cell: '@/components/portal/StatusCell#StatusCell', Field: '@/components/portal/ChamberPicker#ChamberPicker' },
       },
     },
     {
@@ -102,7 +102,7 @@ export const Tenants: CollectionConfig = {
         { label: 'Active', value: 'active' },
         { label: 'Suspended', value: 'suspended' },
       ],
-      admin: { position: 'sidebar', description: 'Suspended sites show “site not found” to visitors.' },
+      admin: { components: { Cell: '@/components/portal/StatusCell#StatusCell' }, position: 'sidebar', description: 'Suspended sites show “site not found” to visitors.' },
     },
     {
       name: 'showcase',

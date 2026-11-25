@@ -78,7 +78,7 @@ export const Newsletters: CollectionConfig = {
         { label: 'Sending', value: 'sending' },
         { label: 'Sent', value: 'sent' },
       ],
-      admin: { hidden: true },
+      admin: { components: { Cell: '@/components/portal/StatusCell#StatusCell' }, hidden: true },
       access: { update: () => false },
     },
     { name: 'scheduledAt', type: 'date', admin: { hidden: true }, access: { update: () => false } },

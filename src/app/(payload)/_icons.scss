@@ -1,0 +1,55 @@
+// Menu icons (generated): one line icon per menu item, drawn as a mask in the current colour.
+$cq-icon-home: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z'/%3E%3C/svg%3E");
+$cq-icon-chart: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20V10M10 20V4M16 20v-7M22 20H2'/%3E%3C/svg%3E");
+$cq-icon-activity: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 12h-4l-3 9L9 3l-3 9H2'/%3E%3C/svg%3E");
+$cq-icon-sliders: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6'/%3E%3C/svg%3E");
+$cq-icon-user: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 21a8 8 0 0 1 16 0'/%3E%3C/svg%3E");
+$cq-icon-list: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 6l2 2 3-3M3 13l2 2 3-3M11 6h10M11 13h10M11 20h10'/%3E%3C/svg%3E");
+$cq-icon-news: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 4h13v16H6a2 2 0 0 1-2-2zM17 8h3v10a2 2 0 0 1-2 2M8 8h5M8 12h5M8 16h5'/%3E%3C/svg%3E");
+$cq-icon-briefcase: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='7' width='20' height='14' rx='2'/%3E%3Cpath d='M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2'/%3E%3C/svg%3E");
+$cq-icon-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='18' height='18' rx='2'/%3E%3Ccircle cx='9' cy='9' r='2'/%3E%3Cpath d='M21 15l-5-5L5 21'/%3E%3C/svg%3E");
+$cq-icon-users: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='9' cy='7' r='4'/%3E%3Cpath d='M2 21a7 7 0 0 1 14 0M16 3.1a4 4 0 0 1 0 7.8M22 21a7 7 0 0 0-5-6.7'/%3E%3C/svg%3E");
+$cq-icon-target: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Ccircle cx='12' cy='12' r='6'/%3E%3Ccircle cx='12' cy='12' r='2'/%3E%3C/svg%3E");
+$cq-icon-inbox: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 12h-6l-2 3h-4l-2-3H2M5.5 5h13L22 12v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-6z'/%3E%3C/svg%3E");
+$cq-icon-mail: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='4' width='20' height='16' rx='2'/%3E%3Cpath d='M22 6l-10 7L2 6'/%3E%3C/svg%3E");
+$cq-icon-landmark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 21h18M5 21V10M10 21V10M14 21V10M19 21V10M2 10l10-7 10 7z'/%3E%3C/svg%3E");
+$cq-icon-userplus: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='9' cy='7' r='4'/%3E%3Cpath d='M2 21a7 7 0 0 1 14 0M19 8v6M16 11h6'/%3E%3C/svg%3E");
+$cq-icon-globe: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20'/%3E%3C/svg%3E");
+$cq-icon-lifebuoy: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M4.9 4.9l4.3 4.3M14.8 14.8l4.3 4.3M14.8 9.2l4.3-4.3M4.9 19.1l4.3-4.3'/%3E%3C/svg%3E");
+
+.nav .cq-ico-home::before { -webkit-mask-image: $cq-icon-home; mask-image: $cq-icon-home; }
+.nav .cq-ico-chart::before { -webkit-mask-image: $cq-icon-chart; mask-image: $cq-icon-chart; }
+.nav .cq-ico-activity::before { -webkit-mask-image: $cq-icon-activity; mask-image: $cq-icon-activity; }
+.nav #nav-site-settings::before { -webkit-mask-image: $cq-icon-sliders; mask-image: $cq-icon-sliders; }
+.nav #nav-about::before { -webkit-mask-image: $cq-icon-user; mask-image: $cq-icon-user; }
+.nav #nav-agenda::before { -webkit-mask-image: $cq-icon-list; mask-image: $cq-icon-list; }
+.nav #nav-news::before { -webkit-mask-image: $cq-icon-news; mask-image: $cq-icon-news; }
+.nav #nav-projects::before { -webkit-mask-image: $cq-icon-briefcase; mask-image: $cq-icon-briefcase; }
+.nav #nav-media::before { -webkit-mask-image: $cq-icon-image; mask-image: $cq-icon-image; }
+.nav #nav-supporters::before { -webkit-mask-image: $cq-icon-users; mask-image: $cq-icon-users; }
+.nav #nav-audiences::before { -webkit-mask-image: $cq-icon-target; mask-image: $cq-icon-target; }
+.nav #nav-messages::before { -webkit-mask-image: $cq-icon-inbox; mask-image: $cq-icon-inbox; }
+.nav #nav-newsletters::before { -webkit-mask-image: $cq-icon-mail; mask-image: $cq-icon-mail; }
+.nav #nav-users::before { -webkit-mask-image: $cq-icon-users; mask-image: $cq-icon-users; }
+.nav #nav-tenants::before { -webkit-mask-image: $cq-icon-landmark; mask-image: $cq-icon-landmark; }
+.nav #nav-leads::before { -webkit-mask-image: $cq-icon-userplus; mask-image: $cq-icon-userplus; }
+.nav #nav-global-civiq-settings::before { -webkit-mask-image: $cq-icon-globe; mask-image: $cq-icon-globe; }
+.nav #nav-support-requests::before { -webkit-mask-image: $cq-icon-lifebuoy; mask-image: $cq-icon-lifebuoy; }
+.nav .cq-ico-home::before,
+.nav .cq-ico-chart::before,
+.nav .cq-ico-activity::before,
+.nav #nav-site-settings::before,
+.nav #nav-about::before,
+.nav #nav-agenda::before,
+.nav #nav-news::before,
+.nav #nav-projects::before,
+.nav #nav-media::before,
+.nav #nav-supporters::before,
+.nav #nav-audiences::before,
+.nav #nav-messages::before,
+.nav #nav-newsletters::before,
+.nav #nav-users::before,
+.nav #nav-tenants::before,
+.nav #nav-leads::before,
+.nav #nav-global-civiq-settings::before,
+.nav #nav-support-requests::before { content: ''; flex: 0 0 18px; width: 18px; height: 18px; background: currentColor; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-size: contain; mask-size: contain; opacity: 0.75; }

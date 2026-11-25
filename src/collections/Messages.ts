@@ -79,7 +79,7 @@ export const Messages: CollectionConfig = {
         { label: 'Read', value: 'read' },
         { label: 'Archived', value: 'archived' },
       ],
-      admin: { position: 'sidebar', description: 'Archive messages you no longer need in the main list.' },
+      admin: { components: { Cell: '@/components/portal/StatusCell#StatusCell' }, position: 'sidebar', description: 'Archive messages you no longer need in the main list.' },
     },
     { name: 'lastRepliedAt', label: 'Last replied', type: 'date', admin: { position: 'sidebar', readOnly: true, date: { pickerAppearance: 'dayAndTime' } } },
     { name: 'notes', label: 'Internal notes', type: 'textarea', admin: { position: 'sidebar', description: 'Only visible to the team.' } },

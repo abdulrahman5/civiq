@@ -64,7 +64,7 @@ export const Leads: CollectionConfig = {
       required: true,
       defaultValue: 'new',
       options: [...LEAD_STATUSES],
-      admin: { position: 'sidebar' },
+      admin: { components: { Cell: '@/components/portal/StatusCell#StatusCell' }, position: 'sidebar' },
     },
     { name: 'notes', label: 'Internal notes', type: 'textarea', admin: { position: 'sidebar' } },
     { name: 'site', label: 'Legislator site', type: 'relationship', relationTo: 'tenants', admin: { position: 'sidebar', readOnly: true } },
